@@ -1,0 +1,21 @@
+#!/bin/bash
+
+#need makepasswd, pwgen
+
+. /root/tools/function.sh
+
+promtLogin
+promtHost
+YesNo 'DNS' 'isDNS'
+if [[ $isDNS ]];then
+    YesNo 'Gmail DNS' 'isGMAIL'
+fi
+YesNo 'HTTP' 'isHTTP'
+YesNo 'SQL' 'isSQL'
+
+confirm
+
+create
+
+
+

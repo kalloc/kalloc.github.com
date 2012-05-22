@@ -1,0 +1,82 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<HEAD>
+<TITLE>фото альбом сайта n1ck.name {if strlen(title)>0}{var " :: %s",title}{/if} :: просмотр/комментирование</TITLE>
+<script language="javascript" type="text/javascript" src="/js/script.js"></script>
+<HTML>
+<HEAD>
+</HEAD>
+<BODY>
+<!-- proc header char *title; -->
+
+<div style="text-align:center;width:100%;height:160px;">
+		<img src="{var "%s",pic}" border="0" >
+	<p style="text-align:center;font-family:Verdana"><sup>{var "%s",text}</sup></p>
+	<div align="left" id="commentus" style="margin-left:35%;padding-left:10px;margin-right:35%;width:360px;border:1px dashed black;text-align:center;font-family:Verdana">
+	&nbsp;		
+
+	</div>
+	<div align="center"  id="formus" style="margin-left:35%;margin-right:35%;width:370px;border:1px dashed black;text-align:center;font-family:Verdana">
+		who are you <br/>(кто тут )? <br/><input onkeyup="checkenter();" onchange="checkenter();" style="border:1 px solid black"  type="text" id="gb_name"><br/><br/>
+		what do yo want <br/>(умный молодец, сказать что желаешь?)
+		<textarea  onkeyup="checkenter();" onchange="checkenter();" style="border:1 px solid black" id="gb_text" rows=5 cols=25></textarea><br/>
+	      <input id="butt" style="border:1 px solid black"  onclick="addAnswer()" type="button" value="заслать (send)"><br/><br/>
+
+	</div>
+
+</div>
+
+
+
+<!-- proc body char *url,char *text,char *pic; -->
+
+<script>
+
+function addAnswer(){
+
+	ajax_query('?ajax',{ 'call':'add','gb_name':document.getElementById('gb_name').value,'gb_text':document.getElementById('gb_text').value});
+//	loadXML('?ajax',{ 'call':'add','gb_name':gb_name,'gb_text':gb_text},AnswerReply);
+	return false;
+}
+function printAnswer(){
+
+	checkenter();
+	ajax_query('?ajax',{'call':'print'});
+//	loadXML('?ajax',{'call':'print'},AnswerReply);
+
+	return false;
+}
+
+
+var AnswerReply=function() {
+		eval(req.responseText);
+}
+
+
+
+function checkenter() {
+
+
+	var gbname=document.getElementById('gb_name').value;
+	var gbtext=document.getElementById('gb_text').value;
+	var bt=document.getElementById('butt');
+
+
+	if(gbname == "" || gbtext== "")
+	{
+		bt.disabled=true;
+	} else {
+		bt.disabled=false;
+		
+	}
+
+
+}
+
+
+printAnswer();
+</script>
+</BODY>
+</HTML>
+<!-- intern footer; -->
+

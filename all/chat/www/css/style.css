@@ -1,0 +1,1024 @@
+body {
+	background-color: #ffffff;
+	margin: 0px;
+	font-family: Arial, Tahoma, Verdana;
+	color: #000000;
+}
+
+table {
+	width: 100%;
+	border-collapse: collapse;
+	margin: 0;
+}
+
+div {
+	width: 100%;
+}
+
+h1 {
+	margin: 0;
+}
+
+p {
+	margin: 0;
+	padding: 0;
+}
+
+img {
+	border: 0;
+}
+
+td {
+	padding: 0;
+	vertical-align: top;
+}
+
+
+.Logo {
+	margin-left: 70px;
+	margin-top: 25px;
+	margin-bottom: 20px;
+}
+
+.BigBanner {
+	padding-top: 20px;
+}
+
+.BigBanner div {
+	position: relative;
+	width: 468px;
+	height: 60px;
+	border: 1px solid #EBEBEB;
+	margin-left: -468px;
+	left: 93%;
+}
+
+.cLeft {
+	background-image: url('/img/conner_left.gif');
+	background-position: 100% 0%;
+	background-repeat: no-repeat;
+}
+
+.cCenter {
+	background-image: url('/img/conner_center.gif');
+	background-position: 100% 0%;
+	background-repeat: no-repeat;
+	text-align: center;
+	vertical-align: middle;
+	padding-left: 25px;
+	font-size: 12px;
+	padding-top: 3px;
+}
+
+.cCenterR {
+	background-image: url('/img/conner_center_right.gif');
+	background-position: 100% 0%;
+	background-repeat: no-repeat;
+	text-align: center;
+	vertical-align: middle;
+	padding-left: 25px;
+	font-size: 12px;
+	padding-top: 3px;
+}
+
+.cRight {
+	background-image: url('/img/conner_right.gif');
+	background-position: 0% 0%;
+	background-repeat: no-repeat;
+}
+
+#Cats {
+	color: #D4D1C6;
+	font-size: 18px;
+	padding-top: 0 !important;
+}
+
+.MenuH p {
+	position: relative;
+	left: -25px;
+}
+
+a {
+	color: #3883E1;
+}
+
+.Star1 {
+	background-color: #2F6DBB;
+	background-image: url('/img/star1.jpg');
+	background-repeat: no-repeat;
+}
+
+.Star2 {
+	height: 171px;
+	background-image: url('/img/star2.gif');
+	background-repeat: no-repeat;
+	background-position: 100% 0%;
+	color: #ffffff;
+	overflow: hidden;
+}
+
+.Star2inner {
+	height: 24px;
+	background-image: url('/img/star2.gif');
+	background-repeat: no-repeat;
+	background-position: 100% 0%;
+}
+
+
+
+.MenuV {
+	position: relative;
+	top: -13px;
+	font-size: 12px;
+}
+
+.First {
+	background-image: url('/img/menu_first.gif') !important;
+}
+
+.MenuV div {
+	background-image: url('/img/menu.gif');
+	background-repeat: no-repeat;
+	padding-left: 30px;
+	background-position: 7px 50%;
+	padding-bottom: 7px;
+	padding-top: 5px;
+	white-space: nowrap;
+	padding-right: 20px;
+	width: 50%;
+	overflow: visible;
+	color: #3883E1;
+}
+
+.Spacer {
+	background-image: url('/img/dot.gif') !important;
+	background-repeat: repeat-y !important;
+	padding-top: 0 !important;
+	padding-bottom: 0 !important;
+	font-size: 0;
+	height: 7px;
+}
+
+.Last {
+	background-image: url('/img/menu_last.gif') !important;
+}
+
+.MenuV a {
+	text-decoration: none;
+}
+
+.MenuV a:hover {
+	text-decoration: underline;
+}
+
+#Active {
+	background-image: url('/img/star_yellow.gif') !important;
+	background-position: 0% 50% !important;
+	padding-top: 0 !important; 
+	padding-bottom: 0 !important; 
+	font-weight: 800;
+}
+
+#nonActive {
+	color: #B2B1AE;
+}
+
+.ServiceAbility {
+	font-size: 22px;
+	margin-bottom: 7px;
+}
+
+.StarLeft {
+	padding-top: 40px;
+	padding-left: 100px;
+	width: 99%;
+	font-size: 14px;
+}
+
+.StarLeft a {
+	color: #ffffff;
+	font-weight: 800;
+}
+
+.StarLeft td {
+	padding-bottom: 9px;
+	padding-right: 5px;
+}
+
+.StarRight {
+	width: 1%;
+	padding-right: 10px;
+}
+
+.Login {
+	margin-top: 47px;
+}
+
+.Login input {
+	border: 1px solid white;
+	width: 150px;
+	height: 15px;
+	background-image: url('/img/input.gif');
+	background-position: 100% 0%;
+	background-repeat: repeat-y;
+	color: #265998;
+	font-size: 13px;
+	font-weight: 800;
+	background-color: #ffffff;
+	margin: 1px;
+}
+
+.Cabinet {
+	font-size: 16px;
+	font-weight: 800;
+	padding-bottom: 4px;
+}
+
+.Icons {
+	text-align: center;
+	vertical-align: middle;
+	padding-right: 4px;
+	padding-left: 4px;
+}
+
+.Enter {
+	width: 40px !important;
+	height: 18px !important;
+	border: 1px solid white !important;
+	background-color: transparent !important;
+	color: #ffffff !important;
+	background-image: none !important;
+	font-weight: 500 !important;
+	font-size: 10px !important;
+	float: right;
+	margin-top: 2px;
+	margin-bottom: 2px;
+	cursor: pointer;
+	text-align: center;
+	padding: 0;
+}
+
+.Reg {
+	font-size: 10px;
+}
+
+.Reg a {
+	color: #ffffff;
+}
+
+.WhiteStar {
+	position: relative;
+	left: -20px;
+	margin-right: -13px;
+	width: 15px;
+	height: 15px;
+	float: left;
+	filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='/img/star_white.png', sizingMethod=crop);
+}
+
+.WhiteStar[class] {
+	background-image: url('/img/star_white.png');
+	background-repeat: no-repeat;
+}
+
+.LeftSpace {
+	background-image: url('/img/dot_grey.gif');
+	background-repeat: repeat-y;
+	background-position: 26px 0%;
+}
+
+.LayotC {
+	background-image: url('/img/gradient.gif');
+	background-repeat: repeat-y;
+	background-position: 100% 0%;
+	padding-top: 15px;
+	padding-left: 10px;
+	padding-right: 20px;
+}
+
+h1 {
+	color: #31A300;
+	font-size: 18px;
+	font-weight: 500;
+}
+
+
+h2 {
+	color: #31A300;
+	font-size: 18px;
+	font-weight: 500;
+	margin: 0;
+}
+
+.FullSearch {
+	vertical-align: middle;
+	font-size: 12px;
+	text-align: right;
+	padding-top: 2px;
+}
+
+.SearchButton {
+	width: 140px !important;
+	height: 18px !important;
+	background-color: #5394E5 !important;
+	color: #ffffff !important;
+	font-size: 10px !important;
+	cursor: pointer;
+}
+
+.SearchButton[class] {
+	margin-left: -1px;
+}
+
+
+.Search {
+	margin-top: 15px;
+	margin-bottom: 15px;
+}
+
+.Search input {
+	width: 99%;
+	height: 14px;
+	background-color: #ffffff;
+	color: #000000;
+	font-size: 10px;
+	border: 0 !important;
+	margin: 0 !important;
+	cursor: pointer;
+}
+
+.Search td {
+	border: 1px solid #E3DFD3;
+	border-right: 0;
+}
+
+.SearchSpace {
+	border: 0 !important;
+}
+
+.SearchSpace div {
+	width: 3px;
+}
+
+.ButtonTD {
+	border-right: 1px solid #E3DFD3 !important;
+}
+
+.SelectItem {
+	border-right: 1px solid #E3DFD3 !important;
+	border-left: 0 !important;	
+}
+
+.SelectItem div {
+	width: 20px;
+	height: 18px;
+	background-image: url('/img/select.gif');
+	background-position: 50% 50%;
+	background-repeat: no-repeat;
+	cursor: pointer;
+}
+
+.Headers {
+	margin-top: 15px;
+	margin-bottom: 10px;
+}
+
+.Headers td {
+	white-space: nowrap;
+}
+
+.Places {
+	margin-bottom: 20px;
+	z-index: 10;
+}
+
+.Places td {
+	color: #A9A69E;
+	font-size: 90%;
+	padding-left: 15px;
+	padding-right: 5px;
+	white-space: nowrap;
+}
+
+.TableHeader td {
+	border: 1px solid #D4D1C6;
+	background-color: #F2EFE6;
+	padding-top: 10px;
+	padding-bottom: 10px;
+	border-top: 0;
+	border-left: 0;
+	border-right: 0;
+	background-image: url('/img/90grey.gif');
+	background-repeat: no-repeat;
+	white-space: nowrap;
+}
+
+.TableHeader .FirstTD {
+	background-image: url('/img/conner_grey.gif') !important;
+	background-repeat: no-repeat;
+}
+
+.FirstTD div {
+	width: 14px;
+}
+
+.NormalLine td {
+	font-size: 80%;
+	padding-top: 5px;
+	padding-bottom: 5px;
+	border: 0;
+	background-image: url('/img/dot_grey.gif');
+	background-repeat: repeat-y;
+	background-position: 0% 0%;
+	background-color: #ffffff;
+}
+.GreyLine td {
+	font-size: 80%;
+	padding-top: 3px;
+	padding-bottom: 3px;
+	background-color: #FAF9F6;
+	border: 0;
+	background-image: url('/img/dot_grey.gif');
+	background-repeat: repeat-y;
+	background-position: 0% 0%;
+}
+
+.GreyLine .FirstTD {
+	white-space: normal !important;
+}
+
+.NormalLine .FirstTD {
+	white-space: normal !important;
+}
+
+.TableBottom .FirstTD div {
+	height: 17px;
+}
+
+.TableBottom .FirstTD {
+	background-image: url('/img/conner_bottom.gif') !important;
+	background-repeat: no-repeat;
+	background-position: 0% 100%;
+}
+
+.TableBottom td {
+	background-image: url('/img/90grey_bottom.gif');
+	background-repeat: no-repeat;
+	background-position: 0% 100%;
+	background-color: #ffffff;
+}
+
+.NewsTable {
+	margin-top: 10px;
+	margin-bottom: 20px;
+}
+
+.NewsTable td {
+	padding-left: 10px;
+	font-size: 80%;
+	padding-right: 15px;
+}
+
+.NewsDate {
+	font-size: 70% !important;
+	color: #B9B7B0;
+	padding-bottom: 1px;
+}
+
+.News {
+	color: #444444;
+	line-height: 110%;
+	padding-bottom: 5px;
+}
+
+.News p {
+	padding-bottom: 5px;
+}
+
+a:hover {
+	text-decoration: none;
+}
+
+.ShowAllPlaces {
+	padding-top: 10px;
+	font-size: 80% !important;
+}
+
+.LeftBottom {
+	background-image: url('/img/conner_bottom.gif');
+	background-position: 26px 100%;
+	background-repeat: no-repeat;
+	width: 10%;
+}
+
+.LeftBottom div {
+	font-size: 0;
+	height: 9px;
+}
+
+.BottomLine {
+	background-image: url('/img/dot_grey.gif');
+	background-repeat: repeat-x;
+	background-position: 0% 100%;
+	width: 90%;
+}
+
+.PodvalLeft {
+	width: 50%;
+	padding-left: 50px;
+	padding-top: 10px;
+	font-size: 14px;
+	color: #444444;
+	padding-bottom: 50px;
+}
+
+.PodvalLeft p {
+	padding-bottom: 10px;
+}
+
+.SmallBanner {
+	width: 88px;
+	height: 31px;
+	border: 1px solid #EBEBEB;
+	margin-right: 3px;
+	margin-bottom: 2px;
+	margin-top: 10px;
+}
+
+.Intitle {
+	width: 50%;
+	white-space: nowrap;
+	padding-top: 14px;
+	padding-right: 50px;
+	font-size: 70%;
+	text-align: right;
+}
+
+.Intitle a {
+	color: #888888;
+}
+
+.Catalog {
+	margin-top: 15px;
+	font-size: 80%;
+	margin-bottom: 15px;
+}
+
+.Catalog td {
+	width: 20%;
+	border-left: 1px solid #E3E3E3;
+	padding-top: 5px;
+	padding-bottom: 5px;
+	padding-left: 20px;
+	padding-right: 5px;
+	overflow: hidden;
+}
+
+.Catalog .FirstTD {
+	border-left: 0 !important;
+}
+
+.Catalog .Active {
+	background-image: url('/img/arrow_down.gif');
+	background-repeat: no-repeat;
+	background-position: 7px 50%;
+	color: #3883E1;
+	font-weight: 800;
+}
+
+#CatalogPlaces {
+	margin-bottom: 0 !important;
+}
+
+#CatalogPlaces td {
+	white-space: normal !important;
+	vertical-align: middle;
+}
+
+#CatalogPlaces img {
+	margin-left: 15px;
+}
+
+.Bottom15 {
+	margin-bottom: 15px;
+}
+
+.BottomXL {
+	background-image: url('/img/conner_bottom.gif');
+	background-position: 26px 100%;
+	background-repeat: no-repeat;
+}
+
+.BottomXC div {
+	font-size: 0;
+	height: 20px;	
+	background-image: url('/img/gradient.gif');
+	background-repeat: repeat-y;
+	background-position: 100% 0%;
+	margin-bottom: 1px;
+}
+
+.BottomXR {
+	background-image: url('/img/dot_grey.gif');
+	background-repeat: repeat-x;
+	background-position: 0% 100%;
+}
+
+.BottomXC {
+	background-image: url('/img/dot_grey.gif');
+	background-repeat: repeat-x;
+	background-position: 0% 100%;
+}
+
+.SearchFull .MultiSelect {
+	width: 93%;
+	height: 160px;
+	border: 1px solid #DBD9D2;
+	margin-top: 5px;
+}
+
+.SearchFull option {
+	padding-top: 3px;
+}
+
+
+.SearchFull {
+	font-size: 85%;
+	color: #444444;
+	margin-top: 15px;
+	width: 97%;
+}
+
+.SmallGrey {
+	font-size: 80%;
+	color: #BFBFBF;
+}
+
+.SearchFull input {
+	border: 1px solid #DBD9D2;
+	width: 88%;
+	font-size: 13px;
+}
+
+.SearchFull td {
+	vertical-align: middle;
+	padding-bottom: 12px;
+}
+
+.SearchFull p {
+	text-align: right;
+	padding-right: 15px;
+	white-space: nowrap;
+}
+
+.BannerFormat {
+	font-size: 85%;
+}
+
+
+.BannerFormat div {
+	width: 75%;
+	cursor: pointer;
+	border: 1px solid #DBD9D2;
+	margin: 5px;
+	text-align: center;
+	padding-top: 2px;
+	padding-bottom: 2px;
+	margin-top: 10px;
+	padding-left: 10px;
+	background-image: url('/img/checkbox.gif');
+	background-repeat: no-repeat;
+	background-position: 3% 50%;
+}
+
+.FullSearchButton {
+	width: 98%;
+	background-color: #ffffff;
+	margin-top: 10px;
+	margin-bottom: 15px;
+	border: 1px solid #DBD9D2;
+	color: #444444;
+	cursor: pointer;
+}
+
+.CreateButton {
+	width: 300px;
+	background-color: #ffffff;
+	border: 1px solid #DBD9D2;
+	color: #444444;
+	cursor: pointer;
+	margin-top: 15px;
+	margin-bottom: 20px;
+}
+
+.Vertical {
+	float: left;
+	width: 1px;
+	height: 500px;
+}
+
+.Content {
+	background-image: url('/img/gradient.gif');
+	background-repeat: repeat-y;
+	background-position: 100% 0%;
+	padding-top: 15px;
+	padding-left: 10px;
+	padding-right: 40px;
+	font-size: 85%;
+	color: #444444;
+}
+
+.TextInFrame .LT {
+	background-image: url('/img/conner_left.gif');
+	background-repeat: no-repeat;
+	width: 16px;
+	height: 16px;
+}
+
+.TextInFrame .CT {
+	background-image: url('/img/dot_grey.gif');
+	background-repeat: repeat-x;
+	width: 100%;
+}
+
+.TextInFrame .RT {
+	background-image: url('/img/conner_r.gif');
+	background-repeat: no-repeat;
+	width: 16px;
+	height: 16px;
+}
+
+.TextInFrame .LB {
+	background-image: url('/img/conner_l_b.gif');
+	background-repeat: no-repeat;
+	background-position: 0% 100%;
+	width: 16px;
+	height: 16px;
+}
+
+.TextInFrame .CB {
+	background-image: url('/img/dot_grey.gif');
+	background-repeat: repeat-x;
+	width: 100%;
+	background-position: 0% 100%;
+}
+
+.TextInFrame .RB {
+	background-image: url('/img/conner_r_b.gif');
+	background-repeat: no-repeat;
+	width: 16px;
+	height: 16px;
+	background-position: 0% 100%;
+}
+
+.TextInFrame .LC {
+	background-image: url('/img/dot_grey.gif');
+	background-repeat: repeat-y;
+}
+
+.TextInFrame .RC {
+	background-image: url('/img/dot_grey.gif');
+	background-repeat: repeat-y;
+	background-position: 100% 0%;
+}
+
+.TextInFrame {
+	margin-top: 15px;
+	margin-bottom: 15px;
+}
+
+.Content p {
+	padding-bottom: 6px;
+}
+
+.Green {
+	color: #4BAF20;
+	font-weight: 800;
+	font-size: 95%;
+}
+
+.Content input {
+	border: 1px solid #D4D1C6;
+	width: 99%;
+	margin-bottom: 6px;
+}
+
+.Content textarea {
+	border: 1px solid #D4D1C6;
+	width: 99%;
+	height: 150px;
+	margin-bottom: 6px;
+}
+
+.Content .Button {
+	border: 1px solid #D4D1C6;
+	color: #444444;
+	background-color: #ffffff;
+	height: 22px;
+}
+
+.Content .cBox {
+	border: 0;
+	width: 15px;
+	height: 15px;
+}
+
+.alMiddle td {
+	vertical-align: middle;
+}
+
+.ScreenShot img {
+	border: 1px solid #D4D1C6;
+	margin-left: 10px;
+}
+
+.ScreenShot {
+	width: 1%;
+}
+
+.PlaceInfo .ltd {
+	width: 1%;
+	white-space: nowrap;
+	font-size: 90%;
+	padding-right: 20px;
+}
+
+.PlaceInfo td {
+	padding-bottom: 15px;
+}
+
+.PlaceInfo {
+	margin-top: 15px;
+}
+
+.PlaceInfo .More {
+	width: 80%;
+	padding-left: 40px;
+	background-image: url('/img/dot_grey.gif');
+	background-repeat: repeat-y;
+	background-position: 20px 0%;
+}
+
+.MoreComp td {
+	padding-bottom: 3px;
+}
+
+.SelectBox {
+	position: absolute;
+	margin-top: -20px;
+	z-index: 10;
+	border: 1px solid #D4D1C6;
+	display: block;
+	float: none;
+	background-color: #ffffff;
+	visibility: hidden;
+	cursor: pointer;
+	overflow: auto;
+	width: 0;
+}
+
+.Invis td {
+	border: 0 !important;
+}
+
+.SelectBox div {
+	font-size: 12px;
+	margin-bottom: 2px;
+	margin-top: 2px;
+	white-space: nowrap;
+	width: 50%;
+}
+
+.SelectBox p {
+	padding-left: 5px;
+}
+
+.MultiSelect .cBox {
+	background-image: url('/img/checkbox.gif');
+	background-repeat: no-repeat;
+	background-position: 50% 50%;
+	padding: 0 !important;
+}
+
+.cBox div {
+	width: 20px;
+	font-size: 0;
+	cursor: pointer;
+}
+
+.MultiSelect td {
+	vertical-align: middle;
+	padding: 2px !important;
+	font-size: 90%;
+}
+
+.MultiSelect {
+	padding-top: 5px;
+	padding-bottom: 5px;
+	cursor: pointer;
+	overflow: auto;
+}
+
+.MultiSelect table {
+	width: 93%;
+}
+
+.CoolBox {
+	background-image: url('/img/checkbox.gif');
+	background-repeat: no-repeat;
+	background-position: 50% 50%;
+	padding: 0 !important;
+	cursor: pointer;
+	width: 20px;
+	height: 20px;
+}
+
+.CoolBoxChecked {
+	background-image: url('/img/checkbox_active.gif');
+	background-repeat: no-repeat;
+	background-position: 50% 50%;
+	padding: 0 !important;
+	cursor: pointer;
+	width: 20px;
+	height: 20px;
+}
+
+.CoolBoxDisabled {
+	background-image: url('/img/checkbox_disabled.gif');
+	background-repeat: no-repeat;
+	background-position: 50% 50%;
+	padding: 0 !important;
+	cursor: default;
+	width: 20px;
+	height: 20px;
+}
+
+.minus1 {
+	margin-bottom: 0px !important;
+	position: relative;
+	top: -1px;
+}
+
+.UserInfo {
+	color: #ffffff;
+	height: 24px;
+	font-size: 12px;
+}
+
+.UserInfo a {
+	color: #ffffff;
+}
+
+.UserInfo td {
+}
+
+.UserInfo .left {
+	padding: 3px 5px 3px 50px;
+	white-space: nowrap;
+}
+
+.UserInfo .right {
+	text-align: right;
+	padding: 3px 10px 3px 5px;
+}
+
+.Pages {
+	font-size: 12px !important;
+	padding: 7px 0 7px 0;
+	width: 100%;
+}
+
+.rButton {
+	position: relative;
+	width: 13px!important;
+	height: 13px !important;
+	background-image: url('/img/radio1.gif');
+	background-repeat: no-repeat !important;
+	font-size: 0;
+	float: left;
+	margin-right: 5px;
+	cursor: pointer;
+}
+
+.rButtonD {
+	position: relative;
+	width: 13px!important;
+	height: 13px !important;
+	background-image: url('/img/radio3.gif');
+	background-repeat: no-repeat !important;
+	font-size: 0;
+	float: left;
+	margin-right: 5px;
+}
+
+.rButtonA {
+	position: relative;
+	width: 13px!important;
+	height: 13px !important;
+	background-image: url('/img/radio2.gif');
+	background-repeat: no-repeat !important;
+	font-size: 0;
+	float: left;
+	margin-right: 5px;
+	cursor: pointer;
+}

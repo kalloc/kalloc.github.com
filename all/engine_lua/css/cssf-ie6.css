@@ -1,0 +1,47 @@
+body { behavior: url("/css/csshover2.htc"); }
+* { behavior: url("/css/iepngfix.htc"); }
+
+/*
+	IE 6 & IE 5 hacks
+	------------------------
+	IE6 !! escape must not precede any of the first six alphabetical characters: a, b, c, d, e, f !!
+	
+	#hack {
+		color:	green;	( IE 5.01 )
+		color/**/:blue; ( IE 5.5 ) 
+		c\olor:	red;	( IE 6 )
+	}
+
+	IE min-width & max-width
+	------------------------
+	
+	element {
+		min-width: 780px; 
+    	max-width: 1260px; 
+		width: expression(document.body.clientWidth < 780? "780px" : document.body.clientWidth > 1260? "1260px" : "auto");
+	}
+	
+	IE PNG background
+	------------------------
+	src='/images/png-image.png' - path relative of page(относительно страницы, не относительно css-файла)
+	
+	element {
+		background: none;
+		filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='/images/png-image.png', sizingMethod='scale');
+	}
+
+*/
+
+.content .f-inputs { padding-left: 0; height: 1%; }
+.content .f-actions { padding-left: 30%; }
+
+.container,
+.content .f-actions,
+.menu-h,
+.menu-v-d a,
+.menu-h-d,
+.menu-h-d li,
+.menu-h-d ul li a { zoom: 1; } /* hasLayout ON */
+
+.menu-v-d ul { margin-left: -1px; }
+.menu-h-d li li { float: left; }

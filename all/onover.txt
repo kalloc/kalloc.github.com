@@ -1,0 +1,24 @@
+
+<script type="text/javascript">
+addEventListener('load',function (e) {
+    var img=document.getElementsByTagName('IMG');
+    var id;
+    for (var i = 0; i < img.length; i++) { 
+	id = img[i].getAttribute("magic"); 
+	if ( id != null) { 
+	    var re = /(.+)_([0-9]+)\.([a-z+])/;
+	    img[i].setAttribute("srcover",img[i].src.replace(re, "$1_$2_on.$3"));
+	    img[i].setAttribute("srcout",img[i].src);
+	    img[i].addEventListener('mouseover',function (e) { 
+		this.src=this.getAttribute("srcover");
+	    },false);
+	    img[i].addEventListener('mouseout',function (e) { 
+		this.src=this.getAttribute("srcout");
+	    },false);
+        }
+    }
+			
+},false);
+
+</script>
+<img src="images/cleverlab_04.gif" magic border="0"/>

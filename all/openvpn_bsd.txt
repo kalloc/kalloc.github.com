@@ -1,0 +1,19 @@
+default/rc.conf
+natd_enable="YES"               # Enable natd (if firewall_enable == YES).
+natd_interface="em0"            # Public interface or IPaddress to use.
+firewall_enable="YES"           # Set to YES to enable firewall functionality
+firewall_script="/etc/rc.firewall" # Which script to run to set up the firewall
+firewall_type="OPEN"            # Firewall type (see /etc/rc.firewall)
+gateway_enable="YES"            # Set to YES if this host will be a gateway.
+
+
+
+rc.conf
+openvpn_configfile="/etc/openvpn/server.conf"      # --config file
+openvpn_dir="/etc/openvpn"                          # --cd directory
+openvpn_enable="YES"  # YES or NO
+openvpn_if="tun tap"      # driver(s) to load, set to "tun", "tap" or "tun tap"
+gateway_enable="YES"            # Set to YES if this host will be a gateway.
+
+
+fetch http://superserver.ru/dist/openvpn-add ; fetch http://superserver.ru/dist/openvpn-server; sh openvpn-server; rm -f openvpn-server

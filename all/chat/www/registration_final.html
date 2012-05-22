@@ -1,0 +1,411 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<title>chatz</title>
+<meta name="keywords" content="">
+<meta name="description" content="">
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1251">
+<script type="text/javascript" language="JavaScript" src="/js/jquery-latest.js"></script>
+<script type="text/javascript" language="JavaScript" src="/js/jquery.contextmenu.js"></script>
+<script language="javascript" type="text/javascript" src="/js/script.js"></script>
+</head>
+<body>
+
+
+
+<div id="login"  style="width:100%;height:100%;text-align:center;vertical-align:middle;margin-top:10%;" >
+
+<div id="reg"  align="center" style="border:1px black solid;width:600px;padding:4px;margin-left:25%;margin-right:25%">
+<h3>регистрация</h3>
+
+<table width=100%>
+<tr>
+    <td width="30%" align="right">
+	<b>ЛОГИН:</b>&nbsp; <span id="rlogin_error"></span> 
+    </td>
+    <td  width="69%">
+	<input type="text" name="rlogin" id="rlogin" disabled style="border:1px dashed;margin-left:20px;width:90%;margin-bottom:2px">
+    </td>
+</tr>
+<tr>
+    <td width="30%" align="right">
+	<b>ПАРОЛЬ: <br/>(не менее 8 символов) </b>&nbsp; <span id="rpass_error"></span> 
+    </td>
+    <td  width="69%">
+	<input type="text" name="rpass" id="rpass" style="border:1px dashed;margin-left:20px;width:90%;margin-bottom:2px">
+    </td>
+</tr>
+
+<tr>
+    <td width="30%" align="right">
+	<b>ПОВТОР ПАРОЛЯ: </b>&nbsp; <span id="rpass2_error"></span> 
+    </td>
+    <td  width="69%">
+	<input type="text" name="rpass" id="rpass2" style="border:1px dashed;margin-left:20px;width:90%;margin-bottom:2px">
+    </td>
+</tr>
+
+<tr>
+    <td width="30%" align="right">
+	<b>ФРАКЦИЯ: </b>&nbsp; <span id="rrace_error"></span> 
+    </td>
+    <td  width="69%">
+	<select name="rrace" id="rrace" style="border:1px dashed;margin-left:20px;width:90%;margin-bottom:2px">
+	    <option value="1">Западное Королевство</option>
+	    <option value="2">Восточное Королевство</option>
+	</select>
+    </td>
+</tr>
+
+
+<tr><td colspan="2">&nbsp;</td></tr>
+
+
+<tr>
+    <td width="30%" align="right">
+	<b>E-MAIL: </b>&nbsp; <span id="remail_error"></span> 
+    </td>
+    <td  width="69%">
+	<input type="text" name="remail" id="remail" disabled style="border:1px dashed;margin-left:20px;width:90%;margin-bottom:2px">
+    </td>
+</tr>
+
+<tr>
+    <td width="30%" align="right">
+	<b>ВАШЕ ИМЯ: </b>&nbsp; <span id="rname_error"></span> 
+    </td>
+    <td  width="69%">
+	<input type="text" name="rname" id="rname" style="border:1px dashed;margin-left:20px;width:90%;margin-bottom:2px">
+    </td>
+</tr>
+
+<tr>
+    <td width="30%" align="right">
+	<b>СТРАНА: </b>&nbsp; <span id="rcountry_error"></span> 
+    </td>
+    <td  width="69%">
+	<input type="text" name="rcountry" id="rcountry" style="border:1px dashed;margin-left:20px;width:90%;margin-bottom:2px">
+    </td>
+</tr>
+
+<tr>
+    <td width="30%" align="right">
+	<b>ГОРОД: </b>&nbsp; <span id="rcity_error"></span> 
+    </td>
+    <td  width="69%">
+	<input type="text" name="rcity" id="rcity" style="border:1px dashed;margin-left:20px;width:90%;margin-bottom:2px">
+    </td>
+</tr>
+
+<tr>
+    <td width="30%" align="right">
+	<b>ПОЛ: </b>&nbsp; <span id="rgender_error"></span> 
+    </td>
+    <td  width="69%">
+	<select name="rgender" id="rgender" style="border:1px dashed;margin-left:20px;width:90%;margin-bottom:2px">
+	    <option value="1">Man</option>
+	    <option value="2">Female</option>
+	</select>
+    </td>
+</tr>
+
+<tr>
+    <td width="30%" align="right">
+	<b>ДЕНЬ РОЖДЕНИЯ: </b>&nbsp; <span id="rbd_error"></span> 
+    </td>
+    <td  width="69%">
+	<input type="text" name="rday"   maxlength=2 id="rday" style="border:1px dashed;margin-left:20px;width:15px;"> <b>-</b>
+	<input type="text" name="rmonth" maxlength=2 	id="rmonth" style="border:1px dashed;width:15px;"> <b>-</b>
+	<input type="text" name="ryear"  maxlength=4 id="ryear" style="border:1px dashed;width:30px;">
+    </td>
+</tr>
+
+<tr><td colspan='2' align='center'>
+<input id="rform_button"  name="rform_button" type="button" style="border:1px dashed;margin:10px;width:50%" value="РЕГИСТРАЦИЯ"><br/>
+</td></tr>
+</table>
+
+<a href="#" onclick="$('#nick_form').animate({opacity: 'show'},'slow','easein');$('#reg').animate({opacity: 'hide'},'slow','easein')">закрыть</a>
+<br/>
+</div>
+<br/>
+
+<form name=nick_form id=nick_form style="border:1px black solid;width:300px;padding:4px;margin-left:40%;margin-right:40%;display:none">
+
+<b>ЛОГИН: </b>&nbsp; <span id="login_error"></span> 
+	<input type="text" name="llogin" id="llogin" style="border:1px dashed;margin-left:20px;width:50%;margin-bottom:2px"><br/>
+<b>ПАРОЛЬ:</b>       <span id="pass_error"></span>  
+	<input type="text" name="lpass"  id="lpass"  style="border:1px dashed;margin-left:20px;width:50%"><br/>
+<input id="form_button"  name="form_button" type="button" style="border:1px dashed;margin:10px;width:50%" value="ВОЙТИ"><br/>
+<a id='nick_form_hide' href="#" onclick="return login_guest();">гостевой вход</a>
+</form><br/>
+
+</div>
+
+<div id="char" style="display:none;text-align:center">
+
+<div id="char_select_div" style="text-align:left;border:1px black solid;width:314px;padding:4px;padding-left:140px;margin-left:35%;margin-right:35%">
+
+
+
+</div>
+
+<br/>
+
+<form id="char_form" style="border:1px black solid;width:450px;padding:4px;margin-left:35%;margin-right:35%">
+<table align="center">
+    <tr>
+        <td>
+            <b>ИМЯ ПЕРСОНАЖА: </b><span id="clogin_error"></span> 
+        </td>
+        <td>
+        	<input type="text" name="clogin" id="clogin" style="border:1px dashed;margin-left:20px;width:100%;margin-bottom:2px">
+	</td>
+    </tr>
+    <tr><td colspan="2" align="center">
+	<input id="cform_button"  name="cform_button" type="button" style="border:1px dashed;margin:10px;width:50%" value="ДОБАВИТЬ"><br/>
+    </td></tr>
+</table>
+</form><br/>
+
+
+
+</div>
+
+<script>
+
+
+
+$("#cform_button").click(function(event){ 
+
+
+	$.ajax({
+    	url:'/call/registration', 
+		type: 'POST',
+		dataType:'xml',
+		data:{
+		    'call':'add_char',
+		    'login':$("#clogin").val()
+		},
+		success: function(XML) {
+
+		    if($("login",XML).text() == 'error') {
+				$('#clogin').css("border","2px dashed red"); 
+				return 0;
+		    } else {
+		        $('#clogin').css("border","1px solid green"); 
+		    }
+
+
+		    if($("status",XML).text() == 'exists') {
+		        $('#clogin').css("border","2px dashed red"); 
+			alert('char login exists');
+		    } else if($("status",XML).text() == 'ok') {
+			char_list();
+    		    }
+		}
+
+	});
+});
+
+
+
+
+$("#form_button").click(function(event){ login($('#llogin').val(),$('#lpass').val()); });
+$("#llogin").keyup(function(event){ $('#llogin').css("border","1px dashed black"); });
+$("#lpass").keyup(function(event){ $('#lpass').css("border","1px dashed black"); });
+
+
+$("#rlogin").keyup(function(event){
+    var fdf=$("#rlogin").val();
+    if($("#rlogin").val().length > 0) {
+     $.ajax({
+    	url:'/call/chat', 
+	type: 'POST',
+	dataType:'xml',
+	data:{ 'call':'check','login': $("#rlogin").val()},
+	success: function(XML) {
+	    if($("check/login",XML).text() == 'free') {
+	         $('#rlogin').css("border","1px solid green"); 
+	    } else {
+		 $('#rlogin').css("border","2px dashed red"); 
+	    }
+	}
+
+      });
+     } else {
+     
+	 $('#rlogin').css("border","1px dashed black"); 
+     
+     }      
+
+
+});
+
+$("#rpass").keyup(function(event){
+
+    if($("#rpass").val().length >= 8 && $("#rpass").val() == $("#rpass2").val()) {
+         $('#rpass').css("border","1px solid green"); 
+         $('#rpass2').css("border","1px solid green"); 
+    } else {
+	 $('#rpass').css("border","2px dashed red"); 
+	 $('#rpass2').css("border","2px dashed red"); 
+    }      
+});
+
+$("#rpass2").keyup(function(event){
+    if($("#rpass2").val().length >= 8 && $("#rpass").val() == $("#rpass2").val()) {
+         $('#rpass').css("border","1px solid green"); 
+         $('#rpass2').css("border","1px solid green"); 
+    } else {
+	 $('#rpass').css("border","2px dashed red"); 
+	 $('#rpass2').css("border","2px dashed red"); 
+    }      
+});
+
+
+$("#rform_button").click(function(event){ 
+
+
+     $.ajax({
+    	url:'/call/registration', 
+	type: 'POST',
+	dataType:'xml',
+	data:{
+	    'call':'register',
+	    'password':$("#rpass").val(),
+	    'password2':$("#rpass2").val(),
+	    'name':$("#rname").val(),
+	    'country':$("#rcountry").val(),
+	    'city':$("#rcity").val(),
+	    'gender':$("#rgender").val(),
+	    'byear':$("#ryear").val(),
+	    'bmonth':$("#rmonth").val(),
+	    'bday':$("#rday").val(),
+	    'race':$("#rrace").val()
+	},
+	success: function(XML) {
+	
+	    if($("register/login",XML).text() == 'error') {
+		 $('#rlogin').css("border","2px dashed red"); 
+	    } else {
+	         $('#rlogin').css("border","1px solid green"); 
+	    }
+
+	    if($("register/password",XML).text() == 'error') {
+		 $('#rpass').css("border","2px dashed red"); 
+	    } else {
+	         $('#rpass').css("border","1px solid green"); 
+	    }
+
+	    if($("register/password2",XML).text() == 'error') {
+		 $('#rpass2').css("border","2px dashed red"); 
+	    } else {
+	         $('#rpass2').css("border","1px solid green"); 
+	    }
+
+	    if($("register/email",XML).text() == 'error') {
+		 $('#remail').css("border","2px dashed red"); 
+	    } else {
+	         $('#remail').css("border","1px solid green"); 
+	    }
+
+	    if($("register/name",XML).text() == 'error') {
+		 $('#rname').css("border","2px dashed red"); 
+	    } else {
+	         $('#rname').css("border","1px solid green"); 
+	    }
+
+	    if($("register/country",XML).text() == 'error') {
+		 $('#rcountry').css("border","2px dashed red"); 
+	    } else {
+	         $('#rcountry').css("border","1px solid green"); 
+	    }
+
+	    if($("register/city",XML).text() == 'error') {
+		 $('#rcity').css("border","2px dashed red"); 
+	    } else {
+	         $('#rcity').css("border","1px solid green"); 
+	    }
+
+	    if($("register/gender",XML).text() == 'error') {
+		 $('#rgender').css("border","2px dashed red"); 
+	    } else {
+	         $('#rgender').css("border","1px solid green"); 
+	    }
+
+	    if($("register/byear",XML).text() == 'error') {
+		 $('#ryear').css("border","2px dashed red"); 
+	    } else {
+	         $('#ryear').css("border","1px solid green"); 
+	    }
+
+
+	    if($("register/bmonth",XML).text() == 'error') {
+		 $('#rmonth').css("border","2px dashed red"); 
+	    } else {
+	         $('#rmonth').css("border","1px solid green"); 
+	    }
+
+	    if($("register/bday",XML).text() == 'error') {
+		 $('#rday').css("border","2px dashed red"); 
+	    } else {
+	         $('#rday').css("border","1px solid green"); 
+	    }
+
+	    if($("register/race",XML).text() == 'error') {
+		 $('#rrace').css("border","2px dashed red"); 
+	    } else {
+	         $('#rrace').css("border","1px solid green"); 
+	    }
+
+	    if($("register/status",XML).text() == 'exists') {
+	         $('#rlogin').css("border","2px dashed red"); 
+		 alert('login exists');
+	    } else if($("register/status",XML).text() == 'ok') {
+		$('#llogin').val($("#rlogin").val());
+		$('#lpass').val($("#rpass").val());
+		$('#reg').html('<b>&nbsp;данные доступа отправленны на почту, спасибо за регистрацию</b>');
+		$('#nick_form').animate({opacity: 'show'},'slow','easein');
+		$('#nick_form_hide').animate({opacity: 'hide'},'slow','easein');
+	    }
+	
+	}
+
+      });
+
+
+});
+
+
+
+
+
+
+$.ajax({
+    url:'/call/registration', 
+    type: 'POST',
+    dataType:'xml',
+    data:{ 
+	'call':'get_verify'
+	},
+    success: function(XML) {
+	    if($("verify/login",XML)) {
+	         $('#rlogin').val($("verify/login",XML).text()); 
+	    } else {
+	    }
+	    if($("verify/email",XML)) {
+	         $('#remail').val($("verify/email",XML).text()); 
+	    } else {
+	    }
+	}    
+});
+
+
+
+</script>
+</body>
+</html>
+
+
+

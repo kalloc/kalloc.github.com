@@ -1,0 +1,52 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ru" xml:lang="ru">
+<body>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=windows-1251"> 
+<title>app::bmlcode [0.39]</title>
+<link rel="stylesheet" href="/default.css" />
+<script type="text/javascript" src="/js/jquery.js"></script>
+<script type="text/javascript" src="/js/jquery.interface.js"></script>
+<script type="text/javascript" src="/js/jquery.iutil.js"></script>
+<script type="text/javascript" src="/js/jquery.iresizable.js"></script>
+<script type="text/javascript" src="/js/jquery.drag.resize.js"></script>
+<script type="text/javascript" src="/js/jquery.moreselectors.js"></script>
+<script type="text/javascript" src="/js/jquery.template.js"></script>
+<script type="text/javascript" src="/js/jquery.winding.js"></script>
+<script type="text/javascript" src="/js/jquery.bgiframe.js"></script>
+<script type="text/javascript" src="/js/jquery.png.js"></script>
+</head>
+
+<script type="text/javascript">
+//$("div[@type='window']").windowing();
+
+
+//$.winding.create({'width':'300','height':'200','title':'test2'});
+
+$(document).ready(function(){
+$.winding.setup({'width':'300','height':'200'});
+
+$.winding.create({'name':'test','width':'300','height':'200','title':'test1','left':'100','top':'100','statusText':'test1|test2|test3',"content":"<a href='javascript:resize(400,300);'>$.winding.resize('test',400,300)</a><br><a href='javascript:move(10,10);'>$.winding.move('test',10,10)</a><br><a href='javascript:move_resize(10,10,300,250);'>$.winding.move_resize('test',10,10,300,250)</a>"});
+$.winding.create({'width':'300','height':'200','title':'test2','left':'450','top':'100',url:'/load.html',icon:"newspaper.png"});
+$.winding.create({'width':'300','height':'200','title':'test3','left':'100','top':'320','icon':'note.png','classname':'notepad','content':'simple skinning<br><b>skin</b>: notepad<br><b>icon</b>: note.png'});
+$.winding.create({'width':'300','height':'200','title':'test4','left':'450','top':'320','content':"<select></select>",'classname':'notepad','icon':'user_female.png','content':'simple skinning<br><b>skin</b>: notepad<br><b>icon</b>: user_female.png','url':'/load2.html'});
+
+});
+
+function resize(w,h)
+{
+	$.winding.resize('test',{'width':w,'height':h});
+}
+function move(l,t)
+{
+	$.winding.resize('test',{'left':l,'top':t});
+}
+function move_resize(l,t,w,h)
+{
+	$.winding.resize('test',{'left':l,'top':t,'width':w,'height':h});
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,200 @@
+require("socket")
+
+Memcached = {
+
+    set = function(cache, key, value)
+	return _store(cache, 'set', key, value)
+    end,
+
+    add = function(cache, key, value)
+	return _store(cache, 'add', key, value)
+    end,
+
+    replace = function(cache, key, value)
+	return _store(cache, 'replace', key, value)
+    end,
+
+    get = function(cache, key)
+	return _retrieve(cache, 'get ' .. key)
+    end,
+
+    delete = function(cache, key)
+	local res = _send(cache, 'delete ' .. key)
+
+	if res == 'NOT_FOUND' then
+	    return nil
+	end
+
+	if res ~= 'DELETED' then
+	    error("Error deleting '" .. key .. "': " .. res)
+	    return nil
+	end
+
+	return true
+    end,
+
+    incr = function(cache, key, val)
+	if val == nil then 
+	    val = 1
+	end
+	
+	local res = _send(cache, 'incr ' .. key .. ' ' .. val)
+
+	if res == 'ERROR' or res == 'CLIENT_ERROR' then
+	    error("Error incrementing '" .. key .. "': " .. res)
+	end
+
+	return res
+    end,
+
+    decr = function(cache, key, val)
+	if val == nil then 
+	    val = 1
+	end
+	
+	local res = _send(cache, 'decr ' .. key .. ' ' .. val)
+
+	if res == 'ERROR' or res == 'CLIENT_ERROR' then
+	    error("Error incrementing '" .. key .. "': " .. res)
+	end
+
+	return res
+    end,
+
+    Connect = function(address, port)
+	if address == nil then
+	    error('No host address defined')
+	end
+
+	if port == nil then
+	    port = 11211
+	end
+
+	local client = socket.connect(address, port)
+
+	if not client then
+	    error('Could not connect to ' .. address .. ':' .. port)
+	end
+
+	function _send(cache, str)
+	    local socket = cache.socket
+
+	    socket:send(str .. "\r\n")
+	    local line, err = socket:receive()
+    
+	    if not err then return line end
+	end
+
+	function _store(cache, op, key, value)
+	    local len = string.len(value)
+	    local cmd = op .. ' ' .. key .. ' 0 0 ' .. len .. '\n' .. value
+
+	    local res = _send(cache, cmd)
+
+	    if res ~= 'STORED' then
+		error("Error storing '" .. key .. "': " .. res)
+		return nil
+	    end
+
+	    return true
+	end
+
+	function _retrieve(cache, str)
+	    local socket = cache.socket
+
+	    socket:send(str .. '\n')
+
+	    local data = {}
+	    while true do
+		local line, err = socket:receive()
+
+		if line == 'END' then
+		    break
+		elseif string.sub(line, 1, 5) == 'VALUE' then
+		else
+		    table.insert(data, line)
+		end
+	    end
+
+	    if table.getn(data) == 0 then 
+		return nil
+	    end
+
+	    local datastring = table.concat(data, '\n')
+
+	    return datastring
+	end
+
+
+	local cache = {
+	    socket = client,
+
+	    set = Memcached.set,
+	    add = Memcached.add,
+	    replace = Memcached.replace,
+	    get = Memcached.get,
+	    delete = Memcached.delete,
+	    incr = Memcached.incr,
+	    decr = Memcached.decr,
+	}
+
+	return cache
+    end
+}
+
+-- 
+-- Memcached.lua
+-- 
+-- A pure lua implementation of a simple memcached client. Only 1 memcached server is currently supported. Requires the luasocket library.
+-- See http://www.danga.com/memcached/ for more information about memcached.
+--
+--
+--
+-- Synopsis
+--
+-- require('Memcached')
+--
+-- memcache = Memcached.Connect('some.host.com', 11000)
+-- 
+-- memcache:set('some_key', 1234)
+-- memcache:add('new_key', 'add new value')
+-- memcache:replace('existing_key', 'replace old value')
+--
+-- cached_data = memcache:get('some_key')
+--
+-- memcache:delete('old_key')
+--
+--
+--
+-- Methods:
+--
+-- memcache = Memcached.Connect(host[, port])
+--    Connect to memcached server at 'host' on port number 'port'. If port is not provider, port 11211 is used.
+--    
+-- memcache:set(key, value)
+--    Unconditionally sets a key to a given value in the memcache.
+--     
+-- memcache:add(key, value)
+--    Like set, but only stores in memcache if the key doesn't already exist.
+--    
+-- memcache:replace(key, value)
+--    Like set, but only stores in memcache if the key already exists. The opposite of add.
+--    
+-- value = memcache:get(key)
+--    Retrieves a key from the memcache. Returns the value or nil
+--    
+-- memcache:delete(key)
+--    Deletes a key. Returns true on deletion, nil if the key was not found.
+--    
+-- value = memcache:incr(key[, value])
+--   Sends a command to the server to atomically increment the value for key by value, or by 1 if value is nil. 
+--   Returns nil if key doesn't exist on server, otherwise it returns the new value after incrementing. Value should be zero or greater.
+--    
+-- value = memcache:decr(key[, value])
+--   Like incr, but decrements. Unlike incr, underflow is checked and new values are capped at 0. If server value is 1, a decrement of 2 returns 0, not -1.
+--
+
+    -- create a memcached connection
+if (not _G["mem"]) then
+    _G.mem = Memcached.Connect('localhost', 11211);
+end

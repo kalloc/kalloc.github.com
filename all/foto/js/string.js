@@ -1,0 +1,10 @@
+var string = new Array();
+string['LOGIN_ERROR_PASSWORD']="Не правильный логин или пароль";
+string['LOGIN_ERROR_EMPTY']="Вы не ввели логин или пароль";
+string['LOGIN_LOGOUT']="Выйти";
+string['ERROR_FORM_ENTRY']="Неверное значение поля";
+string['ERROR_YOU_ENTER']="вы ввели";
+string['TRY_SEC']="Произошло ошибка, попробуйте еще раз";
+string['TRY_ALREADY']="Данные уже являются такими, возможно вы произвели изменения в нескольких окнах. Попробуйте обновить страницу";
+string['CONFIRM']="Вы уверены?";
+string['WAIT']="Пожалуйста подождите";

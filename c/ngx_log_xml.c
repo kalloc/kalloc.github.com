@@ -1,0 +1,1 @@
+/www/site/daedalus.ru/code/all/ngx_log_xml.c

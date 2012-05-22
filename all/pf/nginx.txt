@@ -1,0 +1,229 @@
+user  nobody;
+worker_processes  2;
+worker_rlimit_nofile 80000;
+error_log  /var/log/nginx-error.log info;
+
+events {
+    worker_connections  40000;
+    use kqueue;
+}
+
+
+
+
+http {
+
+   perl_modules  perl/;
+   perl_require  module.pm;
+
+    include       mime.types;
+    default_type  application/octet-stream;
+
+    #log_format  main  '$remote_addr - $remote_user [$time_local] $request '
+    #                  '"$status" $body_bytes_sent "$http_referer" '
+    #                  '"$http_user_agent" "$http_x_forwarded_for"';
+
+    access_log  /dev/null;
+
+    open_file_cache          max=1000  inactive=20s;
+    open_file_cache_valid    30s;
+    open_file_cache_min_uses 2;
+    open_file_cache_errors   on;
+
+    client_header_timeout   10m;
+    client_body_timeout     10m;
+    send_timeout            10m;
+
+    reset_timedout_connection on;
+    connection_pool_size            512;
+    client_header_buffer_size       8k;
+    large_client_header_buffers     8 8k;
+    request_pool_size               32k;
+
+    gzip on;
+    gzip_min_length 500;
+    gzip_buffers    4 8k;
+    gzip_types text/css text/xml image/gif image/jpeg application/x-javascript text/plain text/x-component text/mathml image/png image/x-icon image/x-jng image/vnd.wap.wbmp;
+    gzip_http_version 1.1;
+    gzip_proxied    any;
+
+    output_buffers  1 32k;
+    postpone_output 1460;
+
+    sendfile        on;
+    tcp_nopush      on;
+    tcp_nodelay     on;
+    server_names_hash_max_size 2048;
+    server_names_hash_bucket_size 128;
+
+    keepalive_timeout       75 20;
+
+    ignore_invalid_headers  on;
+
+
+    log_format dump  '$http_host $remote_addr - [$time_local] "$request" '
+    ' $status $body_bytes_sent "$http_referer" "$http_user_agent"'
+    '  "$http_host" $request_time "$http_x_forwarded_for" "$http_via" "$gzip_ratio"';
+	    
+    limit_req_zone  $binary_remote_addr  zone=html:10m rate=8r/s;
+    limit_req_zone  $binary_remote_addr  zone=one:10m   rate=16r/s ;
+    proxy_cache_path  /home/tmp/cache/  levels=1:2   keys_zone=cache:15m  max_size=1000m;
+    proxy_cache_key  "$host$request_uri$is_args$args";
+    proxy_cache_valid  any 15m;
+
+
+server {
+    listen 0.0.0.0:80;
+    server_name  localhost;
+    userid          on;
+    userid_name     watermark;
+    userid_path     /;
+    userid_expires  365d;
+    userid_p3p      'policyref="/w3c/p3p.xml", CP="CUR ADM OUR NOR STA NID"';
+    port_in_redirect off;
+
+    root   /usr/local/www/nginx/;
+
+
+    error_page   500 501 502 504  /50x.html;
+    error_page   503  /overload.html;
+
+    set  $uid  "x";
+    if ($http_cookie ~ "watermark=(.+)") {
+        set  $uid  $1;
+    }
+
+
+    proxy_redirect     off;
+    proxy_set_header   Host             $host;
+
+    proxy_set_header   X-Real-IP        $remote_addr;
+    proxy_set_header   X-Forwarded-For  $proxy_add_x_forwarded_for;
+    client_max_body_size       10m;
+    client_body_buffer_size    2048k;
+    proxy_connect_timeout      90;
+    proxy_send_timeout         90;
+    proxy_read_timeout         90;
+    proxy_buffer_size          128k;
+    proxy_buffers              8 2048k;
+
+
+    valid_referers  server_names;
+    location  /overload.html {
+	root   /usr/local/www/nginx/;
+	ssi on;
+	perl antiddos::handler;
+    }
+
+
+    location ~* ^.+\.(jpg|jpeg|gif|png|ico|css|zip|tgz|gz|rar|bz2|doc|xls|exe|pdf|ppt|txt|tar|wav|bmp|rtf|js|avi|wmv|mp3|mpg|wma|ogg|mpeg|mp4)$ {
+	    expires       24h;
+	    root  /home/home_web/static/$host/;
+
+            if (!-f $request_filename) {
+    		proxy_pass   http://127.0.0.1;
+		access_log  /var/log/nginx-access_log dump;
+		break;
+	    }
+    }
+
+
+
+    location ~* /admin/.+$ {
+
+
+            if ($uid = "") {
+		root   /usr/local/www/nginx/;
+                rewrite ^(.*)$ /redirect.html break;
+		ssi on;
+		break;
+            }
+	    
+	       
+	
+	    if ( $uid ) {
+        	access_log  /var/log/nginx-access.log dump;
+		proxy_pass   http://127.0.0.1;
+	    
+	    }
+	    
+    }
+
+
+
+    location ~* index.php|.+\.(html|htm)$ {
+	    expires       15m;
+    	    limit_req  zone=html  burst=10  nodelay;
+	    proxy_cache cache;
+
+            if ($uid = "") {
+		root   /usr/local/www/nginx/;
+                rewrite ^(.*)$ /redirect.html break;
+		ssi on;
+		break;
+            }
+	    
+	       
+	
+	    if ( $uid ) {
+        	access_log  /var/log/nginx-access.log dump;
+		proxy_pass   http://127.0.0.1;
+	    
+	    }
+	    
+    }
+
+
+    location  = / {
+	    expires       15m;
+	    proxy_cache_valid  5m;
+    	    limit_req   zone=html  burst=10  nodelay;
+	    proxy_cache cache;
+
+            if ($uid = "") {
+		root   /usr/local/www/nginx/;
+                rewrite ^(.*)$ /redirect.html break;
+		ssi on;
+		break;
+            }
+	       
+	
+	    if ( $uid ) {
+        	access_log  /var/log/nginx-access.log dump;
+		proxy_pass   http://127.0.0.1;
+	    
+	    }
+	    
+    }
+
+    location / {
+	    expires       15m;
+
+
+            if ($uid = "") {
+		root   /usr/local/www/nginx/;
+                rewrite ^(.*)$ /redirect.html break;
+		ssi on;
+		break;
+            }
+	    
+
+	    if ( $uid ) {
+        	access_log  /var/log/nginx-access.log dump;
+		proxy_pass   http://127.0.0.1;
+	    
+	    }
+    	    limit_req  zone=one burst=30  nodelay;
+	    
+    }
+
+
+
+}
+   
+
+
+}
+
+
+

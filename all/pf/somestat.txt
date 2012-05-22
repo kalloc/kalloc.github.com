@@ -1,0 +1,557 @@
+|------------------------- [ netstat -ant |grep ESTA |wc -l ] -------------------------|
+    3606
+|------------------------- [  netstat -ant |wc -l ] -------------------------|
+    3947
+|------------------------- [         netstat -Lan ] -------------------------|
+Current listen queue sizes (qlen/incqlen/maxqlen)
+Proto Listen         Local Address         
+tcp4  0/0/10         127.0.0.1.25           
+tcp4  0/0/128        *.22                   
+tcp6  0/0/128        *.22                   
+tcp4  0/3593/4096    *.80                   
+unix  0/0/4          /var/run/devd.pipe
+|------------------------- [            vmstat -z ] -------------------------|
+ITEM                     SIZE     LIMIT      USED      FREE  REQUESTS  FAILURES
+
+UMA Kegs:                 128,        0,      109,       11,      109,        0
+UMA Zones:                888,        0,      109,        3,      109,        0
+UMA Slabs:                284,        0,      769,        1,    53355,        0
+UMA RCntSlabs:            544,        0,     1800,        6,     1800,        0
+UMA Hash:                 128,        0,        2,       28,        4,        0
+16 Bucket:                 76,        0,      107,       43,      129,        0
+32 Bucket:                140,        0,      119,       21,      143,        0
+64 Bucket:                268,        0,      166,        2,      212,       79
+128 Bucket:               524,        0,      418,        2,    90053,      128
+VM OBJECT:                136,        0,    10039,      285,   368652,        0
+MAP:                      140,        0,        7,       21,        7,        0
+KMAP ENTRY:                72,    88351,       32,      498,   115441,        0
+MAP ENTRY:                 72,        0,     1386,      575,   673598,        0
+DP fakepg:                 72,        0,        0,        0,        0,        0
+SG fakepg:                 72,        0,        0,        0,        0,        0
+mt_zone:                 2056,        0,      268,      125,      268,        0
+16:                        16,        0,     2669,      782,    64614,        0
+32:                        32,        0,     2685,      592,   109923,        0
+64:                        64,        0,     5202,      698, 47917451,        0
+128:                      128,        0,     4261,      299,  1433800,        0
+256:                      256,        0,      816,      309,   726425,        0
+512:                      512,        0,      119,      145,    19001,        0
+1024:                    1024,        0,       63,      133,    14074,        0
+2048:                    2048,        0,      407,      103,     1307,        0
+4096:                    4096,        0,      109,      132,    31619,        0
+Files:                     56,        0,      186,     1087,   240961,        0
+TURNSTILE:                 72,        0,      295,       65,      295,        0
+umtx pi:                   52,        0,        0,        0,        0,        0
+MAC labels:                20,        0,        0,        0,        0,        0
+PROC:                     680,        0,       72,      144,    26072,        0
+THREAD:                   572,        0,      258,       36,      258,        0
+SLEEPQUEUE:                32,        0,      295,      118,      295,        0
+VMSPACE:                  232,        0,       49,      206,    26047,        0
+cpuset:                    40,        0,        2,      182,        2,        0
+audit_record:             816,        0,        0,        0,        0,        0
+mbuf_packet:              256,        0,     1032,     1913, 46971641,        0
+mbuf:                     256,        0,        2,      908,  1663814,        0
+mbuf_cluster:            2048,   102400,     2946,      446,   806327,        0
+mbuf_jumbo_page:         4096,   100000,        0,      104,     3627,        0
+mbuf_jumbo_9k:           9216,     6400,        0,        0,        0,        0
+mbuf_jumbo_16k:         16384,     3200,        0,        0,        0,        0
+mbuf_ext_refcnt:            4,        0,        0,        0,        0,        0
+ttyoutq:                  256,        0,       80,       25,      152,        0
+g_bio:                    140,        0,        0,     4844,   676565,        0
+ttyinq:                   152,        0,      150,      110,      285,        0
+ata_request:              204,        0,        0,     1273,   169158,        0
+ata_composite:            180,        0,        0,        0,        0,        0
+VNODE:                    268,        0,    10529,      223,    16412,        0
+VNODEPOLL:                 60,        0,        0,        0,        0,        0
+NAMEI:                   1024,        0,        0,      112,   548498,        0
+S VFS Cache:               72,        0,    10357,      296,   124141,        0
+L VFS Cache:              292,        0,        0,        0,        0,        0
+DIRHASH:                 1024,        0,      186,       22,      188,        0
+NFSMOUNT:                 520,        0,        0,        0,        0,        0
+NFSNODE:                  464,        0,        0,        0,        0,        0
+AIO:                      120,        0,       16,      144,       16,        0
+AIOP:                      16,        0,        4,      402,        5,        0
+AIOCB:                    292,        0,        0,       78,    15551,        0
+AIOL:                      64,        0,        0,        0,        0,        0
+AIOLIO:                   168,        0,        0,        0,        0,        0
+pipe:                     392,        0,        6,       94,     8206,        0
+ksiginfo:                  80,        0,      201,      855,      201,        0
+itimer:                   220,        0,        0,       36,        1,        0
+KNOTE:                     72,        0,       69,      991,   184454,        0
+socket:                   412,   102402,     3665,     1582,    16699,        0
+unpcb:                    172,   102419,       45,       93,      359,        0
+ipq:                       32,     3277,        0,        0,        0,        0
+udp_inpcb:                220,   102402,        2,       88,      701,        0
+udpcb:                      8,   102515,        2,      607,      701,        0
+tcp_inpcb:                220,   102402,     3618,     1386,    15638,        0
+tcpcb:                    632,   102402,     3618,     1506,    15638,        0
+tcptw:                     52,   102456,        0,      504,      367,        0
+syncache:                 112,   409605,      283,    15782,   352332,        0
+hostcache:                 76,    15400,      105,      195,      105,        0
+tcpreass:                  20,     6422,      764,      419,     3389,        0
+sackhole:                  20,        0,        0,      676,      356,        0
+sctp_ep:                  860,    25600,        0,        0,        0,        0
+sctp_asoc:               1492,    40000,        0,        0,        0,        0
+sctp_laddr:                24,    80040,        0,      145,        3,        0
+sctp_raddr:               432,    80001,        0,        0,        0,        0
+sctp_chunk:                96,   400000,        0,        0,        0,        0
+sctp_readq:                76,   400000,        0,        0,        0,        0
+sctp_stream_msg_out:       64,   400020,        0,        0,        0,        0
+sctp_asconf:               24,   400055,        0,        0,        0,        0
+sctp_asconf_ack:           24,   400055,        0,        0,        0,        0
+ripcb:                    220,   102402,        0,        0,        0,        0
+rtentry:                  108,        0,        9,       63,        9,        0
+pfsrctrpl:                124,    10013,        9,      921,     5920,        0
+pfrulepl:                 828,        0,       24,        4,       24,        0
+pfstatepl:                284,    10010,     1010,     9000,   360996,    88562
+pfaltqpl:                 224,        0,        0,        0,        0,        0
+pfpooladdrpl:              68,        0,        0,        0,        0,        0
+pfrktable:               1240,     1002,        4,       20,       14,        0
+pfrkentry:                156,   200000,       54,       46,       54,        0
+pfrkentry2:               156,        0,      815,      210,     1674,        0
+pffrent:                   16,     5075,        0,        0,        0,        0
+pffrag:                    48,        0,        0,        0,        0,        0
+pffrcache:                 48,    10062,        0,        0,        0,        0
+pffrcent:                  12,    50141,        0,        0,        0,        0
+pfstatescrub:              28,        0,        0,        0,        0,        0
+pfiaddrpl:                100,        0,        0,        0,        0,        0
+pfospfen:                 108,        0,      696,       24,     1392,        0
+pfosfp:                    28,        0,      407,      228,      814,        0
+selfd:                     28,        0,      124,      892,   199715,        0
+ip4flow:                   40,     4140,       47,     3081,     8451,        0
+ip6flow:                   64,     4118,        0,        0,        0,        0
+SWAPMETA:                 276,   121576,        0,        0,        0,        0
+Mountpoints:              644,        0,        5,       13,        5,        0
+FFS inode:                116,        0,    10135,      260,    14118,        0
+FFS1 dinode:              128,        0,        0,        0,        0,        0
+FFS2 dinode:              256,        0,    10135,      155,    14118,        0
+
+|------------------------- [           netstat -m ] -------------------------|
+1034/2821/3855 mbufs in use (current/cache/total)
+1033/2359/3392/102400 mbuf clusters in use (current/cache/total/max)
+1032/1913 mbuf+clusters out of packet secondary zone in use (current/cache)
+0/104/104/100000 4k (page size) jumbo clusters in use (current/cache/total/max)
+0/0/0/6400 9k jumbo clusters in use (current/cache/total/max)
+0/0/0/3200 16k jumbo clusters in use (current/cache/total/max)
+2372K/5839K/8211K bytes allocated to network (current/cache/total)
+0/0/0 requests for mbufs denied (mbufs/clusters/mbuf+clusters)
+0/0/0 requests for jumbo clusters denied (4k/9k/16k)
+0/6/10000 sfbufs in use (current/peak/max)
+0 requests for sfbufs denied
+0 requests for sfbufs delayed
+0 requests for I/O initiated by sendfile
+0 calls to protocol drain routines
+|------------------------- [           netstat -s ] -------------------------|
+tcp:
+	444043 packets sent
+		29291 data packets (24055976 bytes)
+		16260 data packets (12055107 bytes) retransmitted
+		239 data packets unnecessarily retransmitted
+		0 resends initiated by MTU discovery
+		401402 ack-only packets (0 delayed)
+		0 URG only packets
+		0 window probe packets
+		880 window update packets
+		9597 control packets
+	784924 packets received
+		32118 acks (for 17448679 bytes)
+		7614 duplicate acks
+		2 acks for unsent data
+		29018 packets (20069946 bytes) received in-sequence
+		181 completely duplicate packets (81330 bytes)
+		24 old duplicate packets
+		5 packets with some dup. data (2887 bytes duped)
+		3389 out-of-order packets (1275816 bytes)
+		5 packets (1 byte) of data after window
+		1 window probe
+		239 window update packets
+		98 packets received after close
+		267 discarded for bad checksums
+		0 discarded for bad header offset fields
+		0 discarded because packet too short
+		65 discarded due to memory problems
+	1635 connection requests
+	13868 connection accepts
+	0 bad connection attempts
+	0 listen queue overflows
+	61459 ignored RSTs in the windows
+	15425 connections established (including accepts)
+	12020 connections closed (including 4330 drops)
+		285 connections updated cached RTT on close
+		315 connections updated cached RTT variance on close
+		197 connections updated cached ssthresh on close
+	64 embryonic connections dropped
+	16992 segments updated rtt (of 22936 attempts)
+	17101 retransmit timeouts
+		0 connections dropped by rexmit timeout
+	0 persist timeouts
+		0 connections dropped by persist timeout
+	0 Connections (fin_wait_2) dropped because of timeout
+	63 keepalive timeouts
+		0 keepalive probes sent
+		63 connections dropped by keepalive
+	489 correct ACK header predictions
+	18833 correct data packet header predictions
+	350937 syncache entries added
+		256226 retransmitted
+		15327 dupsyn
+		1407 dropped
+		13868 completed
+		0 bucket overflow
+		0 cache overflow
+		275454 reset
+		61424 stale
+		0 aborted
+		0 badack
+		0 unreach
+		0 zone failures
+	352344 cookies sent
+	94 cookies received
+	52 SACK recovery episodes
+	87 segment rexmits in SACK recovery episodes
+	94896 byte rexmits in SACK recovery episodes
+	1309 SACK options (SACK blocks) received
+	906 SACK options (SACK blocks) sent
+	0 SACK scoreboard overflow
+	0 packets with ECN CE bit set
+	0 packets with ECN ECT(0) bit set
+	0 packets with ECN ECT(1) bit set
+	0 successful ECN handshakes
+	0 times ECN reduced the congestion window
+udp:
+	309 datagrams received
+	0 with incomplete header
+	0 with bad data length field
+	0 with bad checksum
+	0 with no checksum
+	0 dropped due to no socket
+	0 broadcast/multicast datagrams undelivered
+	0 dropped due to full socket buffers
+	0 not for hashed pcb
+	309 delivered
+	358 datagrams output
+	0 times multicast source filter matched
+sctp:
+	0 input packets
+		0 datagrams
+		0 packets that had data
+		0 input SACK chunks
+		0 input DATA chunks
+		0 duplicate DATA chunks
+		0 input HB chunks
+		0 HB-ACK chunks
+		0 input ECNE chunks
+		0 input AUTH chunks
+		0 chunks missing AUTH
+		0 invalid HMAC ids received
+		0 invalid secret ids received
+		0 auth failed
+		0 fast path receives all one chunk
+		0 fast path multi-part data
+	0 output packets
+		0 output SACKs
+		0 output DATA chunks
+		0 retransmitted DATA chunks
+		0 fast retransmitted DATA chunks
+		0 FR's that happened more than once to same chunk
+		0 intput HB chunks
+		0 output ECNE chunks
+		0 output AUTH chunks
+		0 ip_output error counter
+	Packet drop statistics:
+		0 from middle box
+		0 from end host
+		0 with data
+		0 non-data, non-endhost
+		0 non-endhost, bandwidth rep only
+		0 not enough for chunk header
+		0 not enough data to confirm
+		0 where process_chunk_drop said break
+		0 failed to find TSN
+		0 attempt reverse TSN lookup
+		0 e-host confirms zero-rwnd
+		0 midbox confirms no space
+		0 data did not match TSN
+		0 TSN's marked for Fast Retran
+	Timeouts:
+		3 iterator timers fired
+		0 T3 data time outs
+		0 window probe (T3) timers fired
+		0 INIT timers fired
+		0 sack timers fired
+		0 shutdown timers fired
+		0 heartbeat timers fired
+		0 a cookie timeout fired
+		0 an endpoint changed its cookiesecret
+		0 PMTU timers fired
+		0 shutdown ack timers fired
+		0 shutdown guard timers fired
+		0 stream reset timers fired
+		0 early FR timers fired
+		0 an asconf timer fired
+		0 auto close timer fired
+		0 asoc free timers expired
+		0 inp free timers expired
+	0 packet shorter than header
+	0 checksum error
+	0 no endpoint for port
+	0 bad v-tag
+	0 bad SID
+	0 no memory
+	0 number of multiple FR in a RTT window
+	0 RFC813 allowed sending
+	0 RFC813 does not allow sending
+	0 times max burst prohibited sending
+	0 look ahead tells us no memory in interface
+	0 numbers of window probes sent
+	0 times an output error to clamp down on next user send
+	0 times sctp_senderrors were caused from a user
+	0 number of in data drops due to chunk limit reached
+	0 number of in data drops due to rwnd limit reached
+	0 times a ECN reduced the cwnd
+	0 used express lookup via vtag
+	0 collision in express lookup
+	0 times the sender ran dry of user data on primary
+	0 same for above
+	0 sacks the slow way
+	0 window update only sacks sent
+	0 sends with sinfo_flags !=0
+	0 unordered sends
+	0 sends with EOF flag set
+	0 sends with ABORT flag set
+	0 times protocol drain called
+	0 times we did a protocol drain
+	0 times recv was called with peek
+	0 cached chunks used
+	0 cached stream oq's used
+	0 unread messages abandonded by close
+	0 send burst avoidance, already max burst inflight to net
+	0 send cwnd full avoidance, already max burst inflight to net
+	0 number of map array over-runs via fwd-tsn's
+ip:
+	47021555 total packets received
+	0 bad header checksums
+	0 with size smaller than minimum
+	0 with data size < data length
+	0 with ip length > max ip packet size
+	0 with header length < data size
+	0 with data length < header length
+	0 with bad options
+	0 with incorrect version number
+	0 fragments received
+	0 fragments dropped (dup or out of space)
+	0 fragments dropped after timeout
+	0 packets reassembled ok
+	785233 packets for this host
+	11 packets for unknown/unsupported protocol
+	0 packets forwarded (0 packets fast forwarded)
+	0 packets not forwardable
+	0 packets received for unknown multicast group
+	0 redirects sent
+	799118 packets sent from this host
+	0 packets sent with fabricated ip header
+	0 output packets dropped due to no bufs, etc.
+	0 output packets discarded due to no route
+	0 output datagrams fragmented
+	0 fragments created
+	0 datagrams that can't be fragmented
+	0 tunneling packets that can't find gif
+	0 datagrams with bad address in header
+icmp:
+	0 calls to icmp_error
+	0 errors not generated in response to an icmp message
+	0 messages with bad code fields
+	0 messages less than the minimum length
+	0 messages with bad checksum
+	0 messages with bad length
+	0 multicast echo requests ignored
+	0 multicast timestamp requests ignored
+	Input histogram:
+		destination unreachable: 11
+	0 message responses generated
+	0 invalid return addresses
+	0 no return routes
+	ICMP address mask responses are disabled
+igmp:
+	0 messages received
+	0 messages received with too few bytes
+	0 messages received with wrong TTL
+	0 messages received with bad checksum
+	0 V1/V2 membership queries received
+	0 V3 membership queries received
+	0 membership queries received with invalid field(s)
+	0 general queries received
+	0 group queries received
+	0 group-source queries received
+	0 group-source queries dropped
+	0 membership reports received
+	0 membership reports received with invalid field(s)
+	0 membership reports received for groups to which we belong
+	0 V3 reports received without Router Alert
+	0 membership reports sent
+pfsync:
+	0 packets received (IPv4)
+	0 packets received (IPv6)
+		0 packets discarded for bad interface
+		0 packets discarded for bad ttl
+		0 packets shorter than header
+		0 packets discarded for bad version
+		0 packets discarded for bad HMAC
+		0 packets discarded for bad action
+		0 packets discarded for short packet
+		0 states discarded for bad values
+		0 stale states
+		0 failed state lookup/inserts
+	0 packets sent (IPv4)
+	0 packets sent (IPv6)
+		0 send failed due to mbuf memory error
+		0 send error
+ip6:
+	0 total packets received
+	0 with size smaller than minimum
+	0 with data size < data length
+	0 with bad options
+	0 with incorrect version number
+	0 fragments received
+	0 fragments dropped (dup or out of space)
+	0 fragments dropped after timeout
+	0 fragments that exceeded limit
+	0 packets reassembled ok
+	0 packets for this host
+	0 packets forwarded
+	0 packets not forwardable
+	0 redirects sent
+	0 packets sent from this host
+	0 packets sent with fabricated ip header
+	0 output packets dropped due to no bufs, etc.
+	13 output packets discarded due to no route
+	0 output datagrams fragmented
+	0 fragments created
+	0 datagrams that can't be fragmented
+	0 packets that violated scope rules
+	0 multicast packets which we don't join
+	Mbuf statistics:
+		0 one mbuf
+		0 one ext mbuf
+		0 two or more ext mbuf
+	0 packets whose headers are not continuous
+	0 tunneling packets that can't find gif
+	0 packets discarded because of too many headers
+	0 failures of source address selection
+	Source addresses selection rule applied:
+icmp6:
+	0 calls to icmp6_error
+	0 errors not generated in response to an icmp6 message
+	0 errors not generated because of rate limitation
+	0 messages with bad code fields
+	0 messages < minimum length
+	0 bad checksums
+	0 messages with bad length
+	Histogram of error messages to be generated:
+		0 no route
+		0 administratively prohibited
+		0 beyond scope
+		0 address unreachable
+		0 port unreachable
+		0 packet too big
+		0 time exceed transit
+		0 time exceed reassembly
+		0 erroneous header field
+		0 unrecognized next header
+		0 unrecognized option
+		0 redirect
+		0 unknown
+	0 message responses generated
+	0 messages with too many ND options
+	0 messages with bad ND options
+	0 bad neighbor solicitation messages
+	0 bad neighbor advertisement messages
+	0 bad router solicitation messages
+	0 bad router advertisement messages
+	0 bad redirect messages
+	0 path MTU changes
+rip6:
+	0 messages received
+	0 checksum calculations on inbound
+	0 messages with bad checksum
+	0 messages dropped due to no socket
+	0 multicast messages dropped due to no socket
+	0 messages dropped due to full socket buffers
+	0 delivered
+	0 datagrams output
+|------------------------- [           pfctl -s q ] -------------------------|
+|------------------------- [           pfctl -s r ] -------------------------|
+scrub in all fragment reassemble
+block drop all
+block drop in log quick on ! lo0 inet6 from ::1 to any
+block drop in log quick on ! lo0 inet from 127.0.0.0/8 to any
+block drop in log quick on ! re0 inet from 92.243.77.0/24 to any
+block drop in log quick inet from 92.243.77.226 to any
+block return-rst out on re0 proto tcp all
+block return-rst in on re0 proto tcp all
+block return-icmp(port-unr, port-unr) out on re0 proto udp all
+block return-icmp(port-unr, port-unr) in on re0 proto udp all
+block drop quick proto tcp all flags FPU/FSRPAUEW
+block drop quick proto tcp all flags FSRPAUEW/FSRPAUEW
+block drop quick proto tcp all flags FSRAU/FSRPAUEW
+block drop quick proto tcp all flags /FSRPAUEW
+block drop quick proto tcp all flags SR/SR
+block drop quick proto tcp all flags FS/FS
+block drop in quick from any os "NMAP" to any
+pass out proto tcp all flags S/SA keep state
+pass out proto udp all keep state
+pass in inet proto tcp from any to 92.243.77.226 port > 1000 flags S/SA keep state
+pass in inet proto tcp from ! 92.243.77.226 to 92.243.77.226 port = http flags S/SA keep state (max 10000, source-track rule, max-src-conn 5, max-src-conn-rate 30/10, max-src-nodes 10000, overload <ban> flush global, tcp.established 15, tcp.closing 3, tcp.finwait 3, adaptive.start 6000, adaptive.end 12000, src.track 10)
+block drop in from <ban> to any
+pass in from <white> to any flags S/SA keep state (tcp.established 86400)
+pass out from any to <white> flags S/SA keep state
+|------------------------- [        pfctl -s i -v ] -------------------------|
+Status: Enabled for 0 days 00:58:53           Debug: Urgent
+
+Hostid:   0xb09e5a94
+Checksum: 0x13550283955b49d23fe154f7b295651c
+
+State Table                          Total             Rate
+  current entries                     1012               
+  searches                        47671315        13493.2/s
+  inserts                           361011          102.2/s
+  removals                          359999          101.9/s
+Source Tracking Table
+  current entries                        9               
+  searches                          447345          126.6/s
+  inserts                             5920            1.7/s
+  removals                            5911            1.7/s
+Counters
+  match                           46618123        13195.1/s
+  bad-offset                             0            0.0/s
+  fragment                               0            0.0/s
+  short                                  0            0.0/s
+  normalize                             79            0.0/s
+  memory                             88562           25.1/s
+  bad-timestamp                          0            0.0/s
+  congestion                             0            0.0/s
+  ip-option                              0            0.0/s
+  proto-cksum                          267            0.1/s
+  state-mismatch                      1886            0.5/s
+  state-insert                           0            0.0/s
+  state-limit                            0            0.0/s
+  src-limit                           1674            0.5/s
+  synproxy                               0            0.0/s
+Limit Counters
+  max states per rule                    0            0.0/s
+  max-src-states                         0            0.0/s
+  max-src-nodes                          0            0.0/s
+  max-src-conn                        1674            0.5/s
+  max-src-conn-rate                      0            0.0/s
+  overload table insertion            1674            0.5/s
+  overload flush states               1674            0.5/s
+|------------------------- [             pfctl -m ] -------------------------|
+|------------------------- [        pfctl -s I -v ] -------------------------|
+all
+lo
+lo0
+pflog
+pflog0
+pfsync
+pfsync0
+plip0
+re0

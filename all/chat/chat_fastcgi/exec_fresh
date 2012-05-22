@@ -1,0 +1,4 @@
+EXEC='curl -q -s -bmyproject=C81E728D9D4C2F636F067F89CA4179E5102819113C7E81A66C8BF  -d'
+URL='game/cgi-bin/chat.fcgi'
+echo "Fresh"
+$EXEC "call=fresh" $URL 

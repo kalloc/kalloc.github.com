@@ -1,0 +1,1 @@
+/www/site/daedalus.ru/code/all/ispcp_debian.sh

@@ -1,0 +1,142 @@
+function init_index(){
+    
+    $('load').set('tween',{
+	duration:1500,
+	onComplete:function() {
+	    $('login').fade('show') ;
+	    if(js == 'login_error') {
+		$('login_error').fade('show') ;
+	    }
+	}
+    }).fade('out');
+    document.title=document.title.replace(/ \([^)]+\)$/,"");
+
+    $('login_form').addEvent('submit', function(e) {
+    	e.stop();
+	var request = new Request.JSON({
+		url: '/?json',
+		data: {login:$('login_input').value},
+		onComplete: function(json) {
+		    if(json.content) {
+			$('content').innerHTML=json.content;
+		    } 
+		    if (json.js) {
+			eval(json.js);
+		    }
+		}
+	}).send();
+    });
+
+    
+    
+}
+
+
+
+
+function main_index(){
+    
+    $('load').set('tween',{
+	duration:1500,
+	onComplete:function() {
+	    $('main').fade('show') ;
+	}
+    }).fade('out');
+    document.title=document.title.replace(/ \([^)]+\)$/,"");
+}
+
+function resize_index () {
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+Events:addEvent('domready', function() {
+if(typeof(resize) == "string" && typeof(window[resize]) == "function") {
+    Events:addEvent('resize', window[resize]);
+    window[resize]();
+}
+if(typeof(init) == "string" && typeof(window[init]) == "function") window[init]();
+
+});
+
+
+
+window.size = function()
+{
+	var w = 0;
+	var h = 0;
+
+	//IE
+	if(!window.innerWidth)
+	{
+		//strict mode
+		if(!(document.documentElement.clientWidth == 0))
+		{
+			w = document.documentElement.clientWidth;
+			h = document.documentElement.clientHeight;
+		}
+		//quirks mode
+		else
+		{
+			w = document.body.clientWidth;
+			h = document.body.clientHeight;
+		}
+	}
+	//w3c
+	else
+	{
+		w = window.innerWidth;
+		h = window.innerHeight;
+	}
+	return {width:w,height:h};
+}
+
+window.center = function()
+{
+	var hWnd = (arguments[0] != null) ? arguments[0] : {width:0,height:0};
+
+	var _x = 0;
+	var _y = 0;
+	var offsetX = 0;
+	var offsetY = 0;
+
+	//IE
+	if(!window.pageYOffset)
+	{
+		//strict mode
+		if(!(document.documentElement.scrollTop == 0))
+		{
+			offsetY = document.documentElement.scrollTop;
+			offsetX = document.documentElement.scrollLeft;
+		}
+		//quirks mode
+		else
+		{
+			offsetY = document.body.scrollTop;
+			offsetX = document.body.scrollLeft;
+		}
+	}
+	//w3c
+	else
+	{
+		offsetX = window.pageXOffset;
+		offsetY = window.pageYOffset;
+	}
+
+	_x = ((this.size().width-hWnd.width)/2)+offsetX;
+	_y = ((this.size().height-hWnd.height)/2)+offsetY;
+
+	return{x:_x,y:_y};
+}

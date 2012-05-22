@@ -1,0 +1,15 @@
+pid: "/lj/run.pid"
+port: 8081
+gid: 1118
+uid: 1116
+debug: 0
+
+static : "/lj/static/"
+actions : [
+	{
+        limit: 5,
+        path: "lj",
+	    name: "LJ",
+	},
+]
+

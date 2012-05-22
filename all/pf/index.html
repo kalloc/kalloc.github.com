@@ -1,0 +1,130 @@
+<pre>
+1. Настройка PF
+
+Должен быть доступен pf - по умолчанию доступен 
+пишем в /etc/rc.conf
+<blockquote>
+pf_enable="YES"
+pf_rules="/etc/pf.conf"         
+pf_flags=""                    
+pflog_enable="YES"
+pflog_logfile="/var/log/pflog"  
+pflog_flags="" 
+</blockquote>
+
+пишем в /etc/pf.conf (<a href="pf.conf.txt">скачать</a>)
+
+<blockquote>
+table &lt;ban&gt; persist file "/etc/pf.ban"
+table &lt;white&gt; persist file "/etc/pf.white"
+table &lt;www&gt; persist file "/etc/pf.www"
+
+set optimization aggressive
+set timeout { interval 10, frag 30 }
+set timeout { tcp.first 30, tcp.opening 30, tcp.established 30 }
+set timeout { tcp.closing 10, tcp.finwait 10, tcp.closed 10 }
+set timeout { udp.first 30, udp.single 30, udp.multiple 30 }
+set timeout { icmp.first 20, icmp.error 10 }
+set timeout { other.first 30, other.single 30, other.multiple 60 }
+set timeout { adaptive.start 5000, adaptive.end 10000 }
+set limit { states 10000, frags 5000 }
+set skip on lo0
+set block-policy drop
+scrub in all
+block in all
+
+#accept keep state
+pass out proto { tcp, udp } all keep state
+pass in proto tcp from any to port {25,953} keep state
+pass in proto {tcp,udp} from any to port 53 keep state
+pass in inet proto tcp from any to any port &gt; 50000 keep state
+pass quick inet proto tcp from any to  port {21,110,143} flags S/SA keep state (source-track rule, max-src-conn 3)
+chocho ="( max 4000, max-src-nodes 4000,max-src-states 30,max-src-conn 30,source-track rule,max-src-conn-rate 30/15, overload &lt;ban&gt; flush global, tcp.established 15, tcp.closing 3,tcp.finwait 3)"
+pass in proto tcp to port 80 flags S/SA keep state $chocho
+block in from &lt;ban&gt;
+pass in proto tcp from &lt;www&gt; to port 80 keep state 
+pass in  from &lt;white&gt; to any keep state ( tcp.established 86400 )
+pass out from any to &lt;white&gt;  keep state
+</blockquote>
+
+создать файл /etc/pf.white с списком айпи которым разрешен абсолютный доступ
+файл /etc/pf.www (<a href="pf.www.txt">скачать</a>) кто имеет доступ  к www даже тогда когда его забанили из-за превышение количества запросов(поисковики)
+
+
+и файл /etc/pf.ban с теми кто всегда должен быть забанен
+
+
+<blockquote>
+pfctl -Tl -f /etc/pf.conf #проверка
+pfctl -f /etc/pf.conf #загрузка
+pfctl -e #активация
+</blockquote>
+
+
+
+
+
+
+2. Мега скрипты в связке с NGINX
+
+
+в наличие арсенал из 3 скриптов
+parser.pl (<a href="parser.txt">скачать</a>) - парсит лог nginx'а на предмет количества запросов (по умолчанию 50) и банит тех кто больше чем 50 раз запрашивал
+parser_fifo.pl (<a href="parser_fifo.txt">скачать</a>) - висит в бэкграунде и обрабатывает ошибки от nginx'а, тоже банит
+parser_clean.pl (<a href="parser_clean.txt">скачать</a>) - парсит  статистику PF на предмет количества пакетов отправленных с этого айпи, если их мало (меньще 10) с предыдущего запуска скрипта то разблокирует
+
+
+запускается все это дело кроном
+<blockquote>
+*/1	*	*	*	*	root	/usr/bin/perl /root/<a href="parser.txt">parser.pl</a>  >> /tmp/parser 2>&1
+*/1	*	*	*	*	root	/usr/bin/perl /root/<a href="parser_fifo.txt">parser_fifo.pl</a>  >> /tmp/parser_fifo 2>&1
+</blockquote>
+
+заметьте что если сделать период запуска для parser.pl больше минуты то есть вероятность что нормальный пользователь пошлет за час 60 запросов
+
+
+3. настройка nginx
+
+    добавить настройку для ограничения количества коннектов  в http { 
+<blockquote>
+    log_format dump  '$http_host $remote_addr - [$time_local] "$request" '
+	' $status $body_bytes_sent "$http_referer" "$http_user_agent"'
+	'  "$http_host" $request_time "$http_x_forwarded_for" "$http_via" "$gzip_ratio"';
+    limit_req_zone  $binary_remote_addr  zone=html:10m rate=8r/s;
+    perl_modules  perl/;
+    perl_require  <a href="perl/module.pm">module.pm</a>;    
+</blockquote>
+
+    
+    в настройках server прописать  какой из настроек будет дейстовать 
+<blockquote>
+      limit_req   zone=html  burst=10  nodelay;
+</blockquote>
+    
+    !!!и финт!!!!
+    указать страницу для ошибок
+    
+<blockquote>
+    error_page   503  /overload.html;
+</blockquote>
+    и локейшен для неё
+    
+<blockquote>
+    location  /overload.html {
+	root   /usr/local/www/nginx/;
+	ssi on;
+	perl antiddos::handler;
+    }
+</blockquote>
+    соотвественно этот файл должен лежать в /usr/local/www/nginx
+    алгоритм такой, ддосер обламывается nginx'ом  и ему показывается overload.html
+    при этом nginx    посылает сообщение.
+    на другой стороне наш перл скрипт читает и считает количество этих строк
+    если скажем за 10 секунд было больше 5 таких записей то ловится бан
+
+    <a href="nginx.txt">скачать пример для nginx'a</a> (в примере используется еще технология установки кук, для её работы нужно в /usr/local/www/nginx положить файл redirect.html(<a href="redirect.html">скачать</a>) c META refresh на самого себя)
+
+
+//EOTrash
+</pre>
+

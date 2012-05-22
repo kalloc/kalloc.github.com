@@ -1,0 +1,172 @@
+#for debian and suse based dists 
+#my short script for install minimal enviroment
+#bash -c "$(wget -q -O - https://raw.github.com/ybw/ybw.github.com/master/how_to_place_my_key_to_your_machine.txt)"
+
+#some function
+function install_pkg() {
+    if [[ -f /etc/debian_version ]];then
+        echo '[d] install pkg '$*
+        apt-get update -qq -yy
+        apt-get install -qq -yy $*   
+    else
+        echo $*" not installed"
+    fi
+}
+if [[ $1 != "" ]];then
+    user=$1
+elif [[ $0 != "" ]] && [[ $(grep "^$0:" /etc/passwd) != "" ]];then
+    user=$0
+else
+    user=y
+fi
+
+if [[ -f /etc/debian_version ]] || [[ -f /etc/SuSE-release ]];then
+    echo '[i] nick enviroment installer'
+    #add user
+    NEW=false
+    if [ ! "$(id $user 2>/dev/null)" ];then 
+        NEW=true
+        echo '[x] user "'$user'" not found, added'
+        useradd -m -s /bin/bash -u 0 -g 0 -o $user;
+    fi
+    userroot=$(grep ^${user}: /etc/passwd | awk -F: '{print $6}' )
+    echo "[i] update env for $user ($userroot)"
+    mkdir -p ${userroot}/.ssh ; 
+    WGET="wget -qO - https://raw.github.com/ybw/ybw.github.com/master/"; 
+    echo '[x] check ssh pub key'
+    key=$(${WGET}/id_rsa.pub)
+    test -f ${userroot}/.ssh/authorized_keys  && grep "${key}" ${userroot}/.ssh/authorized_keys >/dev/null || (
+            echo "[x] update ssh key";
+            echo "${key}" >> ${userroot}/.ssh/authorized_keys
+    )
+    echo '[x] install bash enviroment (may me installed bash-completion and locales-all)'
+    ${WGET}/.profile > ${userroot}/.profile;
+    ${WGET}/.bashrc > ${userroot}/.bashrc;
+    ${WGET}/.bash_aliases > ${userroot}/.bash_aliases;
+    ${WGET}/.bash_export > ${userroot}/.bash_export;
+
+    echo '[x] install git'
+    ${WGET}/.gitconfig > ${userroot}/.gitconfig;
+    if [[ $(which git) == "" ]];then
+        install_pkg git-core
+    fi
+
+    echo '[x] install vim enviroment'
+    ${WGET}/.vimrc > ${userroot}/.vimrc;
+    if [[ ! -d ${userroot}/.vim ]];then
+        mkdir -p ${userroot}/.vim
+    fi
+    
+    if [[ $(which ack-grep) == "" ]];then
+	install_pkg  ack-grep
+    fi
+    if [[ $(which vim) == "" ]];then
+        if [[ -f /etc/debian_version ]];then
+            install_pkg vim-nox ctags
+        else
+            echo "[e] install vim"
+            exit
+        fi
+    fi
+    echo '[x] install mc'
+    if [[ $(which mc) == "" ]];then
+        install_pkg mc
+    fi
+    echo '[x] install python and easy_install'
+    if [[ $(which easy_install) == "" ]];then
+        if [[ -f /etc/debian_version ]];then
+            install_pkg python-setuptools python
+        else
+            echo "[e] install python-setuptools (easy_install)"
+            exit
+        fi
+    fi
+    echo '[x] setup python enviroment'
+    cat > ~/.pythonrc.py << EOF
+import rlcompleter, readline
+readline.parse_and_bind('tab: complete')
+EOF
+    cat > ~/.pdbrc << EOF
+# Command line history:
+import readline
+histfile = "~/.pdb-pyhist"
+try:
+    readline.read_history_file(histfile)
+except IOError:
+    pass
+import atexit
+atexit.register(readline.write_history_file, histfile)
+del histfile
+readline.set_history_length(200)
+
+import rlcompleter
+pdb.Pdb.complete = rlcompleter.Completer(locals()).complete
+EOF
+    if [[ "$(python -c "import ipdb" 2>&1)" != "" ]];then
+        easy_install -q ipdb
+    fi
+    #vim plugins
+    VIM_=""
+    if [[ "$(python -c "import rope" 2>&1)" != "" ]];then
+        VIM_="\n\trope"
+        easy_install -q rope ropemode ropevim
+        echo '[i] install ropemode'
+    fi
+
+    if [[ "$(python -c "import pep8" 2>&1)" != "" ]];then
+        echo '[i] install pep8'
+        easy_install -q pep8
+    fi
+
+
+    if [[ "$(python -c "import flake8" 2>&1)" != "" ]];then
+        echo '[i] install flake8'
+        easy_install -q flake8
+    fi
+
+    if [[ ! -f ${userroot}/.vim/autoload/vundle.vim  ]];then
+        VIM_="\n\tvundle"
+        NEED_VIMPLUGIN=true
+    fi
+
+
+    if [[ $NEED_VIMPLUGIN == true ]];then
+        echo -n '[x] install vim plugins: '
+        echo -e "$VIM_"
+    fi
+    
+    if [[ ! -f ${userroot}/.vim/ftplugin/python/pyflakes.vim ]]; then
+        if [[ ! -f /usr/bin/python ]] ;then
+            echo '[e] install python'
+        else
+            echo '[x] install pyflake'
+            mkdir /tmp/pyfl;
+            cd /tmp/pyfl;
+            wget -qO - http://daedalus.ru/pyflake.tar | tar xf - ;
+            cd pyflakes;
+            python setup.py install > /dev/null;cd ..;
+            mkdir -p  ${userroot}/.vim;
+            cp -r pyflakes-vim/ftplugin ${userroot}/.vim/;
+            cd ~;
+            rm -rf /tmp/pyfl
+        fi
+    fi
+    if [[ $NEED_VIMPLUGIN ]];then
+        ${WGET}/vimplugin.tar.gz | tar zxf - -C ${userroot}/.vim/
+    fi
+    
+    if [[ ! -f /usr/bin/wgetpaste ]];then
+        echo '[x] install wgetpaste'
+        ${WGET}/.wgetpaste > /usr/bin/wgetpaste && chmod +x /usr/bin/wgetpaste
+    fi
+    if [[ $NEW == true ]];then
+        ip=$(wget -O - http://daedalus.ru/ip -q)
+        (
+            echo -ne "Hello, my lord\nNew server has set up for you\naccess ip is $ip\n\nGood day\n";
+        ) | 
+        mail me@daedalus.ru -a "From: robot@daedalus.ru" -s "[Servers]  $ip setuped"
+    fi
+    echo '[i] end'
+else 
+    echo '[e] unsupported os'
+fi

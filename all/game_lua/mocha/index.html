@@ -1,0 +1,132 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" dir="ltr">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+	<title>Mootools Mocha UI</title>
+	<meta name="description" content="A web applications user interface library built on the Mootools javascript framework" />
+
+	<link rel="stylesheet" href="css/style.css" type="text/css" />
+	<link rel="stylesheet" href="css/mocha.css" type="text/css" />
+	
+	<!--[if IE]>
+		<script type="text/javascript" src="scripts/excanvas-compressed.js"></script>		
+	<![endif]-->
+	
+	<script type="text/javascript" src="scripts/mootools-1.2-core.js"></script>
+	<script type="text/javascript" src="scripts/mootools-1.2-more.js"></script>	
+	
+	<!-- mocha-javascript.php is for development. It is not recommended for live use -->	 
+	<script type="text/javascript" src="scripts/source/Utilities/mocha.js.php"></script>	
+
+	<!-- <script type="text/javascript" src="scripts/mocha.js"></script> -->		
+	<script type="text/javascript" src="scripts/mocha-init.js"></script> 				
+
+</head>
+<body>
+
+<div id="desktop">
+
+<div id="desktopHeader">
+<div id="desktopTitlebarWrapper">
+	<div id="desktopTitlebar">
+		<h1>Mocha UI <span class="version">beta version 0.9</span></h1>
+	</div>
+</div>
+	
+<div id="desktopNavbar">
+<ul>
+	<li><a class="returnFalse" href="">Examples</a>	
+		<ul>
+			<li><a id="ajaxpageLinkCheck" href="pages/lipsum.html">Ajax/XHR Demo</a></li>
+			<li><a id="jsonLink" href="data/json-windows-data.js">Json Demo</a></li>
+			<li><a id="youtubeLinkCheck" href="pages/youtube.html">Iframe: YouTube</a></li>
+			<li><a id="mootoolsLinkCheck" href="http://mootools.net/">Iframe: Mootools</a></li>
+			<li><a id="clockLinkCheck" href="plugins/coolclock/">Widget: Clock</a></li>						
+			<li><a id="parametricsLinkCheck" href="plugins/parametrics/">Window Parametrics</a></li>
+			<li class="divider"><a class="returnFalse arrow-right" href="">Tests</a>
+				<ul>								
+					<li><a id="windoweventsLinkCheck" href="pages/events.html">Window Events</a></li>
+					<li><a id="containertestLinkCheck" href="pages/lipsum.html">Container Test</a></li>
+					<li><a id="accordiantestLinkCheck" href="pages/overview.html">Accordian Test</a></li>
+					<li><a id="iframetestLinkCheck" href="pages/iframetest.html">Iframe Test</a></li>										
+				</ul>
+			</li>					
+			<li class="divider"><a class="returnFalse arrow-right" href="">Starters</a>
+				<ul>
+					<li><a target="_blank" href="no-toolbars.html">No Toolbars</a></li>
+					<li><a target="_blank" href="no-desktop.html">No Desktop</a></li>			
+					<li><a target="_blank" href="modal-only.html">Modal Only</a></li>					
+				</ul>
+			</li>
+		</ul>
+	</li>
+	<li><a class="returnFalse" href="">View</a>
+		<ul>
+			<li><a id="sidebarLinkCheck" href="">Sidebar</a></li>		
+			<li class="divider"><a id="cascadeLink" href="">Cascade Windows</a></li>
+			<li><a id="tileLink" href="">Tile Windows</a></li>			
+			<li><a id="closeLink" href="">Close All Windows</a></li>
+			<li><a id="minimizeLink" href="">Minimize All Windows</a></li>									
+		</ul>
+	</li>
+	<li><a class="returnFalse" href="">Tools</a>
+		<ul>
+			<li><a id="builderLinkCheck" href="plugins/windowform/">Window Builder</a></li>
+		</ul>
+	</li>
+	<li>
+		<a class="returnFalse" href="">Workspace</a>
+		<ul>
+			<li><a id="saveWorkspaceLink" href="">Save Workspace</a></li>
+			<li><a id="loadWorkspaceLink" href="">Load Workspace</a></li>
+		</ul>
+	</li>
+	<li><a class="returnFalse" href="">Help</a>
+		<ul>
+			<li><a id="overviewLinkCheck" href="pages/overview.html">Overview</a></li>
+			<li><a id="featuresLinkCheck" href="pages/features.html">Features</a></li>		
+			<li class="divider"><a target="_blank" href="http://mochaui.com/docs/">Documentation</a></li>			
+			<li class="divider"><a id="aboutLinkCheck" href="pages/about.html">About</a></li>
+		</ul>	
+	</li>
+</ul>
+</div><!-- desktopNavbar end -->
+</div><!-- desktopHeader end -->
+
+<div id="dockWrapper">
+	<div id="dock">
+		<div id="dockPlacement"></div>
+		<div id="dockAutoHide"></div>
+		<div id="dockSort"><div id="dockClear" class="clear"></div></div>		
+	</div>
+</div>
+
+<div id="sidebarWrapper">
+	<div id="sidebar">
+		<div id="sidebarContentWrapper">	
+			<div id="sidebarContent">
+			<p>Sidebar content goes here.</p>			
+	
+			</div>
+		</div>	
+	</div>
+	<div id="sidebarHandle">
+		<div id="sidebarControl" class="columnControlWrapper">
+			<div class="columnControl"></div>
+		</div>	
+	</div>
+</div>
+
+<div id="pageWrapper">
+	<div id="page">
+
+	<p>Page content goes here.</p>
+	
+	</div><!-- page end -->
+</div><!-- pageWrapper end -->
+
+</div><!-- desktop end -->
+
+</body>
+</html>

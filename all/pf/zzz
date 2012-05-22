@@ -1,0 +1,61 @@
+#0. 
+ext_if          = "em0"
+lo              = "lo0"
+tcp_svc         = "ssh ftp domain pop3 imap"
+udp_svc         = "domain"
+chocho ="( max 4000, max-src-nodes 4000,max-src-states 30,max-src-conn 30,source-track rule,max-src-conn-rate 30/15, overload <ban> flush global, tcp.established 15, tcp.closing 3,tcp.finwait 3)"
+
+
+#1.set variables 
+set fingerprints "/etc/pf.os"
+set loginterface $ext_if
+set block-policy drop
+set quick skip on lo0
+scrub in on ! $lo all fragment reassemble
+
+
+#2.table 
+rdr-anchor "ftp-proxy/*"
+nat-anchor "ftp-proxy/*"
+table <ban> persist file "/etc/pf.ban"
+table <white> persist file "/etc/pf.white"
+table <www> persist file "/etc/pf.www"
+
+
+
+
+
+
+#3.anchor start
+anchor "ftp-proxy/*"
+block on $ext_if
+#4.ALTQ not work in FreeBSD
+
+#5. Nat 
+
+
+
+#6.rdr .....
+
+
+
+#7.
+
+
+pass out all 
+
+
+
+
+block from <ban> to any
+
+pass in proto tcp to port 80 flags S/SA keep state $chocho
+pass in proto tcp from <www> to port 80 keep state 
+pass in proto tcp from any to port $tcp_svc 
+pass in proto udp from any to port $udp_svc
+
+
+
+block in all
+block out all
+

@@ -1,0 +1,57 @@
+#!/usr/bin/perl
+
+
+my $ret,$run;
+$flag=0;
+opendir(PROC,"/proc") or die "Unable to open /proc:$!\n";
+while (defined($_= readdir(PROC))){
+        next if ($_ eq "." or $_ eq "..");
+        next unless /^\d+$/; # filter out any random non-pid files
+	open(PID,"/proc/$_/cmdline");
+	my $cmd=<PID>;
+	$flag+=1 if($cmd =~ m/\/parser_clean.pl/);
+	close(PID);
+}
+closedir(PROC);
+exit(0) if($flag>2) ;
+
+
+my $result=`pfctl -q -t ban -T show -v`;
+my @res=split("\n",$result);
+my $first=0;
+my $IPtable={};
+my $ip="";
+my $delete="";
+my $add="";
+for $key (0..@res) {
+    $first++;
+    if($res[$key] =~ m/^\s+[0-9]+/) {
+	$res[$key] =~ s/^\s+//;
+	$ip=$res[$key];
+	$first=0;
+	next;
+    }
+
+    if($first == 2) {
+	$res[$key] =~ s/.+\s+\[ Packets:\s+([0-9]+).+/$1/ ;
+	$IPtable{$ip}=$res[$key];
+    }
+    
+}
+
+for $key (keys(%IPtable)) {
+    if($IPtable{$key} < 10) {
+	print "clear $key\n";
+        $delete.=" $key";
+    }
+
+}
+
+
+if ($delete != "") {
+    system("pfctl -q -t ban -T delete $delete");
+    system("pfctl -q -t ban -T zero");
+    system("pfctl -q -o");
+    system("pfctl -t ban -T show -q | awk '{print \$1}' > /etc/pf.ban");
+    #system("killall -HUP nginx");
+}

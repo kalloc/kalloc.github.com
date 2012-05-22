@@ -1,0 +1,8 @@
+for type in 468x60 100x100 30x30; do
+    mkdir $type;
+    for file in png gif html txt jpg jpeg;do 
+	for i in `seq 0 1`;do 
+	    echo "dsdsdsd ${type} /  ${i} ${file}" > ${type}/${i}.${file};
+	done; 
+    done; 
+done

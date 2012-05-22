@@ -1,0 +1,52 @@
+8
+
+dir
+63
+file:///storage/svn/foton1ck/templates
+file:///storage/svn
+
+
+
+2007-10-30T16:09:19.481296Z
+40
+root
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+ace5321e-b894-401a-9cb8-ff45ea5c9a5f
+
+foto_index.qtp
+file
+
+
+
+
+2008-01-25T18:35:01.000000Z
+ff536d0445546c779c3f5e11ef95e4f5
+2007-10-30T16:09:19.481296Z
+40
+root
+
+foto_view.qtp
+file
+
+
+
+
+2008-01-25T18:35:01.000000Z
+87487c619a0bd54fa900afc05606592b
+2007-07-16T12:37:36.871147Z
+26
+root
+

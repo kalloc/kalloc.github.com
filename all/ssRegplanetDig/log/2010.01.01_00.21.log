@@ -1,0 +1,264 @@
+[21:21:01 1264972861] [DEBUG] http.c:http_dig() connect from 127.0.0.1:43587 try /dig?dig=ya.ru&query=NS
+[21:21:01 1264972861] [DEBUG] dig.c:OnEventDNSTask() task 0x8260220
+[21:21:01 1264972861] [DEBUG] dig.c:DNSTaskResolvCallback() task 0x8260220 0
+[21:21:01 1264972861] [DEBUG] dig.c:DNSTaskResolvCallback() task 0x8260220 2
+[21:21:01 1264972861] [DEBUG] dig.c:DNSTaskResolvCallback() try 2 
+[21:21:01 1264972861] [DEBUG] dig.c:CheckPatternAfterParseAnswer() task 0x8260220 ns5.yandex.ru
+[21:21:01 1264972861] [DEBUG] dig.c:DNSTaskResolvCallback() try 2 
+[21:21:01 1264972861] [DEBUG] dig.c:CheckPatternAfterParseAnswer() task 0x8260220 ns1.yandex.ru
+[21:21:01 1264972861] [DEBUG] dig.c:OnEventDNSTask() callback 0x8260220
+[21:21:01 1264972861] [DEBUG] http.c:addDigReport_cb() task 0x8260220 0x8260018
+[21:21:01 1264972861] [DEBUG] http.c:addDigReport_cb() NS
+
+[21:21:01 1264972861] [DEBUG] http.c:http_dig() connect from 127.0.0.1:43587 try /dig?dig=ya.ru&query=NS
+[21:21:01 1264972861] [DEBUG] dig.c:OnEventDNSTask() task 0x8260598
+[21:21:01 1264972861] [DEBUG] dig.c:DNSTaskResolvCallback() task 0x8260598 0
+[21:21:01 1264972861] [DEBUG] dig.c:DNSTaskResolvCallback() task 0x8260598 2
+[21:21:01 1264972861] [DEBUG] dig.c:DNSTaskResolvCallback() try 2 
+[21:21:01 1264972861] [DEBUG] dig.c:CheckPatternAfterParseAnswer() task 0x8260598 ns5.yandex.ru
+[21:21:01 1264972861] [DEBUG] dig.c:DNSTaskResolvCallback() try 2 
+[21:21:01 1264972861] [DEBUG] dig.c:CheckPatternAfterParseAnswer() task 0x8260598 ns1.yandex.ru
+[21:21:01 1264972861] [DEBUG] dig.c:OnEventDNSTask() callback 0x8260598
+[21:21:01 1264972861] [DEBUG] http.c:addDigReport_cb() task 0x8260598 0x8260248
+[21:21:01 1264972861] [DEBUG] http.c:addDigReport_cb() NS
+
+[21:21:01 1264972861] [DEBUG] http.c:http_dig() connect from 127.0.0.1:43587 try /dig?dig=ya.ru&query=NS
+[21:21:01 1264972861] [DEBUG] dig.c:OnEventDNSTask() task 0x8260010
+[21:21:01 1264972861] [DEBUG] dig.c:DNSTaskResolvCallback() task 0x8260010 0
+[21:21:01 1264972861] [DEBUG] dig.c:DNSTaskResolvCallback() task 0x8260010 2
+[21:21:01 1264972861] [DEBUG] dig.c:DNSTaskResolvCallback() try 2 
+[21:21:01 1264972861] [DEBUG] dig.c:CheckPatternAfterParseAnswer() task 0x8260010 ns1.yandex.ru
+[21:21:01 1264972861] [DEBUG] dig.c:DNSTaskResolvCallback() try 2 
+[21:21:01 1264972861] [DEBUG] dig.c:CheckPatternAfterParseAnswer() task 0x8260010 ns5.yandex.ru
+[21:21:01 1264972861] [DEBUG] dig.c:OnEventDNSTask() callback 0x8260010
+[21:21:01 1264972861] [DEBUG] http.c:addDigReport_cb() task 0x8260010 0x8260248
+[21:21:01 1264972861] [DEBUG] http.c:addDigReport_cb() NS
+
+[21:21:01 1264972861] [DEBUG] http.c:http_dig() connect from 127.0.0.1:43587 try /dig?dig=ya.ru&query=NS
+[21:21:01 1264972861] [DEBUG] dig.c:OnEventDNSTask() task 0x8260758
+[21:21:01 1264972861] [DEBUG] dig.c:DNSTaskResolvCallback() task 0x8260758 0
+[21:21:01 1264972861] [DEBUG] dig.c:DNSTaskResolvCallback() task 0x8260758 2
+[21:21:01 1264972861] [DEBUG] dig.c:DNSTaskResolvCallback() try 2 
+[21:21:01 1264972861] [DEBUG] dig.c:CheckPatternAfterParseAnswer() task 0x8260758 ns1.yandex.ru
+[21:21:01 1264972861] [DEBUG] dig.c:DNSTaskResolvCallback() try 2 
+[21:21:01 1264972861] [DEBUG] dig.c:CheckPatternAfterParseAnswer() task 0x8260758 ns5.yandex.ru
+[21:21:01 1264972861] [DEBUG] dig.c:OnEventDNSTask() callback 0x8260758
+[21:21:01 1264972861] [DEBUG] http.c:addDigReport_cb() task 0x8260758 0x8260248
+[21:21:01 1264972861] [DEBUG] http.c:addDigReport_cb() NS
+
+[21:21:01 1264972861] [DEBUG] http.c:http_dig() connect from 127.0.0.1:43587 try /dig?dig=ya.ru&query=NS
+[21:21:01 1264972861] [DEBUG] dig.c:OnEventDNSTask() task 0x82605d8
+[21:21:01 1264972861] [DEBUG] dig.c:DNSTaskResolvCallback() task 0x82605d8 0
+[21:21:01 1264972861] [DEBUG] dig.c:DNSTaskResolvCallback() task 0x82605d8 2
+[21:21:01 1264972861] [DEBUG] dig.c:DNSTaskResolvCallback() try 2 
+[21:21:01 1264972861] [DEBUG] dig.c:CheckPatternAfterParseAnswer() task 0x82605d8 ns5.yandex.ru
+[21:21:01 1264972861] [DEBUG] dig.c:DNSTaskResolvCallback() try 2 
+[21:21:01 1264972861] [DEBUG] dig.c:CheckPatternAfterParseAnswer() task 0x82605d8 ns1.yandex.ru
+[21:21:01 1264972861] [DEBUG] dig.c:OnEventDNSTask() callback 0x82605d8
+[21:21:01 1264972861] [DEBUG] http.c:addDigReport_cb() task 0x82605d8 0x8260248
+[21:21:01 1264972861] [DEBUG] http.c:addDigReport_cb() NS
+
+[21:21:06 1264972866] [DEBUG] http.c:http_dig() connect from 127.0.0.1:43588 try /dig?dig=ya.ru&query=A
+[21:21:06 1264972866] [DEBUG] dig.c:OnEventDNSTask() task 0x95b9238
+[21:21:06 1264972866] [DEBUG] dig.c:DNSTaskResolvCallback() task 0x95b9238 0
+[21:21:06 1264972866] [DEBUG] dig.c:DNSTaskResolvCallback() task 0x95b9238 3
+[21:21:06 1264972866] [DEBUG] dig.c:DNSTaskResolvCallback() try 3 
+[21:21:06 1264972866] [DEBUG] dig.c:CheckPatternAfterParseAnswer() task 0x95b9238 0815584d 0000095b
+[21:21:06 1264972866] [DEBUG] dig.c:DNSTaskResolvCallback() try 3 
+[21:21:06 1264972866] [DEBUG] dig.c:CheckPatternAfterParseAnswer() task 0x95b9238 08869e5d 382e3737
+[21:21:06 1264972866] [DEBUG] dig.c:DNSTaskResolvCallback() try 3 
+[21:21:06 1264972866] [DEBUG] dig.c:CheckPatternAfterParseAnswer() task 0x95b9238 08ccb4d5 312e3339
+[21:21:06 1264972866] [DEBUG] dig.c:OnEventDNSTask() callback 0x95b9238
+[21:21:06 1264972866] [DEBUG] http.c:addDigReport_cb() task 0x95b9238 0x95b9010
+[21:21:06 1264972866] [DEBUG] http.c:addDigReport_cb() A
+
+[21:21:12 1264972872] [DEBUG] http.c:http_dig() connect from 127.0.0.1:43590 try /dig?dig=ya.ru&query=NS
+[21:21:12 1264972872] [DEBUG] dig.c:OnEventDNSTask() task 0x95b8c30
+[21:21:12 1264972872] [DEBUG] dig.c:DNSTaskResolvCallback() task 0x95b8c30 0
+[21:21:12 1264972872] [DEBUG] dig.c:DNSTaskResolvCallback() task 0x95b8c30 2
+[21:21:12 1264972872] [DEBUG] dig.c:DNSTaskResolvCallback() try 2 
+[21:21:12 1264972872] [DEBUG] dig.c:CheckPatternAfterParseAnswer() task 0x95b8c30 ns5.yandex.ru
+[21:21:12 1264972872] [DEBUG] dig.c:DNSTaskResolvCallback() try 2 
+[21:21:12 1264972872] [DEBUG] dig.c:CheckPatternAfterParseAnswer() task 0x95b8c30 ns1.yandex.ru
+[21:21:12 1264972872] [DEBUG] dig.c:OnEventDNSTask() callback 0x95b8c30
+[21:21:12 1264972872] [DEBUG] http.c:addDigReport_cb() task 0x95b8c30 0x95b9418
+[21:21:12 1264972872] [DEBUG] http.c:addDigReport_cb() NS
+
+[21:21:31 1264972891] [DEBUG] http.c:http_dig() connect from 127.0.0.1:43593 try /dig?dig=ya.ru&query=NS
+[21:21:31 1264972891] [DEBUG] dig.c:OnEventDNSTask() task 0x95b9090
+[21:21:31 1264972891] [DEBUG] dig.c:DNSTaskResolvCallback() task 0x95b9090 0
+[21:21:31 1264972891] [DEBUG] dig.c:DNSTaskResolvCallback() task 0x95b9090 2
+[21:21:31 1264972891] [DEBUG] dig.c:DNSTaskResolvCallback() try 2 
+[21:21:31 1264972891] [DEBUG] dig.c:CheckPatternAfterParseAnswer() task 0x95b9090 ns5.yandex.ru
+[21:21:31 1264972891] [DEBUG] dig.c:DNSTaskResolvCallback() try 2 
+[21:21:31 1264972891] [DEBUG] dig.c:CheckPatternAfterParseAnswer() task 0x95b9090 ns1.yandex.ru
+[21:21:31 1264972891] [DEBUG] dig.c:OnEventDNSTask() callback 0x95b9090
+[21:21:31 1264972891] [DEBUG] http.c:addDigReport_cb() task 0x95b9090 0x95b9008
+[21:21:31 1264972891] [DEBUG] http.c:addDigReport_cb() NS
+
+[21:21:31 1264972891] [DEBUG] http.c:http_dig() connect from 127.0.0.1:43593 try /dig?dig=ya.ru&query=NS
+[21:21:31 1264972891] [DEBUG] dig.c:OnEventDNSTask() task 0x95b8ea0
+[21:21:31 1264972891] [DEBUG] dig.c:DNSTaskResolvCallback() task 0x95b8ea0 0
+[21:21:31 1264972891] [DEBUG] dig.c:DNSTaskResolvCallback() task 0x95b8ea0 2
+[21:21:31 1264972891] [DEBUG] dig.c:DNSTaskResolvCallback() try 2 
+[21:21:31 1264972891] [DEBUG] dig.c:CheckPatternAfterParseAnswer() task 0x95b8ea0 ns5.yandex.ru
+[21:21:31 1264972891] [DEBUG] dig.c:DNSTaskResolvCallback() try 2 
+[21:21:31 1264972891] [DEBUG] dig.c:CheckPatternAfterParseAnswer() task 0x95b8ea0 ns1.yandex.ru
+[21:21:31 1264972891] [DEBUG] dig.c:OnEventDNSTask() callback 0x95b8ea0
+[21:21:31 1264972891] [DEBUG] http.c:addDigReport_cb() task 0x95b8ea0 0x95b8ff8
+[21:21:31 1264972891] [DEBUG] http.c:addDigReport_cb() NS
+
+[21:21:36 1264972896] [DEBUG] http.c:http_dig() connect from 127.0.0.1:43594 try /dig?dig=ya.ru&query=A
+[21:21:36 1264972896] [DEBUG] dig.c:OnEventDNSTask() task 0x95b8f28
+[21:21:36 1264972896] [DEBUG] dig.c:DNSTaskResolvCallback() task 0x95b8f28 0
+[21:21:36 1264972896] [DEBUG] dig.c:DNSTaskResolvCallback() task 0x95b8f28 3
+[21:21:36 1264972896] [DEBUG] dig.c:DNSTaskResolvCallback() try 3 
+[21:21:36 1264972896] [DEBUG] dig.c:CheckPatternAfterParseAnswer() task 0x95b8f28 08ccb4d5 0000095b
+[21:21:36 1264972896] [DEBUG] dig.c:DNSTaskResolvCallback() try 3 
+[21:21:36 1264972896] [DEBUG] dig.c:CheckPatternAfterParseAnswer() task 0x95b8f28 0815584d 2e333132
+[21:21:36 1264972896] [DEBUG] dig.c:DNSTaskResolvCallback() try 3 
+[21:21:36 1264972896] [DEBUG] dig.c:CheckPatternAfterParseAnswer() task 0x95b8f28 08869e5d 382e3737
+[21:21:36 1264972896] [DEBUG] dig.c:OnEventDNSTask() callback 0x95b8f28
+[21:21:36 1264972896] [DEBUG] http.c:addDigReport_cb() task 0x95b8f28 0x95b8ea0
+[21:21:36 1264972896] [DEBUG] http.c:addDigReport_cb() A
+
+[21:21:36 1264972896] [DEBUG] http.c:http_dig() connect from 127.0.0.1:43594 try /dig?dig=ya.ru&query=A
+[21:21:36 1264972896] [DEBUG] dig.c:OnEventDNSTask() task 0x95b8c30
+[21:21:36 1264972896] [DEBUG] dig.c:DNSTaskResolvCallback() task 0x95b8c30 0
+[21:21:36 1264972896] [DEBUG] dig.c:DNSTaskResolvCallback() task 0x95b8c30 3
+[21:21:36 1264972896] [DEBUG] dig.c:DNSTaskResolvCallback() try 3 
+[21:21:36 1264972896] [DEBUG] dig.c:CheckPatternAfterParseAnswer() task 0x95b8c30 08869e5d 0000095b
+[21:21:36 1264972896] [DEBUG] dig.c:DNSTaskResolvCallback() try 3 
+[21:21:36 1264972896] [DEBUG] dig.c:CheckPatternAfterParseAnswer() task 0x95b8c30 08ccb4d5 312e3339
+[21:21:36 1264972896] [DEBUG] dig.c:DNSTaskResolvCallback() try 3 
+[21:21:36 1264972896] [DEBUG] dig.c:CheckPatternAfterParseAnswer() task 0x95b8c30 0815584d 2e333132
+[21:21:36 1264972896] [DEBUG] dig.c:OnEventDNSTask() callback 0x95b8c30
+[21:21:36 1264972896] [DEBUG] http.c:addDigReport_cb() task 0x95b8c30 0x95b8df8
+[21:21:36 1264972896] [DEBUG] http.c:addDigReport_cb() A
+
+[21:21:37 1264972897] [DEBUG] http.c:http_dig() connect from 127.0.0.1:43595 try /dig?dig=ya.ru&query=A
+[21:21:37 1264972897] [DEBUG] dig.c:OnEventDNSTask() task 0x95b9948
+[21:21:37 1264972897] [DEBUG] dig.c:DNSTaskResolvCallback() task 0x95b9948 0
+[21:21:37 1264972897] [DEBUG] dig.c:DNSTaskResolvCallback() task 0x95b9948 3
+[21:21:37 1264972897] [DEBUG] dig.c:DNSTaskResolvCallback() try 3 
+[21:21:37 1264972897] [DEBUG] dig.c:CheckPatternAfterParseAnswer() task 0x95b9948 0815584d 0000095b
+[21:21:37 1264972897] [DEBUG] dig.c:DNSTaskResolvCallback() try 3 
+[21:21:37 1264972897] [DEBUG] dig.c:CheckPatternAfterParseAnswer() task 0x95b9948 08869e5d 382e3737
+[21:21:37 1264972897] [DEBUG] dig.c:DNSTaskResolvCallback() try 3 
+[21:21:37 1264972897] [DEBUG] dig.c:CheckPatternAfterParseAnswer() task 0x95b9948 08ccb4d5 312e3339
+[21:21:37 1264972897] [DEBUG] dig.c:OnEventDNSTask() callback 0x95b9948
+[21:21:37 1264972897] [DEBUG] http.c:addDigReport_cb() task 0x95b9948 0x95b98e8
+[21:21:37 1264972897] [DEBUG] http.c:addDigReport_cb() A
+
+[21:21:37 1264972897] [DEBUG] http.c:http_dig() connect from 127.0.0.1:43595 try /dig?dig=ya.ru&query=A
+[21:21:37 1264972897] [DEBUG] dig.c:OnEventDNSTask() task 0x95b92c0
+[21:21:37 1264972897] [DEBUG] dig.c:DNSTaskResolvCallback() task 0x95b92c0 0
+[21:21:37 1264972897] [DEBUG] dig.c:DNSTaskResolvCallback() task 0x95b92c0 3
+[21:21:37 1264972897] [DEBUG] dig.c:DNSTaskResolvCallback() try 3 
+[21:21:37 1264972897] [DEBUG] dig.c:CheckPatternAfterParseAnswer() task 0x95b92c0 08ccb4d5 0000095b
+[21:21:37 1264972897] [DEBUG] dig.c:DNSTaskResolvCallback() try 3 
+[21:21:37 1264972897] [DEBUG] dig.c:CheckPatternAfterParseAnswer() task 0x95b92c0 0815584d 2e333132
+[21:21:37 1264972897] [DEBUG] dig.c:DNSTaskResolvCallback() try 3 
+[21:21:37 1264972897] [DEBUG] dig.c:CheckPatternAfterParseAnswer() task 0x95b92c0 08869e5d 382e3737
+[21:21:37 1264972897] [DEBUG] dig.c:OnEventDNSTask() callback 0x95b92c0
+[21:21:37 1264972897] [DEBUG] http.c:addDigReport_cb() task 0x95b92c0 0x95b8df8
+[21:21:37 1264972897] [DEBUG] http.c:addDigReport_cb() A
+
+[21:21:37 1264972897] [DEBUG] http.c:http_dig() connect from 127.0.0.1:43596 try /dig?dig=ya.ru&query=A
+[21:21:37 1264972897] [DEBUG] dig.c:OnEventDNSTask() task 0x95b8c30
+[21:21:37 1264972897] [DEBUG] dig.c:DNSTaskResolvCallback() task 0x95b8c30 0
+[21:21:37 1264972897] [DEBUG] dig.c:DNSTaskResolvCallback() task 0x95b8c30 3
+[21:21:37 1264972897] [DEBUG] dig.c:DNSTaskResolvCallback() try 3 
+[21:21:37 1264972897] [DEBUG] dig.c:CheckPatternAfterParseAnswer() task 0x95b8c30 08869e5d 0001095b
+[21:21:37 1264972897] [DEBUG] dig.c:DNSTaskResolvCallback() try 3 
+[21:21:37 1264972897] [DEBUG] dig.c:CheckPatternAfterParseAnswer() task 0x95b8c30 08ccb4d5 312e3339
+[21:21:37 1264972897] [DEBUG] dig.c:DNSTaskResolvCallback() try 3 
+[21:21:37 1264972897] [DEBUG] dig.c:CheckPatternAfterParseAnswer() task 0x95b8c30 0815584d 2e333132
+[21:21:37 1264972897] [DEBUG] dig.c:OnEventDNSTask() callback 0x95b8c30
+[21:21:37 1264972897] [DEBUG] http.c:addDigReport_cb() task 0x95b8c30 0x95b8ec8
+[21:21:37 1264972897] [DEBUG] http.c:addDigReport_cb() A
+
+[21:21:37 1264972897] [DEBUG] http.c:http_dig() connect from 127.0.0.1:43596 try /dig?dig=ya.ru&query=A
+[21:21:37 1264972897] [DEBUG] dig.c:OnEventDNSTask() task 0x95b97f8
+[21:21:37 1264972897] [DEBUG] dig.c:DNSTaskResolvCallback() task 0x95b97f8 0
+[21:21:37 1264972897] [DEBUG] dig.c:DNSTaskResolvCallback() task 0x95b97f8 3
+[21:21:37 1264972897] [DEBUG] dig.c:DNSTaskResolvCallback() try 3 
+[21:21:37 1264972897] [DEBUG] dig.c:CheckPatternAfterParseAnswer() task 0x95b97f8 0815584d 382e095b
+[21:21:37 1264972897] [DEBUG] dig.c:DNSTaskResolvCallback() try 3 
+[21:21:37 1264972897] [DEBUG] dig.c:CheckPatternAfterParseAnswer() task 0x95b97f8 08869e5d 382e3737
+[21:21:37 1264972897] [DEBUG] dig.c:DNSTaskResolvCallback() try 3 
+[21:21:37 1264972897] [DEBUG] dig.c:CheckPatternAfterParseAnswer() task 0x95b97f8 08ccb4d5 312e3339
+[21:21:37 1264972897] [DEBUG] dig.c:OnEventDNSTask() callback 0x95b97f8
+[21:21:37 1264972897] [DEBUG] http.c:addDigReport_cb() task 0x95b97f8 0x95b8f18
+[21:21:37 1264972897] [DEBUG] http.c:addDigReport_cb() A
+
+[21:21:41 1264972901] [DEBUG] http.c:http_dig() connect from 127.0.0.1:43597 try /dig?dig=ya.ru&query=A
+[21:21:41 1264972901] [DEBUG] dig.c:OnEventDNSTask() task 0x95b8c30
+[21:21:41 1264972901] [DEBUG] dig.c:DNSTaskResolvCallback() task 0x95b8c30 0
+[21:21:41 1264972901] [DEBUG] dig.c:DNSTaskResolvCallback() task 0x95b8c30 3
+[21:21:41 1264972901] [DEBUG] dig.c:DNSTaskResolvCallback() try 3 
+[21:21:41 1264972901] [DEBUG] dig.c:CheckPatternAfterParseAnswer() task 0x95b8c30 08ccb4d5 0001095b
+[21:21:41 1264972901] [DEBUG] dig.c:DNSTaskResolvCallback() try 3 
+[21:21:41 1264972901] [DEBUG] dig.c:CheckPatternAfterParseAnswer() task 0x95b8c30 0815584d 2e333132
+[21:21:41 1264972901] [DEBUG] dig.c:DNSTaskResolvCallback() try 3 
+[21:21:41 1264972901] [DEBUG] dig.c:CheckPatternAfterParseAnswer() task 0x95b8c30 08869e5d 382e3737
+[21:21:41 1264972901] [DEBUG] dig.c:OnEventDNSTask() callback 0x95b8c30
+[21:21:41 1264972901] [DEBUG] http.c:addDigReport_cb() task 0x95b8c30 0x95b8d90
+[21:21:41 1264972901] [DEBUG] http.c:addDigReport_cb() A
+
+[21:21:41 1264972901] [DEBUG] http.c:http_dig() connect from 127.0.0.1:43597 try /dig?dig=ya.ru&query=A
+[21:21:41 1264972901] [DEBUG] dig.c:OnEventDNSTask() task 0x95b8de0
+[21:21:41 1264972901] [DEBUG] dig.c:DNSTaskResolvCallback() task 0x95b8de0 0
+[21:21:41 1264972901] [DEBUG] dig.c:DNSTaskResolvCallback() task 0x95b8de0 3
+[21:21:41 1264972901] [DEBUG] dig.c:DNSTaskResolvCallback() try 3 
+[21:21:41 1264972901] [DEBUG] dig.c:CheckPatternAfterParseAnswer() task 0x95b8de0 08869e5d 0000095b
+[21:21:41 1264972901] [DEBUG] dig.c:DNSTaskResolvCallback() try 3 
+[21:21:41 1264972901] [DEBUG] dig.c:CheckPatternAfterParseAnswer() task 0x95b8de0 08ccb4d5 312e3339
+[21:21:41 1264972901] [DEBUG] dig.c:DNSTaskResolvCallback() try 3 
+[21:21:41 1264972901] [DEBUG] dig.c:CheckPatternAfterParseAnswer() task 0x95b8de0 0815584d 2e333132
+[21:21:41 1264972901] [DEBUG] dig.c:OnEventDNSTask() callback 0x95b8de0
+[21:21:41 1264972901] [DEBUG] http.c:addDigReport_cb() task 0x95b8de0 0x95b8c98
+[21:21:41 1264972901] [DEBUG] http.c:addDigReport_cb() A
+
+[21:21:41 1264972901] [DEBUG] http.c:http_dig() connect from 127.0.0.1:43597 try /dig?dig=ya.ru&query=A
+[21:21:41 1264972901] [DEBUG] dig.c:OnEventDNSTask() task 0x95b8c80
+[21:21:41 1264972901] [DEBUG] dig.c:DNSTaskResolvCallback() task 0x95b8c80 0
+[21:21:41 1264972901] [DEBUG] dig.c:DNSTaskResolvCallback() task 0x95b8c80 3
+[21:21:41 1264972901] [DEBUG] dig.c:DNSTaskResolvCallback() try 3 
+[21:21:41 1264972901] [DEBUG] dig.c:CheckPatternAfterParseAnswer() task 0x95b8c80 0815584d 0000095b
+[21:21:41 1264972901] [DEBUG] dig.c:DNSTaskResolvCallback() try 3 
+[21:21:41 1264972901] [DEBUG] dig.c:CheckPatternAfterParseAnswer() task 0x95b8c80 08869e5d 382e3737
+[21:21:41 1264972901] [DEBUG] dig.c:DNSTaskResolvCallback() try 3 
+[21:21:41 1264972901] [DEBUG] dig.c:CheckPatternAfterParseAnswer() task 0x95b8c80 08ccb4d5 312e3339
+[21:21:41 1264972901] [DEBUG] dig.c:OnEventDNSTask() callback 0x95b8c80
+[21:21:41 1264972901] [DEBUG] http.c:addDigReport_cb() task 0x95b8c80 0x95b91d8
+[21:21:41 1264972901] [DEBUG] http.c:addDigReport_cb() A
+
+[21:21:41 1264972901] [DEBUG] http.c:http_dig() connect from 127.0.0.1:43597 try /dig?dig=ya.ru&query=A
+[21:21:41 1264972901] [DEBUG] dig.c:OnEventDNSTask() task 0x95b8eb8
+[21:21:41 1264972901] [DEBUG] dig.c:DNSTaskResolvCallback() task 0x95b8eb8 0
+[21:21:41 1264972901] [DEBUG] dig.c:DNSTaskResolvCallback() task 0x95b8eb8 3
+[21:21:41 1264972901] [DEBUG] dig.c:DNSTaskResolvCallback() try 3 
+[21:21:41 1264972901] [DEBUG] dig.c:CheckPatternAfterParseAnswer() task 0x95b8eb8 08ccb4d5 0000095b
+[21:21:41 1264972901] [DEBUG] dig.c:DNSTaskResolvCallback() try 3 
+[21:21:41 1264972901] [DEBUG] dig.c:CheckPatternAfterParseAnswer() task 0x95b8eb8 0815584d 2e333132
+[21:21:41 1264972901] [DEBUG] dig.c:DNSTaskResolvCallback() try 3 
+[21:21:41 1264972901] [DEBUG] dig.c:CheckPatternAfterParseAnswer() task 0x95b8eb8 08869e5d 382e3737
+[21:21:41 1264972901] [DEBUG] dig.c:OnEventDNSTask() callback 0x95b8eb8
+[21:21:41 1264972901] [DEBUG] http.c:addDigReport_cb() task 0x95b8eb8 0x95b91d8
+[21:21:41 1264972901] [DEBUG] http.c:addDigReport_cb() A
+
+[21:21:41 1264972901] [DEBUG] http.c:http_dig() connect from 127.0.0.1:43597 try /dig?dig=ya.ru&query=A
+[21:21:41 1264972901] [DEBUG] dig.c:OnEventDNSTask() task 0x95b9f18
+[21:21:41 1264972901] [DEBUG] dig.c:DNSTaskResolvCallback() task 0x95b9f18 0
+[21:21:41 1264972901] [DEBUG] dig.c:DNSTaskResolvCallback() task 0x95b9f18 3
+[21:21:41 1264972901] [DEBUG] dig.c:DNSTaskResolvCallback() try 3 
+[21:21:41 1264972901] [DEBUG] dig.c:CheckPatternAfterParseAnswer() task 0x95b9f18 08869e5d 0001095b
+[21:21:41 1264972901] [DEBUG] dig.c:DNSTaskResolvCallback() try 3 
+[21:21:41 1264972901] [DEBUG] dig.c:CheckPatternAfterParseAnswer() task 0x95b9f18 08ccb4d5 312e3339
+[21:21:41 1264972901] [DEBUG] dig.c:DNSTaskResolvCallback() try 3 
+[21:21:41 1264972901] [DEBUG] dig.c:CheckPatternAfterParseAnswer() task 0x95b9f18 0815584d 2e333132
+[21:21:41 1264972901] [DEBUG] dig.c:OnEventDNSTask() callback 0x95b9f18
+[21:21:41 1264972901] [DEBUG] http.c:addDigReport_cb() task 0x95b9f18 0x95b91d8
+[21:21:41 1264972901] [DEBUG] http.c:addDigReport_cb() A
+

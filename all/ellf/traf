@@ -1,0 +1,3 @@
+#!/bin/bash
+awk -f traf.awk /var/log/nginx/access.log
+
