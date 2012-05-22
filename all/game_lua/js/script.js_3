@@ -1,0 +1,188 @@
+/*
+ * 
+ * 
+ */
+
+function init_index(){
+    
+    $('load').set('tween',{
+	duration:1500,
+	onComplete:function() {
+	    $('login').fade('show') ;
+	    if(js == 'login_error') {
+		$('login_error').fade('show') ;
+	    }
+	}
+    }).fade('out');
+    document.title=document.title.replace(/ \([^)]+\)$/,"");
+
+    $('login_form').addEvent('submit', function(e) {
+    	e.stop();
+	var request = new Request.JSON({
+		url: '/?json',
+		data: {login:$('login_input').value},
+		onComplete: function(json) {
+		    if(json.content) {
+			$('content').innerHTML=json.content;
+		    } 
+		    if (json.js) {
+			eval(json.js);
+		    }
+		}
+	}).send();
+    });
+
+    
+    
+}
+
+
+
+
+function main_index(){
+    
+    $('load').set('tween',{
+	duration:1500,
+	onComplete:function() {
+	    $('main').fade('show') ;
+	}
+    }).fade('out');
+    document.title=document.title.replace(/ \([^)]+\)$/,"");
+
+}
+
+function resize_index () {
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+Events:addEvent('domready', function() {
+    if(typeof(resize) == "string" && typeof(window[resize]) == "function") {
+	Events:addEvent('resize', window[resize]);
+	window[resize]();
+    }
+    if(typeof(init) == "string" && typeof(window[init]) == "function") window[init]();
+
+});
+
+
+
+window.size = function()
+{
+	var w = 0;
+	var h = 0;
+	if(!window.innerWidth)	{if(!(document.documentElement.clientWidth == 0)){w = document.documentElement.clientWidth;h = document.documentElement.clientHeight;}else{w = document.body.clientWidth;h = document.body.clientHeight;}}
+	else	{w = window.innerWidth;h = window.innerHeight;}
+	return {width:w,height:h};
+}
+
+
+
+
+
+initializeWindows = function(){
+
+	// Examples
+	MochaUI.ajaxpageWindow = function(){ 
+		new MochaUI.Window({
+			id: 'ajaxpage',
+			title: 'Content Loaded with an XMLHttpRequest',
+			loadMethod: 'xhr',
+			contentURL: '/lipsum.html',
+			width: 340,
+			height: 150
+		});
+	}	
+	if ($('ajaxpageLinkCheck')){ 
+		$('ajaxpageLinkCheck').addEvent('click', function(e){	
+			new Event(e).stop();
+			MochaUI.ajaxpageWindow();
+		});
+	}	
+	
+	MochaUI.jsonWindows = function(){
+		var url = 'data/json-windows-data.js';
+		var request = new Request.JSON({
+			url: url,
+			method: 'get',
+			onRequest: function(){
+				// add code to show loading icon
+			}.bind(this),										  
+			onComplete: function(properties) {
+				MochaUI.newWindowsFromJSON(properties.windows);
+				// add code to hide loading icon
+			}
+		}).send();		
+	}	
+	if ($('jsonLink')){
+		$('jsonLink').addEvent('click', function(e) {
+			new Event(e).stop();
+			MochaUI.jsonWindows();			
+		});
+	}	
+
+	// View
+	if ($('sidebarLinkCheck')){
+		$('sidebarLinkCheck').addEvent('click', function(e){	
+			new Event(e).stop();
+			MochaUI.Desktop.sidebarToggle();
+		});
+	}
+	
+
+	MochaUI.featuresWindow = function(){		
+		new MochaUI.Window({
+			id: 'features',
+			title: 'Features',
+			loadMethod: 'xhr',
+			contentURL: '/features.html',
+			//onContentLoaded: function(){
+				//MochaUI.initializeTabs('featuresTabs');
+			//},
+			width: 330,
+			height: 180,
+			x: 570,
+			y: 280,
+			resizeLimit: {'x': [275, 2500], 'y': [125, 2000]},			
+			toolbar: true,
+			toolbarURL: '/features-tabs.html'
+		});	
+	}
+
+	
+	// Deactivate menu header links
+	$$('a.returnFalse').each(function(el){
+		el.addEvent('click', function(e){
+			new Event(e).stop();
+		});
+	});
+	
+	// Build windows onDomReady
+	MochaUI.featuresWindow();
+	
+}
+
+// Initialize MochaUI when the DOM is ready
+window.addEvent('domready', function(){									 
+	MochaUI.Desktop = new MochaUI.Desktop();									 
+	MochaUI.Dock = new MochaUI.Dock();	
+	MochaUI.Modal = new MochaUI.Modal();
+	initializeWindows();
+});
+
+
+window.addEvent('unload', function(){
+	if (MochaUI) MochaUI.garbageCleanUp();
+});

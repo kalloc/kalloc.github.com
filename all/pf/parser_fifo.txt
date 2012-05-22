@@ -1,0 +1,75 @@
+#!/usr/bin/perl
+use IPC::SysV qw(IPC_CREAT ftok);
+
+my $ttl=10;
+my $key = ftok("/tmp",'A');
+my $id = msgget($key,0) || msgget($key, IPC_CREAT | S_IRUSR | S_IWUSR);
+
+my $Tables = {};
+my $Ban = {};
+my $counter = 0;
+
+my $result = "";
+my $textbody = "";
+my $rcvd;
+my $ret,$run,$browser,$ip,$refer,$uri;
+$flag=0;
+opendir(PROC,"/proc") or die "Unable to open /proc:$!\n";
+while (defined($_= readdir(PROC))){
+	next if ($_ eq "." or $_ eq "..");
+	next unless /^\d+$/; # filter out any random non-pid files
+		open(PID,"/proc/$_/cmdline");
+	my $cmd=<PID>;
+	$flag+=1 if($cmd =~ m/\/parser_fifo.pl/);
+	close(PID);
+}
+closedir(PROC);
+exit(0) if($flag>1) ;
+
+
+
+
+
+open (BAN,">> /tmp/parser_fifo_ban") || die;
+
+
+while(1) {
+	msgrcv($id, $rcvd, 10000, 0, 0) || die();
+
+	my $time=time();
+
+	($ip,$uri,$refer,$browser)=split(/\t/,$rcvd);
+	if( ! exists $Tables{$ip})  {
+		$Tables{$ip}[1]=$time;
+		$Tables{$ip}[0]=0;
+	}
+	next if( exists $Ban{$ip});
+	if($browser  =~ /America Online Browser|Linux 2.6.15-1.2054_FC5/) {
+		$Tables{$ip}[0]+=6;
+	} elsif($browser  =~ /Debian-2.0.0.6-0etch1+lenny1|iOpus-I-M\; QXW03416\; .NET CLR 1.1.4322/) {
+		$Tables{$ip}[0]+=4;  
+	} else {
+		$Tables{$ip}[0]++;
+	}
+
+	if($Tables{$ip}[1] + $ttl < $time) {
+		delete $Tables{$ip};
+	} elsif($Tables{$ip}[0] > 5) {
+		system("pfctl -q -t ban  -T add  $ip");
+		system("pfctl -q -k $ip");
+		$Ban{$ip}=$time;
+		print BAN "$rcvd\n";
+		flush(BAN);
+		delete $Tables{$ip};
+	}
+	if($time % 60 == 0) {
+		for $IPadr (keys(%Tables)) {
+			delete $Tables{$IPadr} if ($Tables{$IPadr}[1] + 60 < $time);
+		}
+		for $IPadr (keys(%Ban)) {
+			delete $Ban{$IPadr} if ($Ban{$IPadr} + 60 < $time);
+		}
+	}
+}
+
+

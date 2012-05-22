@@ -1,0 +1,90 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
+   "http://www.w3.org/TR/html4/strict.dtd">
+
+<html lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>LJ Friend Crawler</title>
+
+    <!-- Framework CSS -->
+    <link rel="stylesheet" href="../../blueprint/screen.css" type="text/css" media="screen, projection">
+    <link rel="stylesheet" href="../../blueprint/print.css" type="text/css" media="print">
+    <!--[if lt IE 8]><link rel="stylesheet" href="../../blueprint/ie.css" type="text/css" media="screen, projection"><![endif]-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.js" type="text/javascript"></script> 
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.11/jquery-ui.js"></script> 
+     <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
+
+    <script src="/js/jquery.tablesorter.js" type="text/javascript"></script> 
+    <script src="/js/script.js" type="text/javascript"></script>
+  </head>
+  <body>
+
+    <div class="container">
+      <h1>LJ Friend Crawler</h1>
+      <div class="span-20">
+        <form action="" method="post" class="inline" id="shot">
+          <fieldset>
+            <legend>Введите имя лжеюзера</legend>
+            <div class="span-30" id="error">
+                <span></span>
+            </div>
+            <div class="span-30" id="notice">
+                <span></span>
+            </div>
+            <div class="span-30">
+              <input type="text" class="text" id="ljuser" name="ljuser" value="tema">
+            </div>
+            <div class="span-2 last">
+              <input type="submit" value="submit" class="button">
+            </div>
+          </fieldset>
+
+        </form>
+
+
+
+      </div>
+      <div class="span-20" id="result" style="display:none">
+        <div id="tabs">
+            <ul>
+                <li><a href="#tab_interest"><span>ТОП по Интересам</span></a></li>
+                <li><a href="#tab_groups"><span>ТОП по сообществам</span></a></li>
+            </ul>
+          <hr>
+            <div id="tab_interest">
+                <table summary=""  border="0" cellspacing="0" cellpadding="0">
+                    <caption>
+                        <em>TOP интересов</em>
+                    </caption>
+                  <thead>
+                    <tr>
+                      <th class="span-6">Интерес</th>
+                      <th class="span-6">Популярность</th>
+                      <th class="span-6 last">Пользователи указавшие</th>
+                    </tr>
+                  </thead>
+                  <tbody id="interest">
+                  </tbody>
+                </table>
+            </div>
+            <div id="tab_groups">
+                <table summary=""  border="0" cellspacing="0" cellpadding="0">
+                    <caption>
+                        <em>TOP Сообществ</em>
+                    </caption>
+                  <thead>
+                    <tr>
+                      <th class="span-6">Название сообщества</th>
+                      <th class="span-6">Популярность</th>
+                      <th class="span-6 last">Пользователи указавшие</th>
+                    </tr>
+                  </thead>
+                  <tbody id=groups>
+                  </tbody>
+                </table>
+            </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

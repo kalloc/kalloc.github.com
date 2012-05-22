@@ -1,0 +1,298 @@
+/sbin/ifconfig em0 tso polling
+
+
+/boot/loader.conf
+#hw.re0.rxd=4096
+#hw.re0.txd=4096
+accf_http_load="YES"
+accf_data_load="YES"
+accf_dns_load="YES"
+aio_load="YES"
+
+net.inet.tcp.syncache.hashsize=1024
+net.inet.tcp.syncache.bucketlimit=100
+
+# Incresed hostcache
+net.inet.tcp.hostcache.hashsize="16384"
+net.inet.tcp.hostcache.bucketlimit="100"
+
+# Enable superpages, for 7.2+ only
+# Also read http://lists.freebsd.org/pipermail/freebsd-hackers/2009-November/030094.html
+vm.pmap.pg_ps_enabled=1
+
+#ipdiver_load="YES"
+net.inet.tcp.tcbhashsize=32768
+kern.ipc.nsfbufs=10000
+vm.kmem_size=1G
+vm.kmem_size_max=1G
+
+
+
+/etc/sysctl.conf
+
+
+# Should be increased when you have A LOT of files on server 
+# (Increase until vfs.ufs.dirhash_mem becames lower)
+vfs.ufs.dirhash_maxmem=67108864
+
+
+# Extreme polling tuning
+#kern.polling.burst_max=1000
+#kern.polling.each_burst=1000
+#kern.polling.reg_frac=100
+#kern.polling.user_frac=1
+#kern.polling.idle_poll=1
+#kern.polling.enable=1
+
+
+
+# shm_use_phys Wires all shared pages, making them unswappable
+# Use this to lessen Virtual Memory Manager's work when using Shared Mem.
+# Useful for databases
+#kern.ipc.shm_use_phys=1
+
+
+
+# Do not use lager sockbufs on 8.0 
+# ( http://old.nabble.com/Significant-performance-regression-for-increased-maxsockbuf-on-8.0-RELEASE-tt26745981.html#a26745981 )
+kern.ipc.maxsockbuf=262144 
+
+
+# Jumbo 9k/16k clusters
+# If you are using them
+#kern.ipc.nmbjumbo9=24000
+#kern.ipc.nmbjumbo16=10240
+
+kern.ipc.somaxconn=60000
+
+#192000 - 796M
+kern.ipc.nmbjumbop=100000
+
+# Recive clusters (on amd64 7.2+ 65k is default)
+# For such high value vm.kmem_size must be increased to 3G
+#kern.ipc.nmbclusters=229376
+#204800 - 421M
+kern.ipc.nmbclusters=102400
+
+#204800 - 421M
+kern.ipc.maxsockets=102400
+
+kern.ipc.shmall=32768 
+kern.ipc.semmap=256 
+# Shared memory // 7.2+ can use shared memory > 2Gb
+kern.ipc.shmmax=134217728
+kern.maxfiles=102400
+kern.maxfilesperproc=200000
+kern.maxvnodes=200000
+
+
+
+
+# Interrupt handling via multiple CPU, but with context switch.
+# You can play with it. Default is 1;
+#net.isr.direct=0
+
+
+# This speed ups dummynet when channel isn't saturated
+net.inet.ip.dummynet.io_fast=1
+# Increase dummynet(4) hash
+#net.inet.ip.dummynet.hash_size=2048
+#net.inet.ip.dummynet.max_chain_len
+
+
+# Flowtable - flow caching mechanism
+# Useful for routers
+#net.inet.flowtable.enable=1
+#net.inet.flowtable.nmbflows=65535
+
+
+#net.inet.ip
+
+# This is for routers only
+#net.inet.ip.forwarding=1
+#net.inet.ip.fastforwarding=1
+# Increases default TTL, sometimes useful
+# Default is 64
+net.inet.ip.ttl=128
+# Should be increased until net.inet.ip.intr_queue_drops is zero
+net.inet.ip.intr_queue_maxlen=4096
+net.inet.ip.portrange.first=1024
+net.inet.ip.portrange.randomized=0
+net.inet.ip.portrange.last=65535
+net.inet.ip.redirect=0
+net.inet.ip.stealth=1
+net.inet.ip.accept_sourceroute=0
+
+
+
+#net.inet.tcp
+
+# Explicit Congestion Notification (see http://en.wikipedia.org/wiki/Explicit_Congestion_Notification)
+net.inet.tcp.ecn.enable=1
+# Don't use tw on local connections
+# As of 15 Apr 2009. Igor Sysoev says that nolocaltimewait has some buggy realization.
+# So disable it or now till get fixed
+#net.inet.tcp.nolocaltimewait=1
+# FIN_WAIT_2 state fast recycle
+net.inet.tcp.fast_finwait2_recycle=1
+# Time before tcp keepalive probe is sent
+# default is 2 hours (7200000)
+#net.inet.tcp.keepidle=60000
+# Max bumber of timewait sockets
+net.inet.tcp.maxtcptw=102400
+net.inet.tcp.blackhole=2
+# Lessen max segment life to conserve resources
+# ACK waiting time in miliseconds (default: 30000 from RFC)
+net.inet.tcp.msl=2500 
+net.inet.tcp.delayed_ack=0
+net.inet.tcp.sendspace=32768
+net.inet.tcp.recvspace=32768
+net.inet.tcp.drop_synfin=1
+
+#net.inet.udp
+
+net.inet.udp.blackhole=1
+
+
+#net.inet.icmp
+
+net.inet.icmp.drop_redirect=1 
+net.inet.icmp.icmplim=50
+net.inet.icmp.maskrepl=0
+net.inet.icmp.log_redirect=0
+
+net.link.ether.inet.max_age=1200
+
+
+security.bsd.see_other_uids=0
+
+
+
+Kernel options:
+
+Так же можно или даже нужно собирать с опцией nomodules=YES.
+device mem
+device pf
+device pflog
+device pfsync
+
+options         ACCEPT_FILTER_HTTP
+options    	SMP
+options   	DEVICE_POLLING
+options         TCP_DROP_SYNFIN
+options 	HZ=1000
+options         KVA_PAGES=512
+
+
+
+make -j4 buildkernel KERNCONF=NEW
+make installkernel KERNCONF=NEW
+
+
+/etc/make.conf
+
+
+Переменная CPUTYPE определяет тип вашего процессора,  дабы компилятор мог получить оптимизированный бинарный код для вашего типа процессора. Список поддерживаемых процессоров может быть найден в файле /usr/share/examples/etc/make.conf.
+
+Если вы планируете использовать процессор Intel Core Duo то необходимо  установить значение этой переменной в core2, в файле /etc/make.conf:
+
+CPUTYPE?=core2
+
+Убедитесь, что выбран корректный тип процессора, просматривая сообщения загрузчика (либо используя утилиту dmesg(8)). Иначе, результирующий бинарный код может оказаться не корректным.
+
+Текущий список поддерживаемых процессоров указан в следующей таблице:
+
+Семейство процессоров                  Значение CPUTYPE
+
+Intel IA32                                                 core2, core, Nocona,
+                                                                 pentium4m, pentium4,
+                                                                 prescott,pentium3m,
+                                                                 pentium3, Pentium-m,
+                                                                 pentium2
+
+Intel IA64                                                itanium, itanium2 
+
+AMD                                                        opteron, athlon64,
+                                                                 athlon-mp, athlon-xp,
+                                                                 athlon-4, athlon-tbird,
+                                                                 athlon, k8, k6-3, k6-2,
+                                                                 k6, k5
+
+
+
+CFLAGS и COPTFLAGS
+
+Переменная CFLAGS определяет любые дополнительные параметры компилятора, которые вы желаете ему передать. Эти параметры главным образом определяют  работу процессора в ходе компилирования. Типовая переменная CFLAGS выглядит следующим образом:
+
+CFLAGS= -O2 -pipe
+
+В данном примере компилятору передаются два параметра: флаг -O2 устанавливает уровень оптимизации в 2, который является приемлемым для большинства приложений. Второй флаг -pipe оптимизирует бинарный код в целях уменьшения его размера.
+
+[ Желательно не использовать флаг -O3 (самый высокий уровень бнарной оптимизации gcc), поскольку это, весьма вероятно, приведет к получению нерабочего бинарного кода. ]
+
+Система портов так же учитывает переменные, которые вы определяете в файле /etc/make.conf. Однако, для некоторых портов  должна быть установлена переменная WITH_OPTIMIZED_CFLAGS для включения оптимизации в процессе сборки.
+
+Другая важная переменная , которую можно использовать в файле make.conf - это WITHOUT_DEBUG. Некоторые порты строятся с информацией отладки, при условии, что эта переменная не установлена. Рекомендуется установить эту переменную в make.conf, чтобы гарантировать, что порты собраны без отладочной информации.
+
+WITHOUT_DEBUG = yes
+
+
+
+
+
+
+
+
+Состояние задействованных mbuf кластеров можно посмотреть командой:
+>netstat -m
+4/1421/1425 mbufs in use (current/cache/total)
+0/614/614/25600 mbuf clusters in use (current/cache/total/max)
+
+>netstat -s -p tcp
+…
+2079088720 syncache entries added
+…
+> 0 dropped
+2058506523 completed
+> 0 bucket overflow
+> 0 cache overflow
+…
+0 cookies sent
+0 cookies received
+
+
+>netstat -Lan
+Current listen queue sizes (qlen/incqlen/maxqlen)
+Proto Listen Local Address
+tcp4 43/0/4096 *.80
+tcp4 0/0/128 *.22
+
+
+4096 – размер очереди (максимум 65тыс.)
+43 – заполненность очереди в данный момент (приложение не вытащило из очереди).
+
+>vmstat -z
+ITEM SIZE LIMIT USED FREE REQUESTS FAILURES
+…
+socket: 356, 204809, 48041, 114869, 4292783585, 0
+…
+inpcb: 180, 204820, 63956, 121460, 4283258030, 0
+tcpcb: 464, 204800, 48015, 114897, 4283258030, 0
+
+
+i386>netstat -m
+…
+190/510/6656 sfbufs in use (current/peak/max)
+
+amd64>netstat -m
+…
+0/0/0 sfbufs in use (current/peak/max)
+
+
+>vmstat -z
+ITEM SIZE LIMIT USED FREE REQUESTS FAILURES
+…
+tcptw: 48, 41028, 15941, 25087, 1045159949, 438573
+
+
+

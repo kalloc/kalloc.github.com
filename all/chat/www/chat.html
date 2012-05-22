@@ -1,0 +1,94 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<title>chatz</title>
+<meta name="keywords" content="">
+<meta name="description" content="">
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1251">
+<script type="text/javascript" language="JavaScript" src="/js/jquery-latest.js"></script>
+<script type="text/javascript" language="JavaScript" src="/js/jquery.contextmenu.js"></script>
+<script type="text/javascript" language="JavaScript" src="/js/script.js"></script>
+</head>
+<body>
+
+
+<div class="contextMenu" id="myMenu">
+      <ul>
+	  <li><b>меню юзера</b></li>
+    	  <li id="private">private</li>
+    	  <li id="profile">profile</li>
+     </ul>
+</div>
+
+
+<div style="min-width:600px;min-height:600px;display:none" id="chat">
+
+<table  width=99% height=99% border=0>
+<tr>
+<td height=80%>
+    <div style="padding-left:20px;margin:20px;height:500px;width:700px;border:1px dotted black;float:left;overflow:auto" id="chat_text"></div>
+</td>
+<td width=20% align="center">
+
+
+    <div style="height:430px;padding:10px;padding-left:20px;text-align:left;min-width:120px;border:1px dotted black;overflow:auto;" id="chat_user"></div>
+
+    <div style="height:25px;margin:2px;border:1px solid black">
+    <input type="button" id="getplace" value="выбор локации">
+    <input type="button" id="closeplace" style="display:none;" value="CLOSE">
+    </div>
+    <div style="display:none;margin:2px;text-align:center;border:1px dotted red;overflow:auto;" id="chat_select_list">
+    </div>
+
+</td>
+</tr>
+<tr>
+<td colspan='2'>
+    <div style="width:100%;height:70px">
+	<form id="add_msg_form" name="add_msg_form">
+    	    Писать сюда &gt;<input id="text" type="text" style="margin-left:10px;margin-right:20px;width:40%;border:1px dashed black"> 
+        </form>
+    </div>
+</td>
+</tr>
+</table>
+
+</div>
+
+
+
+
+<div id="chat_select" style="width:100%;height:100%;text-align:center;vertical-align:middle;margin-top:30%;" >
+        <b>ВЫБЕРИТЕ ЧАТ</b><br/>
+	<div style="text-align:left;margin-left:45%" id="chat_select_div">
+	</div>
+</div>
+
+
+
+<script>
+$("#add_msg_form").bind("submit", function(event){ add($('input',"#add_msg_form").val());event.preventDefault();});
+
+$("#getplace").click(function(event){ 
+    inchat=1;
+    chat_list_cron();
+    $('#chat_select_list').animate({opacity: 'show'},'slow','easein');
+    $('#getplace').hide();
+    $('#closeplace').show(); 
+});
+
+$("#closeplace").click(function(event){ 
+    inchat=0;
+    $('#chat_select_list').animate({opacity: 'hide'},'slow','easein');
+    $('#getplace').show();
+    $('#closeplace').hide(); 
+});
+
+get_status();
+
+</script>
+
+
+
+</body>
+</html>

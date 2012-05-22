@@ -1,0 +1,7 @@
+Options +Indexes
+AddType text/plain .sh .c .py .pl .txt .lua .h .cpp
+AddDefaultCharset utf8
+ReadmeName "/code/foot.html"
+IndexOptions FancyIndexing
+IndexIgnore foot.html
+php_flag engine off

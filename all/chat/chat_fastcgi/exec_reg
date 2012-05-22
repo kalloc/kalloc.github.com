@@ -1,0 +1,7 @@
+EXEC="curl -i -q -s -bmyproject=C81E728D9D4C2F636F067F89CA4179E5102819113C7E81A66C8BF  -d"
+URL='game/cgi-bin/chat.fcgi'
+echo "
+Enter: Register
+"
+$EXEC "call=register&login=nick2&password=passkaka&password2=passkaka&email=me@n1ck.name&name=nikita&country=russian&city=moscow&gender=2&byear=1983&bmonth=08&bday=03&race=1"  $URL 
+

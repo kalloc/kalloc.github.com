@@ -1,0 +1,6 @@
+RewriteEngine On
+RewriteRule ^captcha.png$ /cgi-bin/captcha.fcgi [L]
+RewriteRule ^registration_verify$ /cgi-bin/reg.fcgi?call=verify&%{QUERY_STRING} [L]
+RewriteRule ^call/registration$ /cgi-bin/reg.fcgi?%{QUERY_STRING} [L]
+RewriteRule ^call/chat$ /cgi-bin/chat.fcgi?%{QUERY_STRING} [L]
+AddDefaultCharset windows-1251

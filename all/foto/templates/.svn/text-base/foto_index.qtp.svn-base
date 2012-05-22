@@ -1,0 +1,34 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<HEAD>
+<TITLE>фото альбом сайта n1ck.name {if strlen(title)>0}{var " :: %s",title}{/if}</TITLE>
+<script language="javascript" type="text/javascript" src="/js/script.js"></script>
+<script language="javascript" type="text/javascript" src="/js/jquery.js"></script>
+<script language="javascript" type="text/javascript" src="/js/interface.js"></script>
+<link href="/js/css.css" rel="stylesheet" type="text/css" />
+</HEAD>
+<BODY>
+<!-- proc header char *title; -->
+
+<div style="text-align:center;width:170px;height:170px;float:left">
+	{if strlen(pic)>0}
+		{if strstr(url,"foto_view")}
+			<a target="_new" href="{var "http://xxl/foto_content/2007/new/2007-06-13/catz.jpg?%s",url}" rel="imagebox-view" title="{var "%s",pic}"><img src="{var "%s",pic}" border="0" /></a>
+		{else}
+			<a href="{var "%s",url}" rel="imagebox-view" title="{var "%s",pic}"><img src="{var "%s",pic}" border="0" /></a>
+		{/if}
+</a>
+	{else}
+		<a href="{var "%s",url}"  rel="imagebox-view" title="{var "%s",pic}">{var "%s",text}</a>
+	{/if}
+	<p style="text-align:center;font-family:Verdana"><sup>{var "%s",text}</sup></p>
+</div>
+
+
+<!-- loop body char *url,char *text,char *pic; -->
+
+</BODY>
+</HTML>
+<!-- intern footer; -->
+
+                                  

@@ -1,0 +1,16 @@
+EXEC="curl -q -s -bmyproject=C81E728D9D4C2F636F067F89CA4179E5102819113C7E81A66C8BF  -d"
+URL='game/cgi-bin/chat.fcgi'
+echo "
+Enter: Login bla, Pass blabla
+"
+$EXEC "call=login&login=nick&password=pass"  $URL 
+echo "
+List: 1
+"
+$EXEC "call=getplace" $URL
+echo "
+Join: 1
+"
+$EXEC "call=join&place=2" $URL
+
+

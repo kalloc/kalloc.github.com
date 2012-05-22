@@ -1,0 +1,4 @@
+AuthType Basic   
+AuthName "Private zone. Only for Friends" 
+AuthUserFile  /www/site/daedalus.ru/.htpasswd
+require valid-user

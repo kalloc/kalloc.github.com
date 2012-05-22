@@ -1,0 +1,264 @@
+
+function init_index(){
+    
+    $('load').set('tween',{
+	duration:1500,
+	onComplete:function() {
+	    if(js == 'login_error' && $('login_error')) $('login_error').fade('show');
+	    document.title=document.title.replace(/ \([^)]+\)$/,"");
+
+	    new MochaUI.Window({
+			        id: 'mywindow',
+			        title: 'Welcome to Well',
+			        content: $("login_form"),
+					restrict:false,
+					collapsible:false,
+					minimizable:false,
+					maximizable:false,
+					closable:false,
+					draggable:false,
+					resizable:false,
+			        width: 340,
+			        height: 150
+		});
+	
+
+	    $('login_form').addEvent('submit', function(e) {
+			e.stop();
+			var request = new Request.JSON({
+			url: '/',
+			data: {login:$('login_input').value},
+			onComplete: function(json) {
+				if(json.content) {
+				$('content').innerHTML=json.content;
+				} 
+					if (json.js) {
+					eval(json.js);
+					}
+				}
+			}).send();
+	    });
+		$('login_input').focus();
+	}
+    }).fade('out');
+
+    
+    
+}
+
+
+
+
+function init_main(){
+    
+    $('load').set('tween',{
+	duration:1500,
+	onComplete:function() {
+	    if($('main'))   $('main').fade('show') ;
+
+	    if (MochaUI) {
+/*			MochaUI.Desktop = new MochaUI.Desktop({desktop:'desktop_chat',pageWrapper:'desktop_chat_pageWrapper',page:'desktop_chat_page'});	
+			MochaUI.Dock = new MochaUI.Dock({useControls:false});	
+			MochaUI.Dock.dockWrapper.setStyles({'position': 'relative','bottom': null});
+			MochaUI.Dock.dockWrapper.addClass('top');
+			MochaUI.Desktop.setDesktopSize();
+			MochaUI.Dock.dockWrapper.setProperty('dockPosition','top');
+			MochaUI.Modal = new MochaUI.Modal();
+			initializeWindows();
+			window.addEvent('unload', MochaUI.garbageCleanUp);
+			*/
+			$("char_info").makeResizable({
+											modifiers: { 
+													x:false,
+													y:"height"
+											},
+											handle:"char_info",
+											onDrag: function() {
+												$("chat_user").setStyle("height",size().height-$("char_info").clientHeight-20);
+											},
+											onComplete:function() {
+												$("chat_user").setStyle("height",size().height-$("char_info").clientHeight-20);
+											}
+			});
+			
+			$("userlist").makeResizable({
+											invert:true,
+											modifiers: { 
+													x:"width",
+													y:false
+											},
+											limit:	{
+												x:[200,400]
+											},
+											handle:"userlist",
+											onDrag: function() {
+												$("chat").setStyle("width",size().width-$("userlist").clientWidth-20);
+											},
+											onBeforeStart:function() {
+												$("userlist").setStyle("right",0);
+
+											},
+											onComplete:function() {
+												$("chat").setStyle("width",size().width-$("userlist").clientWidth-20);
+											}
+			});
+			
+
+            $("userlist").setStyles({'cursor': Browser.Engine.presto ? 'e-resize' : 'col-resize','display':'block'});
+            $("char_info").setStyles({'cursor': Browser.Engine.presto ? 'e-resize' : 'row-resize','display':'block'});
+
+
+		}
+
+	    document.title=document.title.replace(/ \([^)]+\)$/,"");
+	}
+    }).fade('out');
+
+
+
+}
+
+function resize_index () {
+
+	if($("mywindow")) {
+		$("mywindow").setStyle("left",size().width/2-$("mywindow").clientWidth/2);
+		$("mywindow").setStyle("top",(size().height/2)-($("mywindow").clientHeight/2));
+
+	}
+
+}
+
+
+
+function resize_main() {
+	var sz=size();
+	$("main").setStyle("width",sz.width-10);
+	$("main").setStyle("height",sz.height-10);
+
+/*
+ * $("chat").setStyle("width",sz.width-$("userlist").clientWidth-20);
+ * $("info").setStyle("width",sz.width-$("char").clientWidth-20);
+ * $("char_info").setStyle("height",sz.height-$("chat_user").clientHeight-30);
+ */
+
+
+	
+
+}
+
+
+
+
+
+
+
+
+
+
+Events:addEvent('domready', function() {
+    if(typeof(resize) == "string" && typeof(window[resize]) == "function") {
+	Events:addEvent('resize', window[resize]);
+	window[resize]();
+    }
+    if(typeof(init) == "string" && typeof(window[init]) == "function") window[init]();
+
+});
+
+
+
+window.size = function()
+{
+	var w = 0;
+	var h = 0;
+	if(!window.innerWidth)	{if(!(document.documentElement.clientWidth == 0)){w = document.documentElement.clientWidth;h = document.documentElement.clientHeight;}else{w = document.body.clientWidth;h = document.body.clientHeight;}}
+	else	{w = window.innerWidth;h = window.innerHeight;}
+	return {width:w,height:h};
+}
+
+
+
+
+
+initializeWindows = function(){
+
+	// Examples
+	MochaUI.ajaxpageWindow = function(){ 
+		new MochaUI.Window({
+			id: 'ajaxpage',
+			title: 'Content Loaded with an XMLHttpRequest',
+			loadMethod: 'xhr',
+			contentURL: '/lipsum.html',
+			width: 340,
+			height: 150
+		});
+	}	
+	if ($('ajaxpageLinkCheck')){ 
+		$('ajaxpageLinkCheck').addEvent('click', function(e){	
+			new Event(e).stop();
+			MochaUI.ajaxpageWindow();
+		});
+	}	
+	
+	MochaUI.jsonWindows = function(){
+		var url = 'data/json-windows-data.js';
+		var request = new Request.JSON({
+			url: url,
+			method: 'get',
+			onRequest: function(){
+				// add code to show loading icon
+			}.bind(this),										  
+			onComplete: function(properties) {
+				MochaUI.newWindowsFromJSON(properties.windows);
+				// add code to hide loading icon
+			}
+		}).send();		
+	}	
+	if ($('jsonLink')){
+		$('jsonLink').addEvent('click', function(e) {
+			new Event(e).stop();
+			MochaUI.jsonWindows();			
+		});
+	}	
+
+
+	// View
+	if ($('sidebarLinkCheck')){
+		$('sidebarLinkCheck').addEvent('click', function(e){	
+			new Event(e).stop();
+			MochaUI.Desktop.sidebarToggle();
+		});
+	}
+	
+
+	MochaUI.featuresWindow = function(){		
+		new MochaUI.Window({
+			id: 'features',
+			title: 'Features',
+			loadMethod: 'xhr',
+			contentURL: '/features.html',
+			desktop:'desktop_chat',
+			container:'desktop_chat',
+			width: 330,
+			height: 180,
+			x: 570,
+			y: 280,
+			resizeLimit: {'x': [275, 350], 'y': [125, 2000]},			
+			toolbar: true,
+			toolbarURL: '/features-tabs.html'
+		});	
+	}
+
+	
+	// Deactivate menu header links
+	$$('a.returnFalse').each(function(el){
+		el.addEvent('click', function(e){
+			new Event(e).stop();
+		});
+	});
+	
+	// Build windows onDomReady
+	MochaUI.featuresWindow();
+	
+}
+
+

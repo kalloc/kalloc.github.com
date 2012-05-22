@@ -1,0 +1,57 @@
+#после установки, настройка конфигов 
+
+#создать директорию /etc/openvpn
+
+#ca.crt server.crt server.key скачивать с вашего аккаунта
+#dh1024.pem генерить  openssl dhparam out /etc/openvpn/dh1024.pem 1024
+
+#в iptables прописать правило 
+#iptables -t nat -A POSTROUTING -s 10.6.66.0/24 -j MASQUERADE -o eth0
+#iptables -t nat  -A POSTROUTING -s 10.6.66.0/255.255.255.0 -j SNAT --to-source  72.36.222.126
+iptables -t nat -A POSTROUTING -d 66.29.101.40/28 -j MASQUERADE -o tun+
+iptables -t nat -A POSTROUTING -s 66.29.101.44/32 -j MASQUERADE -o eth0
+
+#echo 1 > /proc/sys/net/ipv4/ip_forward 
+#и 
+#echo "net.ipv4.ip_forward = 1" >/etc/sysctl.conf
+
+---------------------------[конфиг]-----------------------------
+
+dev tun
+#для приёма перенаправления трафика через сервер
+push "redirect-gateway"
+#вместо dns.ip.x.x вписать айпи днс, если нужно
+push "dhcp-option DNS dns.ip.x.x"
+
+port 1666
+proto tcp
+
+server 10.6.66.0 255.255.255.0
+ifconfig-pool-persist /etc/openvpn/ipp.txt
+persist-key
+persist-tun
+user nobody
+group nobody
+tls-server
+
+cipher AES-256-CBC
+auth none
+comp-lzo
+chroot   /etc/openvpn/
+
+ca      /etc/openvpn/ca.crt
+cert    /etc/openvpn/server.crt
+key     /etc/openvpn/server.key
+dh      /etc/openvpn/dh1024.pem
+
+
+log        /etc/openvpn/openvpn.log
+log-append /etc/openvpn/openvpn.log
+status     /etc/openvpn/vpnstatus.log
+
+
+ping 15
+verb 1
+
+
+-----------------------------------------------------------------

@@ -1,0 +1,43 @@
+
+table <ban> persist file "/etc/pf.ban"
+table <white> persist file "/etc/pf.white"
+table <www> persist file "/etc/pf.www"
+
+
+
+
+set optimization aggressive
+set timeout { interval 10, frag 30 }
+set timeout { tcp.first 30, tcp.opening 30, tcp.established 30 }
+set timeout { tcp.closing 10, tcp.finwait 10, tcp.closed 10 }
+set timeout { udp.first 30, udp.single 30, udp.multiple 30 }
+set timeout { icmp.first 20, icmp.error 10 }
+set timeout { other.first 30, other.single 30, other.multiple 60 }
+set timeout { adaptive.start 5000, adaptive.end 10000 }
+set limit { states 10000, frags 5000 }
+set skip on lo0
+set block-policy drop
+scrub in all
+block in all
+
+#accept keep state
+pass out proto { tcp, udp } all keep state
+
+pass in proto tcp from any to port {25,953} keep state
+
+pass in proto {tcp,udp} from any to port 53 keep state
+pass in inet proto tcp from any to any port > 50000 keep state
+
+
+
+pass quick inet proto tcp from any to  port {21,110,143} flags S/SA keep state (source-track rule, max-src-conn 3)
+
+
+chocho ="( max 4000, max-src-nodes 4000,max-src-states 30,max-src-conn 30,source-track rule,max-src-conn-rate 30/15, overload <ban> flush global, tcp.established 15, tcp.closing 3,tcp.finwait 3)"
+pass in proto tcp to port 80 flags S/SA keep state $chocho
+
+block in from <ban>
+pass in proto tcp from <www> to port 80 keep state 
+pass in  from <white> to any keep state ( tcp.established 86400 )
+pass out from any to <white>  keep state
+

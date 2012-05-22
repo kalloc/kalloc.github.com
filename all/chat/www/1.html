@@ -1,0 +1,22 @@
+function login(login,pass){
+	if(pass.length >0 && login.length >0) {
+		$.ajax({url:'/call/chat', type: 'POST',dataType:'xml',data:{ 'call':'login','login': login,'password':pass},success: doXML });
+	} else {
+		if(login.length == 0)
+		     $('#llogin').css("border","1px solid red"); 
+		 if(pass.length == 0)
+		     $('#lpass').css("border","1px solid red"); 
+	}
+	return false;
+}
+
+function char_select(char){
+	$.ajax({url:'/call/chat', type: 'POST',dataType:'xml',data:{ 'call':'char_select','login':char},success: doXML });
+	return false;
+}
+
+function login_guest(login,pass){
+	$.ajax({url:'/call/chat', type: 'POST',dataType:'xml',data:{ 'call':'login_guest'},success: doXML });
+	return false;
+}
+

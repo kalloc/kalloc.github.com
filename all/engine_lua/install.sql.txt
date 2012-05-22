@@ -1,0 +1,315 @@
+-- MySQL dump 10.11
+--
+-- Host: localhost    Database: adct
+-- ------------------------------------------------------
+-- Server version	5.0.32-Debian_7etch5-log
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8 */;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+--
+-- Table structure for table `account`
+--
+
+DROP TABLE IF EXISTS `account`;
+CREATE TABLE `account` (
+  `loginID` int(5) NOT NULL auto_increment,
+  `login` char(40) NOT NULL,
+  `pass` char(36) NOT NULL,
+  UNIQUE KEY `loginID` (`loginID`),
+  KEY `id` (`loginID`),
+  KEY `lp` (`login`,`pass`)
+) ENGINE=MyISAM AUTO_INCREMENT=10668 DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `account`
+--
+
+LOCK TABLES `account` WRITE;
+/*!40000 ALTER TABLE `account` DISABLE KEYS */;
+INSERT INTO `account` VALUES (10666,'amir',MD5('pazklo'));
+INSERT INTO `account` VALUES (10667,'nick',MD5('pazkl0'));
+/*!40000 ALTER TABLE `account` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `client`
+--
+
+DROP TABLE IF EXISTS `client`;
+CREATE TABLE `client` (
+  `clientID` int(5) NOT NULL auto_increment,
+  `loginID` int(5) default NULL,
+  `uri` char(255) NOT NULL,
+  `site` char(100) NOT NULL,
+  `status` enum('enable','disable') default 'enable',
+  KEY `cid` (`clientID`),
+  KEY `lid` (`loginID`)
+) ENGINE=MyISAM AUTO_INCREMENT=20 DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `client`
+--
+
+LOCK TABLES `client` WRITE;
+/*!40000 ALTER TABLE `client` DISABLE KEYS */;
+INSERT INTO `client` VALUES (15,10667,'','xyligan.ru','enable');
+INSERT INTO `client` VALUES (14,10667,'crz/','www2.totalfootball.ru','disable');
+INSERT INTO `client` VALUES (3,10667,'','virtualserver.ru','enable');
+INSERT INTO `client` VALUES (17,10667,'news.php?itemid=1825','totalfootball.ru','enable');
+INSERT INTO `client` VALUES (9,10667,'','ruserver.net','enable');
+INSERT INTO `client` VALUES (16,10667,'','maxi-tuning.ru','enable');
+INSERT INTO `client` VALUES (19,10667,'','n1ck.name','enable');
+/*!40000 ALTER TABLE `client` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `source`
+--
+
+DROP TABLE IF EXISTS `source`;
+CREATE TABLE `source` (
+  `sourceID` int(10) NOT NULL auto_increment,
+  `groupID` int(5) default NULL,
+  `loginID` int(5) default NULL,
+  `name` char(40) NOT NULL,
+  `hash` char(32) NOT NULL,
+  `status` enum('enable','disable') default 'enable',
+  `ua_ie` enum('true','false') default 'true',
+  `ua_op` enum('true','false') default 'true',
+  `ua_ff` enum('true','false') default 'true',
+  `ua_ot` enum('true','false') default 'true',
+  PRIMARY KEY  (`sourceID`),
+  KEY `id` (`loginID`),
+  KEY `gid` (`groupID`),
+  KEY `hash` (`hash`)
+) ENGINE=MyISAM AUTO_INCREMENT=16 DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `source`
+--
+
+LOCK TABLES `source` WRITE;
+/*!40000 ALTER TABLE `source` DISABLE KEYS */;
+INSERT INTO `source` VALUES (1,666,10667,'источник 1','919284AF374C4F868E893C43168AA726','enable');
+INSERT INTO `source` VALUES (2,666,10667,'источник 2','DBEE2E9001FB445FB721A1AF8D314256','enable');
+INSERT INTO `source` VALUES (3,666,10667,'источник 3','3FAB1E35D2D3402894482631FBDAADBE','enable');
+INSERT INTO `source` VALUES (4,666,10667,'источник 4','90A95CB8EE684418949AEA1913AC3E81','enable');
+INSERT INTO `source` VALUES (9,668,10667,'турция.ру'37755798B7BB40C6AC486A8C9EE99306','enable');
+INSERT INTO `source` VALUES (15,670,10667,'vpleer.ru','5D59311F4959417998D1BE27D7A3E73C','enable');
+INSERT INTO `source` VALUES (14,669,10667,'Египет.ру','36F9CB3400DA4407AF17FF8F86707999','enable');
+/*!40000 ALTER TABLE `source` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `stat`
+--
+
+DROP TABLE IF EXISTS `stat`;
+CREATE TABLE `stat` (
+  `ts` datetime NOT NULL,
+  `clientID` int(5) unsigned NOT NULL,
+  `sourceID` int(5) unsigned NOT NULL,
+  `ip` char(12) NOT NULL,
+  `ua` enum('ie','opera','ff','other') NOT NULL,
+  `uaID` int(5) NOT NULL,
+  `quality` enum('true','false') NOT NULL,
+  KEY `cid` (`clientID`),
+  UNIQUE `uniq` (`ts`,`ip`,`clientID`),
+  KEY `uid` (`uaID`,`ua`),
+  KEY `sid` (`sourceID`),
+  KEY `new` (`ts`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `stat`
+--
+
+LOCK TABLES `stat` WRITE;
+/*!40000 ALTER TABLE `stat` DISABLE KEYS */;
+INSERT INTO `stat` VALUES ('2008-08-17 13:21:48',9,670,'1565549240','ff',11,'true');
+INSERT INTO `stat` VALUES ('2008-08-17 13:21:48',3,670,'1550853681','opera',314,'true');
+INSERT INTO `stat` VALUES ('2008-08-17 13:21:42',9,670,'1297069721','ie',45,'true');
+INSERT INTO `stat` VALUES ('2008-08-17 13:21:42',9,669,'1559471846','opera',36,'true');
+INSERT INTO `stat` VALUES ('2008-08-17 13:21:41',9,670,'1509872228','ff',11,'true');
+INSERT INTO `stat` VALUES ('2008-08-17 13:21:40',3,670,'1546554071','opera',850,'true');
+INSERT INTO `stat` VALUES ('2008-08-17 13:21:40',9,670,'1546120865','ff',88,'true');
+/*!40000 ALTER TABLE `stat` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `stat_day`
+--
+
+DROP TABLE IF EXISTS `stat_day`;
+CREATE TABLE `stat_day` (
+  `ts` datetime NOT NULL,
+  `clientID` int(5) unsigned NOT NULL,
+  `sourceID` int(5) unsigned NOT NULL,
+  `ip` char(12) NOT NULL,
+  `ua` enum('ie','opera','ff','other') NOT NULL,
+  `uaID` int(5) NOT NULL,
+  `quality` enum('true','false') NOT NULL,
+  KEY `cid` (`clientID`),
+  KEY `uid` (`uaID`,`ua`),
+  KEY `sid` (`sourceID`),
+  KEY `new` (`ts`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+
+
+--
+-- Table structure for table `traf`
+--
+
+DROP TABLE IF EXISTS `traf`;
+CREATE TABLE `traf` (
+  `id` int(5) NOT NULL,
+  `ts` date NOT NULL,
+  `type` enum('client','source') default NULL,
+  `total` int(6) unsigned NOT NULL,
+  `count` int(6) unsigned NOT NULL,
+  `hit` int(6) unsigned default '0',
+  `fail` int(6) unsigned default '0',
+  UNIQUE KEY `unique_id` (`id`,`ts`,`type`),
+  KEY `id` (`id`),
+  KEY `ts` (`ts`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `traf`
+--
+
+LOCK TABLES `traf` WRITE;
+/*!40000 ALTER TABLE `traf` DISABLE KEYS */;
+INSERT INTO `traf` VALUES (1,'2008-08-13','client',5000,0,0,0);
+INSERT INTO `traf` VALUES (1,'2008-08-14','client',5000,0,0,0);
+INSERT INTO `traf` VALUES (1,'2008-08-15','client',6000,14,0,0);
+INSERT INTO `traf` VALUES (1,'2008-08-16','client',5000,6,0,0);
+INSERT INTO `traf` VALUES (1,'2008-08-17','client',10000,0,0,0);
+INSERT INTO `traf` VALUES (2,'2008-08-13','client',5000,0,0,0);
+INSERT INTO `traf` VALUES (2,'2008-08-14','client',5000,0,0,0);
+INSERT INTO `traf` VALUES (2,'2008-08-15','client',6000,14,0,0);
+INSERT INTO `traf` VALUES (2,'2008-08-16','client',5000,6,0,0);
+INSERT INTO `traf` VALUES (2,'2008-08-17','client',10000,0,0,0);
+INSERT INTO `traf` VALUES (3,'2008-08-13','client',5000,0,0,0);
+INSERT INTO `traf` VALUES (3,'2008-08-14','client',5000,0,0,0);
+INSERT INTO `traf` VALUES (3,'2008-08-15','client',6000,14,0,0);
+INSERT INTO `traf` VALUES (3,'2008-08-16','client',5000,1094,0,0);
+INSERT INTO `traf` VALUES (3,'2008-08-17','client',7000,4478,1605,0);
+INSERT INTO `traf` VALUES (666,'2008-08-15','source',11000,46,0,0);
+INSERT INTO `traf` VALUES (666,'2008-08-14','source',12000,0,0,0);
+INSERT INTO `traf` VALUES (4,'2008-08-16','client',5000,6,0,0);
+INSERT INTO `traf` VALUES (4,'2008-08-15','client',5000,4,0,0);
+INSERT INTO `traf` VALUES (666,'2008-08-16','source',6000,25,0,0);
+INSERT INTO `traf` VALUES (0,'2008-09-01','client',1000,0,0,0);
+INSERT INTO `traf` VALUES (668,'2008-08-16','source',6000,3007,0,0);
+INSERT INTO `traf` VALUES (16,'2008-08-17','client',3000,1908,1745,0);
+INSERT INTO `traf` VALUES (15,'2008-08-17','client',10000,2490,1791,0);
+INSERT INTO `traf` VALUES (669,'2008-08-16','source',5000,753,0,0);
+INSERT INTO `traf` VALUES (9,'2008-08-17','client',4000,3361,655,0);
+INSERT INTO `traf` VALUES (9,'2008-08-16','client',2000,351,0,0);
+INSERT INTO `traf` VALUES (668,'2008-08-17','source',22000,2025,902,3394);
+INSERT INTO `traf` VALUES (669,'2008-08-17','source',22000,1369,490,1302);
+INSERT INTO `traf` VALUES (670,'2008-08-17','source',40000,13542,6691,2288);
+INSERT INTO `traf` VALUES (16,'2008-08-18','client',6000,0,0,0);
+INSERT INTO `traf` VALUES (14,'2008-08-17','client',10000,3607,209,0);
+INSERT INTO `traf` VALUES (16,'2008-08-19','client',6000,0,0,0);
+INSERT INTO `traf` VALUES (16,'2008-08-20','client',6000,0,0,0);
+INSERT INTO `traf` VALUES (16,'2008-08-21','client',6000,0,0,0);
+INSERT INTO `traf` VALUES (16,'2008-08-22','client',6000,0,0,0);
+INSERT INTO `traf` VALUES (16,'2008-08-23','client',6000,0,0,0);
+INSERT INTO `traf` VALUES (16,'2008-08-24','client',6000,0,0,0);
+INSERT INTO `traf` VALUES (16,'2008-08-25','client',6000,0,0,0);
+INSERT INTO `traf` VALUES (16,'2008-08-26','client',6000,0,0,0);
+INSERT INTO `traf` VALUES (16,'2008-08-27','client',6000,0,0,0);
+INSERT INTO `traf` VALUES (16,'2008-08-28','client',6000,0,0,0);
+INSERT INTO `traf` VALUES (16,'2008-08-29','client',6000,0,0,0);
+INSERT INTO `traf` VALUES (16,'2008-08-30','client',6000,0,0,0);
+INSERT INTO `traf` VALUES (16,'2008-08-31','client',6000,0,0,0);
+INSERT INTO `traf` VALUES (17,'2008-08-17','client',10000,508,1925,0);
+INSERT INTO `traf` VALUES (19,'2008-08-17','client',1000,123,130,0);
+/*!40000 ALTER TABLE `traf` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `useragent`
+--
+
+DROP TABLE IF EXISTS `useragent`;
+CREATE TABLE `useragent` (
+  `uaID` int(5) unsigned NOT NULL auto_increment,
+  `name` char(255) NOT NULL,
+  PRIMARY KEY  (`uaID`),
+  KEY `name` (`name`)
+) ENGINE=MyISAM AUTO_INCREMENT=1888 DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `useragent`
+--
+
+LOCK TABLES `useragent` WRITE;
+/*!40000 ALTER TABLE `useragent` DISABLE KEYS */;
+INSERT INTO `useragent` VALUES (1,'Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.9.0.1) Gecko/2008071618 Firefox/3.0.1.x.o.o.y.');
+INSERT INTO `useragent` VALUES (2,'Mozilla/5.0 (Windows; U; Windows NT 5.1; ru; rv:1.9.0.1) Gecko/2008070208 Firefox/3.0.1');
+INSERT INTO `useragent` VALUES (3,'Opera/9.26 (Windows NT 5.1; U; en)');
+INSERT INTO `useragent` VALUES (4,'Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1; .NET CLR 1.1.4322)');
+INSERT INTO `useragent` VALUES (5,'Mozilla/5.0 (Windows; U; Windows NT 6.0; ru; rv:1.9.0.1) Gecko/2008070208 Firefox/3.0.1');
+INSERT INTO `useragent` VALUES (6,'Mozilla/5.0 (X11; U; Linux i686 (x86_64); en-US; rv:1.8.1.4) Gecko/20080721 BonEcho/2.0.0.4');
+INSERT INTO `useragent` VALUES (7,'Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1; MRA 5.1 (build 02243); MRSPUTNIK 2, 0, 0, 36 SW; Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1) )');
+INSERT INTO `useragent` VALUES (8,'Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1)');
+INSERT INTO `useragent` VALUES (9,'Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1; MRA 5.1 (build 02243); MRSPUTNIK 2, 0, 0, 36 SW)');
+INSERT INTO `useragent` VALUES (10,'Mozilla/5.0 (Windows; U; Windows NT 5.1; ru; rv:1.8.1.16) Gecko/20080702 Firefox/2.0.0.16');
+INSERT INTO `useragent` VALUES (11,'Mozilla/5.0 (Windows; U; Windows NT 5.1; ru; rv:1.8.1.16) Gecko/20080702 AdCentriaIM/1.7 Firefox/2.0.0.16');
+INSERT INTO `useragent` VALUES (12,'Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1; MRA 5.1 (build 02243); .NET CLR 1.1.4322; .NET CLR 2.0.50727; InfoPath.1)');
+INSERT INTO `useragent` VALUES (13,'Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1; MRA 4.10 (build 01952); .NET CLR 1.1.4322)');
+INSERT INTO `useragent` VALUES (14,'Opera/9.27 (Windows NT 5.1; U; ru)');
+INSERT INTO `useragent` VALUES (15,'Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1; MRSPUTNIK 2, 0, 0, 36 HW; .NET CLR 1.1.4322)');
+INSERT INTO `useragent` VALUES (16,'Mozilla/3.0 (compatible; Indy Library)');
+INSERT INTO `useragent` VALUES (17,'Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1; Zango 10.3.74.0)');
+INSERT INTO `useragent` VALUES (18,'Opera/9.25 (Windows NT 5.1; U; ru)');
+INSERT INTO `useragent` VALUES (19,'Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1)');
+INSERT INTO `useragent` VALUES (20,'Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1; MRA 5.1 (build 02228)');
+INSERT INTO `useragent` VALUES (21,'Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 6.0; SLCC1; .NET CLR 2.0.50727; .NET CLR 3.0.04506; InfoPath.2)');
+INSERT INTO `useragent` VALUES (22,'Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1; .NET CLR 1.1.4322; .NET CLR 2.0.50727)');
+INSERT INTO `useragent` VALUES (23,'Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 6.0; Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1) ; SLCC1; .NET CLR 2.0.50727; .NET CLR 3.0.04506; InfoPath.1)');
+INSERT INTO `useragent` VALUES (24,'Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1; .NET CLR 1.1.4322; PeoplePal 6.6)');
+INSERT INTO `useragent` VALUES (25,'Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1; MRA 5.0 (build 02094); .NET CLR 1.1.4322)');
+INSERT INTO `useragent` VALUES (26,'Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1; .NET CLR 2.0.50215)');
+INSERT INTO `useragent` VALUES (27,'Opera/9.10 (Windows NT 5.1; U; en)');
+INSERT INTO `useragent` VALUES (28,'Opera/9.26 (Windows NT 5.1; U; ru)');
+INSERT INTO `useragent` VALUES (29,'Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1; .NET CLR 1.1.4322)');
+INSERT INTO `useragent` VALUES (30,'Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.0; FunWebProducts)');
+INSERT INTO `useragent` VALUES (31,'Opera/9.50 (Windows NT 5.1; U; ru)');
+INSERT INTO `useragent` VALUES (32,'Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1; .NET CLR 1.1.4322; InfoPath.1)');
+INSERT INTO `useragent` VALUES (33,'Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1; .NET CLR 2.0.50727; InfoPath.2)');
+INSERT INTO `useragent` VALUES (34,'Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.0)');
+INSERT INTO `useragent` VALUES (35,'Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1; MRSPUTNIK 2, 0, 0, 36 HW; MRA 5.1 (build 02243); MRSPUTNIK 2, 0, 0, 20 SW; .NET CLR 1.1.4322; .NET CLR 2.0.50727)');
+INSERT INTO `useragent` VALUES (36,'Opera/9.51 (Windows NT 5.1; U; ru)');
+INSERT INTO `useragent` VALUES (37,'Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 6.0; MRA 5.1 (build 02228); MRSPUTNIK 2, 0, 0, 36 HW; SLCC1; .NET CLR 2.0.50727; Media Center PC 5.0; .NET CLR 3.0.04506; InfoPath.1)');
+INSERT INTO `useragent` VALUES (38,'Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1; .NET CLR 1.1.4322; .NET CLR 2.0.50727; .NET CLR 3.0.04506.30; InfoPath.1)');
+INSERT INTO `useragent` VALUES (39,'Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1; MRA 5.1 (build 02214); MRSPUTNIK 2, 0, 0, 36 SW; .NET CLR 1.1.4322)');
+INSERT INTO `useragent` VALUES (40,'Opera/9.23 (Windows NT 5.1; U; SV1; MEGAUPLOAD 1.0; ru)');
+INSERT INTO `useragent` VALUES (41,'Opera/9.50 (J2ME/MIDP; Opera Mini/4.1.11320/546; U; ru)');
+INSERT INTO `useragent` VALUES (42,'Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1; SIMBAR={41F9049F-5928-42f8-93CE-7FBE0BD7F126})');
+/*!40000 ALTER TABLE `useragent` ENABLE KEYS */;
+UNLOCK TABLES;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
+-- Dump completed on 2008-08-17 16:30:19
