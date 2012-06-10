@@ -8,6 +8,10 @@ fi
 export HOSTNAME=""
 export NAME=$1
 export IP=$2
+if [ ! -e /vs ];then
+    ln -s /var/lib/vservers /vs
+    ln -s /var/lib/vservers /
+fi
 
 if [ -d /etc/vservers/${NAME} ];then
     echo already exists user ${NAME}
@@ -59,12 +63,12 @@ if [[ $islvm ]];then
     test -f /dev/$BASE/${NAME} && (printf "\e[1;31m\t\t\t LVM - %s уже существует в системе\e[0m\n" $NAME;exit)
     lvcreate -L${lvm_size}G -n ${NAME} $BASE >/dev/null  2>&1|| (printf "\e[1;31m\t\t\t Не удалось создать LVM \e[0m\n";rm -rf /vservers/${NAME};exit)
     if [[ -d /vservers/${NAME} ]];then
-	mkfs.xfs /dev/$BASE/${NAME} >/dev/null  2>&1
+	mkfs.ext4 /dev/$BASE/${NAME} >/dev/null  2>&1
 	mount /dev/$BASE/${NAME} /vservers/${NAME}  >/dev/null  2>&1 || (printf "\e[1;31m\t\t\t Не удалось смонтировать\e[0m\n";lvremove -f $BASE/$NAME > /dev/null 2>&1 ; rm -rf /vservers/${NAME};exit)
     fi
 
     if [[ -d /vservers/${NAME} ]];then
-	echo "/dev/$BASE/${NAME}    /vservers/${NAME}   xfs   noatime       0       1" >> /etc/fstab
+	echo "/dev/$BASE/${NAME}    /vservers/${NAME}   ext4    noatime       0       1" >> /etc/fstab
     fi
 fi
 if [[ -d /vservers/${NAME} ]];then
