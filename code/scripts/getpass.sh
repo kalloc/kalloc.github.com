@@ -1,1 +1,1 @@
-/www/site/daedalus.ru/code/all/getpass.sh
+../all/getpass.sh

@@ -1,1 +1,1 @@
-/www/site/daedalus.ru/code/all/onover.txt
+../all/onover.txt

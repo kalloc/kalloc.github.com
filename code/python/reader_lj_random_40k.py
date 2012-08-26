@@ -1,1 +1,1 @@
-/www/site/daedalus.ru/code/all/reader_lj_random_40k.py
+../all/reader_lj_random_40k.py

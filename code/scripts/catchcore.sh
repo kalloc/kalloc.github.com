@@ -1,1 +1,1 @@
-/www/site/daedalus.ru/code/all/catchcore.sh
+../all/catchcore.sh

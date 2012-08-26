@@ -1,1 +1,1 @@
-/www/site/daedalus.ru/code/all/openvpn_bsd.txt
+../all/openvpn_bsd.txt

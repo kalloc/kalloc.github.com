@@ -1,1 +1,1 @@
-/www/site/daedalus.ru/code/all/reader_lj_atom.py
+../all/reader_lj_atom.py

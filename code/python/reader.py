@@ -1,1 +1,1 @@
-/www/site/daedalus.ru/code/all/reader.py
+../all/reader.py

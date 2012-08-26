@@ -1,1 +1,1 @@
-/www/site/daedalus.ru/code/all/SSL_session.py
+../all/SSL_session.py

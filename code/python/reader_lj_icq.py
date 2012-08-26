@@ -1,1 +1,1 @@
-/www/site/daedalus.ru/code/all/reader_lj_icq.py
+../all/reader_lj_icq.py

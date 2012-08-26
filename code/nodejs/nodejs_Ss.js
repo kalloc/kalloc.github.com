@@ -1,1 +1,1 @@
-/www/site/daedalus.ru/code/all/nodejs_Ss.js
+../all/nodejs_Ss.js

@@ -1,1 +1,1 @@
-/www/site/daedalus.ru/code/all/double_vpn.txt
+../all/double_vpn.txt

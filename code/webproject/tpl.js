@@ -1,1 +1,1 @@
-/www/site/daedalus.ru/code/all/tpl.js
+../all/tpl.js

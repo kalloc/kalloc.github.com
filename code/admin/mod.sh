@@ -1,1 +1,1 @@
-/www/site/daedalus.ru/code/all/mod.sh
+../all/mod.sh

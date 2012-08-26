@@ -1,1 +1,1 @@
-/www/site/daedalus.ru/code/all/sysctl_bsd.txt
+../all/sysctl_bsd.txt

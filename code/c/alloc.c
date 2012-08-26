@@ -1,1 +1,1 @@
-/www/site/daedalus.ru/code/all/alloc.c
+../all/alloc.c

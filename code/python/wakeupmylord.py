@@ -1,1 +1,1 @@
-/www/site/daedalus.ru/code/all/wakeupmylord.py
+../all/wakeupmylord.py

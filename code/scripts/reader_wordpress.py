@@ -1,1 +1,1 @@
-/www/site/daedalus.ru/code/all/reader_wordpress.py
+../all/reader_wordpress.py

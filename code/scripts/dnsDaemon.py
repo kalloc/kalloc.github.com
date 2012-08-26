@@ -1,1 +1,1 @@
-/www/site/daedalus.ru/code/all/dnsDaemon.py
+../all/dnsDaemon.py

@@ -1,1 +1,1 @@
-/www/site/daedalus.ru/code/all/reader_names.astrostar.py
+../all/reader_names.astrostar.py

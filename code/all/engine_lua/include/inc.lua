@@ -1,1 +1,1 @@
-/www/site/lastplanet.ru/include/inc.lua
+..//www/site/lastplanet.ru/include/inc.lua

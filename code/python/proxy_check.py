@@ -1,1 +1,1 @@
-/www/site/daedalus.ru/code/all/proxy_check.py
+../all/proxy_check.py

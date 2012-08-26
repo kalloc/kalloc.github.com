@@ -1,1 +1,1 @@
-/www/site/daedalus.ru/code/all/epoll.c
+../all/epoll.c

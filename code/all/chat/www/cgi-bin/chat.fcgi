@@ -1,1 +1,1 @@
-/www/c/chat/chat.fcgi
+..//www/c/chat/chat.fcgi

@@ -1,1 +1,1 @@
-/www/site/daedalus.ru/code/all/openvpn_server.txt
+../all/openvpn_server.txt

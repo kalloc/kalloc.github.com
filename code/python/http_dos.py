@@ -1,1 +1,1 @@
-/www/site/daedalus.ru/code/all/http_dos.py
+../all/http_dos.py

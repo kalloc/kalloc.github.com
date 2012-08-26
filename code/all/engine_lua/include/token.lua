@@ -1,1 +1,1 @@
-/www/site/lastplanet.ru/include/token.lua
+..//www/site/lastplanet.ru/include/token.lua

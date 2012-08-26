@@ -1,1 +1,1 @@
-/www/site/daedalus.ru/code/all/php.sh
+../all/php.sh

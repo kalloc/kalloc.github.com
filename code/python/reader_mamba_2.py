@@ -1,1 +1,1 @@
-/www/site/daedalus.ru/code/all/reader_mamba_2.py
+../all/reader_mamba_2.py

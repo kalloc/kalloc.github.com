@@ -1,1 +1,1 @@
-/www/site/daedalus.ru/code/all/authorizer.txt
+../all/authorizer.txt

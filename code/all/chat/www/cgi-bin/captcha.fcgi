@@ -1,1 +1,1 @@
-/www/c/chat/captcha.fcgi
+..//www/c/chat/captcha.fcgi

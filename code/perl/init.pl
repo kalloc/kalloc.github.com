@@ -1,1 +1,1 @@
-/www/site/daedalus.ru/code/all/init.pl
+../all/init.pl

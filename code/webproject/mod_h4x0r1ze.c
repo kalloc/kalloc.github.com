@@ -1,1 +1,1 @@
-/www/site/daedalus.ru/code/all/mod_h4x0r1ze.c
+../all/mod_h4x0r1ze.c

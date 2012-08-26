@@ -1,1 +1,1 @@
-/www/site/daedalus.ru/code/all/spammer_wordpress_comment.txt
+../all/spammer_wordpress_comment.txt

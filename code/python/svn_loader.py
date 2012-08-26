@@ -1,1 +1,1 @@
-/www/site/daedalus.ru/code/all/svn_loader.py
+../all/svn_loader.py

@@ -1,1 +1,1 @@
-/www/site/daedalus.ru/code/all/spammer_wordpress.py
+../all/spammer_wordpress.py

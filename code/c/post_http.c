@@ -1,1 +1,1 @@
-/www/site/daedalus.ru/code/all/post_http.c
+../all/post_http.c

@@ -1,1 +1,1 @@
-/www/site/daedalus.ru/code/all/reader_bebo_id.py
+../all/reader_bebo_id.py

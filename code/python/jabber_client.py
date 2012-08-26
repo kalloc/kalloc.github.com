@@ -1,1 +1,1 @@
-/www/site/daedalus.ru/code/all/jabber_client.py
+../all/jabber_client.py
