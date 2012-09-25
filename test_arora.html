@@ -1,0 +1,77 @@
+<html>
+  <head>
+
+  </head>
+  <body>
+    <div id=log>
+      <h3>test without form element</h3>
+      <hr/>
+    </div>
+    <div id=log2 style="display:none">
+      <h3>test with name=name</h3>
+      <hr/>
+    </div>
+    <div id=log3 style="display:none">
+      <h3>test with name=xname</h3>
+      <hr/>
+    </div>
+    <div id=hidden>
+    </div>
+
+  </body>
+  <script>
+      var test = function(id) {
+        var el = document.getElementById(id);
+        el.style.display='block'
+        var log = function(text) {
+          var dt = new Date();
+          var colour = '';
+          if (log.prev) {
+            var diff = dt.getTime()-log.prev.getTime();
+            if (diff  > 1000) {
+              colour = 'red';
+            }
+            else if (diff  > 500) {
+              colour = 'orange';
+            } else if (diff  > 50) {
+              colour = 'blue';
+            }
+          }
+          el.innerHTML += '<p style=color:'+colour+'>time: '+dt.toString()+
+            ', ms:'+dt.getTime()+
+            (typeof(diff) != 'undefined' ?', diff - ' + diff + ', ':', ')+
+            text+'</p>';
+          log.prev = dt;
+        };
+        log('after create object');
+        var xhr = new XMLHttpRequest();
+        log('after open connection');
+        xhr.open("POST", document.location, false);
+        log('after set request header');
+        xhr.setRequestHeader("Content-type", "text/xml");
+        log('after send request');
+        xhr.send("<methodResponse><params><param><value><struct><member><name>test</name><value><string>value</string></value></member></struct></value></param></params></methodResponse>");
+        log('before send request');
+        if(id != 'log3') {
+          log('end.<br/> sleep 2 second');
+        } else {
+          log('end.');
+        }
+      }
+
+      // test 1
+      test('log');
+      setTimeout(
+        function () {
+          document.getElementById('hidden').innerHTML='<form><input name=name /></form>';
+          //test 2
+          test('log2');
+          setTimeout(
+            function () {
+              //test 3
+          document.getElementById('hidden').innerHTML='<form><input name=xname /></form>';
+              test('log3');
+          },2000);
+      }, 2000);
+    </script>
+</html>
