@@ -188,6 +188,7 @@ let g:neocomplcache_lock_buffer_name_pattern = '\*ku\*'
 autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS 
 autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags 
 autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS 
+au FileType javascript set dictionary+=$HOME/.vim/dict/node.dict
 autocmd FileType python setlocal omnifunc=pythoncomplete#Complete 
 autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags 
 autocmd FileType ruby,eruby set omnifunc=rubycomplete#Complete
@@ -267,11 +268,13 @@ Bundle "rygwdn/ultisnips"
 
 " IDE
 Bundle "mileszs/ack.vim"
+Bundle "git://github.com/godlygeek/tabular.git"
 Bundle "Source-Explorer-srcexpl.vim"
 Bundle "taglist.vim"
 Bundle "kien/ctrlp.vim"
 Bundle "Shougo/neocomplcache"
 Bundle "xolox/vim-easytags"
+Bundle "https://github.com/motemen/git-vim"
 
 " PHP
 Bundle 'git://github.com/vim-scripts/php.vim--Garvin.git'
@@ -291,6 +294,17 @@ Bundle 'bdd/vim-scala'
 " Perl
 "Bundle 'git://github.com/petdance/vim-perl.git'
 "Bundle 'git://github.com/ggray/vim-tt2.git'
+
+"NodeJS
+"Bundle 'git://github.com/guileen/vim-node.git'
+"Bundle 'git://github.com/myhere/vim-nodejs-complete.git'
+"Bundle 'git://github.com/pangloss/vim-javascript.git'
+"Bundle 'git://github.com/briancollins/vim-jst.git'
+"let g:html_indent_inctags = "html,body,head,tbody"
+"let g:html_indent_script1 = "inc"
+"let g:html_indent_style1 = "inc"
+"let g:node_usejscomplete = 1
+"au BufRead,BufNewFile *.ejs set filetype=jst
 
 " HTML/HAML
 Bundle 'git://github.com/othree/html5.vim.git'
