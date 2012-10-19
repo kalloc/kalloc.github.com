@@ -1,13 +1,15 @@
 [user]
-	name = Nikita Kuznetsov
-	email = kalloc@daedalus.ru
+    name = Nikita Kuznetsov
+    email = nikita.kuznetsov@daedalus.ru
 
 [alias]
-	ci = commit
-	st = status
-	co = checkout
+    up = !(git add . && git stash && git pull --rebase >&2) | grep -v \"No local changes to save\" && git stash pop
+    ci = commit
+    st = status
+    co = checkout
+    sync = git up && git push
 
 [color]
-	diff = auto
-	status = auto
-	branch = auto
+    diff = auto
+    status = auto
+    branch = auto
