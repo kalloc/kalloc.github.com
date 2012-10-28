@@ -1,1 +1,0 @@
-..//www/c/chat/reg.fcgi

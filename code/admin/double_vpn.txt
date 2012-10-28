@@ -1,1 +1,13 @@
-../all/double_vpn.txt
+iptables -F -t nat
+iptables -F -t mangle
+iptables -F
+ip ro flush table 100
+ip ru del fwmark 100
+iptables -A POSTROUTING -t nat -o tun1 -j MASQUERADE
+iptables -A POSTROUTING -t nat -o tun0 -j MASQUERADE
+ip rule  add  from VPN1 table 100
+ip route add table 100 via GW_VPN1 dev eth0
+
+
+
+

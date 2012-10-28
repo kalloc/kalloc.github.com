@@ -1,1 +1,109 @@
-../all/backuper2
+#!/bin/sh
+
+#Config  Start
+
+DATEUSE="-d -1 day"
+#Путь к директории для сохрания backup
+BACKPATH="/backup"
+#файл для сохранения информации о процессе
+LOG="/var/log/backup.log"
+#
+#Настройки для файлового backup
+#субдиректория в BACKPATH для сохранения tar архивов
+FLBACKPATH="file"
+#пути которые будут архивироваться через пробел
+FLPATH="/vservers/web/etc /vservers/web/www /vservers/web/var /vservers/web/home /vservers/web/usr/local/mail"
+
+#Config End
+
+export PATH="$PATH:/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin"
+DATA=`date  +%u`
+
+
+if [ ! -d $BACKPATH ]; then
+    mkdir $BACKPATH
+fi;
+
+if [ ! -d $BACKPATH/$MYBACKPATH ]; then
+    mkdir $BACKPATH/$MYBACKPATH
+fi;
+
+if [ ! -d $BACKPATH/$FLBACKPATH ]; then
+    mkdir $BACKPATH/$FLBACKPATH
+fi;
+
+echo ""  >> $LOG
+echo "----------"`date`"------------" >> $LOG
+echo ""  >> $LOG
+echo "		[file backup started]" >> $LOG
+echo "" >> $LOG
+for filepath in $FLPATH; do
+
+    filename=`echo $filepath | sed "s/\///" |  sed "s/\//_/g"`
+
+    echo "Start Backup:$filepath"  >> $LOG
+    if [ -f $BACKPATH/$FLBACKPATH/$filename.tar ]; then
+        DATE=`date +%u`;
+        if [ "$DATE" == "1" ]; then
+	    echo "1 day, create full backup"  >> $LOG
+            mv $BACKPATH/$FLBACKPATH/$filename.tar $BACKPATH/$FLBACKPATH/$filename"_old.tar"
+	    nice -n 19 tar -cf $BACKPATH/$FLBACKPATH/$filename.tar $filepath >/dev/null 2>&1
+	    rm -f $BACKPATH/$FLBACKPATH/$filename"_*".tar >/dev/null 2>&1
+	    if [ -f $BACKPATH/$FLBACKPATH/$filename.tar ]; then
+	    nice -n 19 tar -tvf $BACKPATH/$FLBACKPATH/$filename.tar > $BACKPATH/$FLBACKPATH/$filename.txt
+	    echo backuped, size:`ls -alh $BACKPATH/$FLBACKPATH/$filename.tar | awk '{print $5}'`  >> $LOG
+	    fi;
+	else
+            DATE=`date "$DATEUSE" +%u`
+            DATE2=`date "$DATEUSE" +%F`
+            echo "create backup after $DATE2" >> $LOG
+            #nice -n 19 tar  --newer-mtime="$DATE2"  -cf $BACKPATH/$FLBACKPATH/$filename"_"$DATE.tar $filepath >/dev/null 2>&1
+            find $filepath -mtime -1 -type f  > $BACKPATH/$FLBACKPATH/$filename"_"$DATE.txt
+            nice -n 19 tar  -cf $BACKPATH/$FLBACKPATH/$filename"_"$DATE.tar -T $BACKPATH/$FLBACKPATH/$filename"_"$DATE.txt >/dev/null 2>&1
+
+            if [ -f $BACKPATH/$FLBACKPATH/$filename"_"$DATE.tar ]; then
+                echo backuped, size:`ls -alh $BACKPATH/$FLBACKPATH/$filename"_"$DATE.tar |awk '{print $5}'` >> $LOG
+            fi;
+	fi;
+    else   
+	    echo "full backup is no exist, create full backup" >> $LOG
+	    nice -n 19 tar -cf $BACKPATH/$FLBACKPATH/$filename.tar $filepath >/dev/null 2>&1
+	    rm -f $BACKPATH/$FLBACKPATH/"$filename"_*.tar
+	    if [ -f $BACKPATH/$FLBACKPATH/$filename.tar ]; then
+	    nice -n 19 tar -tvf $BACKPATH/$FLBACKPATH/$filename.tar > $BACKPATH/$FLBACKPATH/$filename.txt
+	    echo backuped, size:`ls -alh $BACKPATH/$FLBACKPATH/$filename.tar | awk '{print $5}'` >> $LOG
+	    fi;
+	    
+    fi;
+    
+#    echo "" >> $LOG
+
+done;
+
+echo ""  >> $LOG
+echo "		[backup mysql]" >> $LOG
+echo ""  >> $LOG
+
+for db in $MYDB; do
+
+    char="cp1251"
+
+    if [ -f /var/lib/mysql/$db/db.opt ]; then
+        char=`cat /var/lib/mysql/$db/db.opt  | grep default-character | cut -d= -f2`
+    fi;
+    
+    if [ ! $char  ]; then
+        char=$MYDFCHAR
+    fi;
+
+    echo "Start Backup:$db, with character: $char" >> $LOG
+#    echo "wait...." >> $LOG
+    mysqldump -u"$MYUSER" -p"$MYPASS" --default-character-set=$char  $db | gzip -c > $BACKPATH/$MYBACKPATH/$db"_"$DATA.sql.gz
+#убрать внизу #, если нужен архивный месячный backup
+#    cp -f $BACKPATH/$MYBACKPATH/$db"_"$DATA.sql.gz $BACKPATH/$MYBACKPATH/$db"_"`date +month_%m`.sql.gz
+    echo db: $db backuped, size:`ls -alh $BACKPATH/$MYBACKPATH/$db"_"$DATA.sql.gz | awk '{print $5}'` >> $LOG
+#    echo "" >> $LOG
+
+done;
+
+echo "					.EOL" >> $LOG

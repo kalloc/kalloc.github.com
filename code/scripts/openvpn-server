@@ -1,1 +1,240 @@
-../all/openvpn-server
+#!/bin/bash
+openvpn_root="/etc/openvpn/"
+
+
+if [ ! -d $openvpn_root"keys" ]; then mkdir -p $openvpn_root"keys"; touch $openvpn_root"keys/database.txt"; echo "10" > $openvpn_root"keys/serial"; fi;
+
+echo 'HOME			= .
+RANDFILE		= $ENV::HOME/.rnd
+
+oid_section		= new_oids
+
+
+[ new_oids ]
+
+
+[ ca ]
+default_ca	= CA_default		# The default ca section
+
+[ CA_default ]
+
+dir		= /etc/openvpn/		# Where everything is kept
+certs		= $dir/keys		# Where the issued certs are kept
+crl_dir		= $dir/keys		# Where the issued crl are kept
+database	= $dir/keys/database.txt	# database index file.
+					# several ctificates with same subject.
+
+certificate	= $dir/keys/cacert.pem 	# The CA certificate
+serial		= $dir/keys/serial 		# The current serial number
+					# commented out to leave a V1 CRL
+crl		= $dir/keys/crl.pem 		# The current CRL
+private_key	= $dir/keys/cakey.pem# The private key
+RANDFILE	= $dir/keys/.rand	# private random number file
+
+x509_extensions	= usr_cert		# The extentions to add to the cert
+
+cert_opt 	= ca_default		# Certificate field options
+
+
+
+default_days	= 365			# how long to certify for
+default_crl_days= 30			# how long before next CRL
+default_md	= md5			# which md to use.
+preserve	= no			# keep passed DN ordering
+
+policy		= policy_match
+
+[ policy_match ]
+countryName		= match
+stateOrProvinceName	= match
+organizationName	= match
+organizationalUnitName	= optional
+commonName		= supplied
+emailAddress		= optional
+
+[ policy_anything ]
+countryName		= optional
+stateOrProvinceName	= optional
+localityName		= optional
+organizationName	= optional
+organizationalUnitName	= optional
+commonName		= supplied
+emailAddress		= optional
+
+[ ca_default_policy ]
+countryName             = optional
+stateOrProvinceName     = optional
+localityName            = optional
+organizationName        = optional
+organizationalUnitName  = optional
+emailAddress            = optional
+
+
+
+[ req ]
+default_bits		= 2048
+default_keyfile 	= privkey.pem
+distinguished_name	= req_distinguished_name
+attributes		= req_attributes
+x509_extensions	= v3_ca	# The extentions to add to the self signed cert
+
+
+string_mask = nombstr
+
+
+[ req_distinguished_name ]
+countryName			= "Country Name (2 letter code)"
+#- - - - - - - - - - - - - - -	= $ENV::KEY_COUNTRY
+countryName_default		= "US"
+countryName_min			= 2
+countryName_max			= 2
+stateOrProvinceName		= "State or Province Name (full name)"
+#- - - - - - - - - - - - - - -	= $ENV::KEY_PROVINCE
+stateOrProvinceName_default	= "NA"
+localityName			= "City Name (or town, village etc)"
+#- - - - - - - - - - - - - - -	= $ENV::KEY_CITY
+localityName_default		= "Dakota"
+0.organizationName		= "Organization Name (eg, company)"
+#- - - - - - - - - - - - - - -	= $ENV::KEY_ORG
+0.organizationName_default	= "OpenVPN"
+
+commonName			= "Common Name (eg, person`s or server`s name)"
+commonName_max			= 64
+
+emailAddress			= "E-mail Address"
+#- - - - - - - - - - - - - - -	= $ENV::KEY_EMAIL
+emailAddress_default		= "mail@fake.net"
+emailAddress_max		= 40
+
+[ req_attributes ]
+challengePassword		= A challenge password
+challengePassword_min		= 4
+challengePassword_max		= 20
+unstructuredName		= An optional company name
+
+[ req_x509_ext ]
+basicConstraints		= CA:true
+subjectKeyIdentifier		= hash
+authorityKeyIdentifier		= keyid:always,issuer:always
+
+[ server ]
+basicConstraints		= CA:FALSE
+nsCertType			= server
+nsComment			= "OpenSSL Generated Server Certificate"
+subjectKeyIdentifier		= hash
+authorityKeyIdentifier		= keyid,issuer:always
+
+
+
+
+
+[ usr_cert ]
+
+
+
+basicConstraints=CA:FALSE
+
+
+
+
+
+
+
+
+subjectKeyIdentifier=hash
+authorityKeyIdentifier=keyid,issuer:always
+
+
+
+
+[ v3_req ]
+
+
+basicConstraints = CA:FALSE
+keyUsage = nonRepudiation, digitalSignature, keyEncipherment
+
+[ v3_ca ]
+
+
+
+
+
+subjectKeyIdentifier=hash
+
+authorityKeyIdentifier=keyid:always,issuer:always
+
+basicConstraints = CA:true
+
+
+
+
+
+[ crl_ext ]
+
+
+authorityKeyIdentifier=keyid:always,issuer:always
+
+[ proxy_cert_ext ]
+
+
+basicConstraints=CA:FALSE
+
+
+
+
+
+
+
+
+subjectKeyIdentifier=hash
+authorityKeyIdentifier=keyid,issuer:always
+
+
+
+
+proxyCertInfo=critical,language:id-ppl-anyLanguage,pathlen:3,policy:foo
+
+' >> $openvpn_root"openvpn_openssl.conf"
+
+
+openssl req -nodes -new -x509 -keyout "$openvpn_root"ca.key -out "$openvpn_root"ca.crt -days 3650 -batch -config "$openvpn_root"openvpn_openssl.conf 2>&1 > /dev/null
+openssl req -extensions server -subj '/countryName=US/stateOrProvinceName=NA/organizationName=OpenVPN/CN=server' -nodes -new  -keyout "$openvpn_root"server.key -out "$openvpn_root"server.csr -days 3650 -batch -config "$openvpn_root"openvpn_openssl.conf 2>&1 > /dev/null
+openssl ca  -extensions server -subj '/countryName=US/stateOrProvinceName=NA/organizationName=OpenVPN/CN=server' -outdir "$openvpn_root"keys/ -keyfile "$openvpn_root"ca.key -cert "$openvpn_root"ca.crt -out "$openvpn_root"server.crt -in "$openvpn_root"server.csr -days 3650 -batch -config "$openvpn_root"openvpn_openssl.conf 2>&1 > /dev/null
+openssl dhparam -out /etc/openvpn/dh2048.pem 2048
+dns=`cat /etc/resolv.conf  | grep '^nameserver' | awk '{print $2}'| head -n1`
+for ip in $dns; do
+echo "
+dev tun
+push \"redirect-gateway def1\"
+push \"dhcp-option DNS $ip\"  
+port 1666
+proto tcp
+
+server 10.6.66.0 255.255.255.0
+ifconfig-pool-persist /etc/openvpn/ipp.txt
+persist-key
+persist-tun
+keepalive 60 120
+user nobody
+group nobody
+tls-server
+
+cipher AES-256-CBC
+auth SHA1
+comp-lzo
+chroot   /etc/openvpn/
+
+ca      /etc/openvpn/ca.crt
+cert    /etc/openvpn/server.crt
+key     /etc/openvpn/server.key
+dh      /etc/openvpn/dh2048.pem
+
+
+log        /etc/openvpn/openvpn.log
+log-append /etc/openvpn/openvpn_a.log
+status     /etc/openvpn/vpnstatus.log
+verb 0
+
+" >> $openvpn_root"server.conf"
+done;
+

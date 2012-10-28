@@ -1,1 +1,139 @@
-../all/iptables.txt
+#!/bin/bash
+
+VS1="62.205.190.41"
+white="213.219.216.40 213.248.62.7 217.147.17.0/24 194.87.37.62 213.248.58.166"
+ftpVS1=""
+ipt=iptables
+
+$ipt -F
+$ipt -A INPUT -i lo -j ACCEPT
+$ipt -A INPUT -p tcp ! --syn -m conntrack --ctstate NEW -j DROP
+$ipt -A INPUT -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT
+ipset  -U :all: :default:
+ipset -F
+ipset -X
+
+function ipfill() {
+    ipset -N ${2}_Net nethash
+    ipset -N $2 iptree
+    for ip in $1; do 
+	if [ "`echo $ip | grep '/'`" == "" ];then
+	    ipset -A $2 $ip;
+	else
+	    ipset -A ${2}_Net $ip;
+	fi
+    done
+}
+
+ipfill "$white" white
+ipfill "$ftpVS1" ftpVS1
+ipfill "$VS1" VS1
+ipfill "" block
+
+ipset -B ftpVS1 :default:  -b VS1
+ipset -B ftpVS1_Net :default: -b VS1
+
+
+function accept_list() {
+
+    for src in $1;do
+	for dst in $2;do 
+	    $ipt -A INPUT -s $src -d $dst  $3 -j ACCEPT ;
+	done
+    done
+
+} 
+
+
+#INPUT
+$ipt -A INPUT -m set --set white src  -j ACCEPT
+$ipt -A INPUT -m set --set white_Net src  -j ACCEPT
+
+
+$ipt -A INPUT -m set --set block src  -j DROP
+$ipt -A INPUT -m set --set block_Net src  -j DROP
+
+$ipt -A INPUT -p tcp -m multiport --dport 25,1433,135,136,137,138,139,445 -j DROP
+
+$ipt -A INPUT -m set --set ftpVS1 src,dst -j ACCEPT
+$ipt -A INPUT -m set --set ftpVS1_Net src,dst -j ACCEPT
+
+$ipt -A INPUT -m recent --name banned-hosts --update --seconds 600 -j DROP
+
+$ipt -N BANNED
+$ipt -A BANNED -m limit --limit 10/s --limit-burst 1 -j LOG
+$ipt -A BANNED -j SET --add-set block src
+$ipt -A BANNED -m recent --name banned-hosts --set -j RETURN
+  
+$ipt -N ADAPT
+$ipt -A ADAPT -m limit --limit 30/s --limit-burst 1 -j LOG
+$ipt -A ADAPT -m recent --hitcount 3 --name watch-hosts --update --seconds 180 -j BANNED
+$ipt -A ADAPT -m recent --name watch-hosts --set -j RETURN
+
+
+# Invalid tcp packets
+$ipt -A INPUT -p tcp --tcp-option 128 -j DROP
+$ipt -A INPUT -p tcp --tcp-option 64 -j DROP
+# Malformed xmas packets
+$ipt -A INPUT -p tcp --tcp-flags ALL ALL -j DROP
+# Malformed null packets
+$ipt -A INPUT -p tcp --tcp-flags ALL NONE -j DROP
+# New tcp connections must be SYN packets!
+$ipt -A INPUT -p tcp ! --syn -m state --state NEW -j DROP
+# others
+$ipt -A INPUT -m state --state INVALID -j DROP
+# Block timestamp
+$ipt -A INPUT -p icmp --icmp-type timestamp-request -j DROP
+# Always allow localhost
+$ipt -A INPUT -i lo -j ACCEPT
+ 
+# Syn-flood protection
+$ipt -N syn-flood
+$ipt -A INPUT -p tcp --syn -j syn-flood
+$ipt -A syn-flood -m set --set white src -j RETURN
+$ipt -A syn-flood -m recent --name syn-flood --update --seconds 60 -j DROP
+$ipt -A syn-flood -m hashlimit --hashlimit 50/s --hashlimit-burst 100 --hashlimit-mode srcip --hashlimit-name syn-flood -j RETURN
+$ipt -A syn-flood -m recent --name syn-flood --set -j ADAPT
+$ipt -A syn-flood -j DROP
+# Furtive port scanner
+$ipt -N port-scan
+$ipt -A INPUT -p tcp --tcp-flags SYN,ACK,FIN,RST RST -j port-scan
+$ipt -A port-scan -m recent --name port-scan --update --seconds 60 -j DROP
+$ipt -A port-scan -m hashlimit --hashlimit 10/s --hashlimit-burst 2 --hashlimit-mode srcip --hashlimit-name port-scan -j RETURN
+$ipt -A port-scan -m recent --name port-scan --set -j ADAPT
+$ipt -A port-scan -j DROP
+ 
+# SSH bruteforce attack protection
+$ipt -N SSH
+$ipt -A INPUT -p tcp --dport 22 --syn -j SSH
+$ipt -A SSH -m set --set white src -j RETURN
+$ipt -A SSH -p tcp -m recent --hitcount 2 --name SSH --update --seconds 60 -j DROP
+$ipt -A SSH -p tcp -m recent --name SSH --update --seconds 60 -j RETURN
+$ipt -A SSH -m recent --name SSH --set -j ADAPT
+# FTP bruteforce attack protection
+$ipt -N FTP
+$ipt -A INPUT -m set --set VS1 dst -p tcp --dport 21 --syn -j FTP
+$ipt -A FTP -m set --set white src -j RETURN
+$ipt -A FTP -m set --set white_Net src -j RETURN
+$ipt -A FTP -p tcp -m recent --hitcount 2 --name FTP --update --seconds 60 -j DROP
+$ipt -A FTP -p tcp -m recent --name FTP --update --seconds 60 -j RETURN
+$ipt -A FTP -m recent --name FTP --set -j ADAPT
+
+
+# HTTP flood protection
+$ipt -N http-flood
+$ipt -A INPUT -m set --set VS1 dst -p tcp --syn -j http-flood
+$ipt -A http-flood -m set --set white src -j RETURN
+$ipt -A http-flood -m recent --name http-flood --update --seconds 60 -j ADAPT
+$ipt -A http-flood -p tcp --syn --dport 80 -m hashlimit --hashlimit 10/s --hashlimit-burst 20 --hashlimit-mode srcip --hashlimit-name http-flood -j RETURN
+$ipt -A http-flood -m recent --name http-flood --set -j ADAPT
+$ipt -A http-flood -j DROP
+
+
+#-j SET --add-set 
+$ipt -A INPUT -p tcp -m multiport --dport 21,22,80,443  -j ACCEPT
+
+#$ipt -A INPUT -m set --set VS1 dst -j LOG --log-prefix "INPUT_DROP: "
+$ipt -A INPUT -m set --set VS1 dst  -j DROP
+
+

@@ -1,1 +1,78 @@
-../all/backuper
+#!/bin/bash
+function  fileback() {
+    name=$1
+    path=$2
+    depth=$3
+    
+    i=$depth
+    if [ "$i" == "" ];then
+	i=3;
+    fi;
+    while [ $i -gt 0 ];
+    do
+	if [ -f "/backup/${name}_$((i-1)).tar" ];then
+	    mv  /backup/${name}_$((i-1)).tar /backup/${name}_${i}.tar
+	fi;
+        i=$((i-1))
+    done
+
+    tar -cf /backup/${name}_0.tar -C ${path} .
+}
+
+
+function  sqlback() {
+    db=$1
+    depth=$2
+    
+    i=$depth
+    if [ "$i" == "" ];then
+	i=3;
+    fi;
+    
+    while [ $i -gt 0 ];
+    do
+	if [ -f "/backup/${db}_$((i-1)).sql.gz" ];then
+	    mv /backup/${db}_$((i-1)).sql.gz /backup/${db}_${i}.sql.gz
+	fi;
+        i=$((i-1))
+    done
+
+    /usr/bin/mysqldump ${db} | /bin/gzip -c > /backup/${db}_0.sql.gz
+}
+
+
+
+function xfs {
+        name=$1
+        ip=$2
+        key=$3
+        path=$4
+        ssh -i ${key} ${ip} "xfsdump -E -F -l ${Level} - -L Session_${Level} -M ${name} ${path}" >/backup/${name}.${Level} 2> /backup/${name}.${Level}.log
+        if [ ! -f "/backup/${name}.0" ];then
+                ssh -i ${key} ${ip} "xfsdump -E -F -l 0 - -L Session_0 -M ${name} ${path}" > /backup/${name}.0 2> /backup/${name}.0.log
+        fi
+}
+
+
+
+
+
+fileback 1018ru /www/teneighru/10-18.ru/
+fileback etc /etc 10
+fileback awstats /home/awstats 10
+sqlback	db_1018ru 4
+sqlback mysql 10
+sqlback roundcubemail 4
+sqlback vexim 10
+
+xfs web1.ru 80.93.56.118 ~/.ssh/backup_web1.ru /
+
+
+
+for db in `echo 'show databases' | mysql -s `;do
+    nice -n 20 mysqlcheck -as ${db} | grep -v 'OK' > /backup/${db}_check.log
+    nice -n 20 mysqlcheck -cs ${db} | grep -v 'OK' >> /backup/${db}_check.log
+    nice -n 20 mysqlcheck -rs ${db} | grep -v 'OK' >> /backup/${db}_check.log
+    nice -n 20 mysqlcheck -os ${db} | grep -v 'OK' >> /backup/${db}_check.log
+    sqlback $db 10
+done

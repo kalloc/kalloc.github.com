@@ -1,1 +1,684 @@
-../all/authorizer.txt
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+#include <unistd.h>
+#include <sys/time.h>
+#include <stdlib.h>
+#include <stdarg.h>
+#include <stdio.h>
+#include <unistd.h>
+#include <string.h>
+#include <fcntl.h>
+#include <signal.h>
+#include <errno.h>
+#include <err.h>
+#include <sys/queue.h>
+#include <event.h>
+#include <time.h>
+#include <mysql/mysql.h>
+#include <search.h>
+#include <crypt.h>
+
+
+#define SERVER_PORT 5555
+
+#define BUFLEN 1024
+
+#define TAILQ_FOREACH(var, head, field)                                 \
+        for ((var) = ((head)->tqh_first);                               \
+    		(var);                                                  \
+		(var) = ((var)->field.tqe_next))
+					
+
+struct pool {
+    struct sockaddr_in client;
+    struct event ev;
+    char buf[BUFLEN];
+    char data[BUFLEN];
+    int len;
+    int fd;
+};
+
+struct timeval ttl  = {5, 0};
+time_t now;
+void *root = NULL;
+
+
+FILE * fp = 0;
+
+
+struct st_db {
+    char *key;
+    char *prefix;
+    void *root;
+    MYSQL h;
+};
+
+struct st_user {
+    char *key;
+    char *clear;
+    char *email;
+    char *group;
+    char crypt[14];
+    time_t time;
+    time_t sess;
+    TAILQ_ENTRY(st_user) entries;
+};
+
+
+TAILQ_HEAD(, st_user) expire_tailq_head;
+
+struct st_db_config {
+    char key[50];
+    char host[50];
+    char login[20];
+    char pass[20];
+    char db[20];
+    char prefix[10];
+} db_config[]={
+    {"turkey.ru","localhost","xxx","xxx","xxx","w3t"},
+    {"egyptclub.ru","localhost","xxx","xxx","xxx","w3t"},
+    {"investclub.ru","localhost","xxx","xxx","xxx","w3t"},
+    {"","","","",""}
+};
+
+
+MYSQL mysql;
+MYSQL_RES *result;
+MYSQL_ROW row;
+MYSQL_FIELD *fields;
+char query[BUFLEN*2];
+unsigned len;
+
+
+#include "aes.h"
+#define KEYLEN 256
+#define b64encode() to64frombits((unsigned char *)base64,(unsigned char *)out,len)
+#define b64decode() from64tobits(in,base64)
+#define bh() plain2hex(out,base64,len)
+#define hb() hex2plain(base64,in,strlen(base64))
+#define secretcode "xxx"
+#define SALT "xxx"
+
+#define TTL 3600
+
+
+aes_context ctx;
+unsigned int skey=0,len;
+char in[BUFLEN+1],out[BUFLEN+1],base64[BUFLEN+1];
+char cryptout[128],cryptb64[256];
+
+char *login,*ip;
+unsigned char key[]="xxxx";
+unsigned char iv_key[]="xxx";
+
+
+
+char * aes64decrypt(char *base64) {
+
+
+    unsigned char iv[16];
+    memcpy(iv,iv_key,16);
+
+    hb();
+
+    len=aes_cbc_decrypt(&ctx,iv,(unsigned char*)in,(unsigned char*)out,len); 
+
+
+    return out;
+}
+
+char * aes64encrypt(char *in) {
+
+
+    unsigned char iv[16];
+    memcpy(iv,iv_key,16);
+
+    len=aes_cbc_encrypt(&ctx,iv,(unsigned char*)in,(unsigned char*)out,len); 
+    bh();
+    snprintf(out,BUFLEN,"%s",base64);
+    return out;
+}
+
+
+
+char * genLink (char *ip,char *login) {
+	len=snprintf(base64,BUFLEN,"%s:%s:%s:%d",ip,secretcode,login,(int)time(NULL));
+	snprintf(cryptout,126,"%s",(char *)crypt(base64,SALT));
+	plain2hex(cryptout,cryptb64,strlen(cryptout));
+	return  aes64encrypt(base64);
+}
+
+
+
+int checkLink (char *Link,char *Hash) {
+	len=strlen(Link);
+	if(len > BUFLEN) return -1;
+
+	aes64decrypt(Link);
+	if(len > BUFLEN) return -2;
+
+	if(!strstr(out,":"secretcode":")) return -3;
+
+	hex2plain(Hash,cryptout,strlen(Hash));
+
+	if(strcmp((char *)crypt(out,cryptout),cryptout) < 0) return -4;
+
+	int i=0;
+	for(;i<=len;i++) {
+	    if(out[i] == ':') {
+		out[i]=0;
+		ip=out;    
+		break;
+	    }
+	}
+	for(;i<=len;i++) {
+	    if(out[i] == ':') 	break;
+	}
+	i++;
+	login=out+i;
+
+	for(;i<=len;i++) {
+	    if(out[i] == ':') {
+		out[i]=0;
+		break;
+	    }
+	}
+	
+	if((atoi(out+i+1) + TTL) < time(NULL)) return -5;
+
+	return 1;
+}
+
+
+
+char * getIP () {
+	return ip;
+}
+
+char * getHash () {
+	return cryptb64;
+}
+
+char * getLink () {
+	return out;
+}
+
+char * getLogin () {
+	return login;
+}
+
+
+
+int strcmp(const char*,const char*);
+
+int compare(struct st_db *a, struct st_db *b){
+    return strcmp(a->key,b->key);
+}
+										    
+
+
+
+double get_timeval_delta(struct timeval *after, struct timeval *before) {
+    return ((double) after ->tv_usec - (double) before->tv_usec);
+}
+
+		    
+
+int setnb(int fd) {
+	int flags;
+	flags = fcntl(fd, F_GETFL);
+	if (flags < 0)	return flags;
+
+	flags |= O_NONBLOCK;
+	if (fcntl(fd, F_SETFL, flags) < 0) return -1;
+
+        return 0;
+}
+
+char * get_addr(struct sockaddr_in client) {
+    char *ptr;
+    return ((ptr=inet_ntoa(client.sin_addr)) ? ptr : "unknow_ip");
+}
+
+
+
+#define HEAD "HTTP/1.1 200 OK\r\nContent-Type:text/plain\r\n\r\n"
+
+#define get(s) s ? s : "ERR"
+
+#define error_write(STR);    p->len=snprintf(p->data,BUFLEN,STR);				\
+			     event_set(&p->ev,p->fd,EV_WRITE|EV_TIMEOUT,client_handle,p);	\
+		    	     event_add(&p->ev,&ttl); 						\
+		    	     return;
+
+
+void loger(const char *fmt, ...) {
+    static char buf[4096];
+    static int len;
+    va_list ap;
+    va_start(ap,fmt);
+    len=vsnprintf(buf,4096,fmt,ap);
+    buf[len]='\n';
+    buf[len+1]=0;
+    if(fp==0) {
+        fp=fopen("/var/log/authorizer.log","a");
+    }
+    fwrite(buf,1,len,fp);
+    fflush(fp);
+    va_end(ap);
+}
+
+void restart_handler (int signum)
+{
+    if(fp != 0) fclose(fp);
+    fp=0;
+}
+
+
+
+
+int check_pass(char *clear,char *hash) {
+    //  в php это так crypt($clear,$hash) != $hash
+    char salt[2];
+    salt[0]=hash[0];
+    salt[1]=hash[1];
+    salt[2]=0;
+    return !memcmp(crypt(clear,salt),hash,13);
+}
+char * get_crypt(char *clear,char *hash) {
+    char salt[2];
+    salt[0]=hash[0];
+    salt[1]=hash[1];
+    salt[2]=0;
+    return crypt(clear,salt);
+}
+
+void expire(void *root) {
+
+    struct st_user *item;
+    TAILQ_FOREACH(item,&expire_tailq_head,entries) {
+	if(now>(item->time+TTL*2)) {
+	    loger("[%d]\texpire:%s\n",now,item->key);
+	    TAILQ_REMOVE(&expire_tailq_head, item, entries);
+	    tdelete(item,root,(void *)compare);
+	    free(item->key);
+	    free(item->clear);
+	    free(item->email);
+	    free(item->group);
+	    free(item);
+	} else {
+	    break;
+	}
+	
+    }
+}
+void strtolower(char *str) {
+    for(;*str;str++) {
+	if(*str>='A' && *str<='Z') {
+	    *str+=32;
+	} else if(*str>=192 && *str<=223) {
+	    *str+=32;
+	}
+    }
+}
+
+char * mysqlsafe(char *str) {
+    char *ptr;
+    ptr=str;
+    while(*str) {
+	 if(*str == '\'') *str = '"';
+	 str++;
+    }
+    return ptr;
+}
+
+
+
+
+void client_handle(int fd, short event, void *arg) {
+    struct pool *p;
+    p=(struct pool *)arg;
+
+
+    char *data=0;
+    char *login=0;
+    char *server=0;
+    char *clear=0;
+    char *ip=0;
+    char *session=0;
+    int reset=0;
+    char *hash=0;
+    
+    struct st_db db,**dbh;
+    struct st_user user,**userh,*usernew;
+    time(&now);
+    
+    if((event & EV_READ) == EV_READ) {
+
+	p->len=read(fd,p->buf,BUFLEN);
+	if(p->len == -1) {
+	    client_handle(fd,EV_TIMEOUT,arg);
+	    return;
+	}
+	p->buf[p->len]=0;
+
+	for(len=0;len<p->len;len++) {
+	    if((p->buf+len)[0] == '\r' && (p->buf+len)[1] == '\n' && (p->buf+len)[2] == '\r' && (p->buf+len)[3] == '\n') {
+		data=p->buf+len+4;
+		break;
+	    }
+	}
+
+	if(data == 0 ||  p->len == data-p->buf) {
+		p->len=snprintf(p->data,BUFLEN,"%s\n",get_addr(p->client));
+	} else {
+		p->len-=(data-p->buf);
+		int in=0;
+		for(;*data;data++) {
+		    if(!in) {
+			if(data[0] == 'l' && data[1] == 'o' && data[2] == 'g' && data[3] == 'i' && data[4] == 'n' && data[5] == '=') {
+			    in=1;
+			    data+=6;
+			    login=data;
+			} else if(data[0] == 'r' && data[1] == 'e' && data[2] == 's' && data[3] == 'e' && data[4] == 't' && data[5] == '=') {
+			    in=1;
+			    reset=1;
+			    data+=6;
+			} else if(data[0] == 'p' && data[1] == 'a' && data[2] == 's' && data[3] == 's' && data[4] == '=') {
+			    in=1;
+			    data+=5;
+			    clear=data;
+			} else if(data[0] == 'h' && data[1] == 'a' && data[2] == 's' && data[3] == 'h' && data[4] == '=') {
+			    in=1;
+			    data+=5;
+			    hash=data;
+			} else if(data[0] == 's' && data[1] == 'e' && data[2] == 'r' && data[3] == 'v' && data[4] == 'e'  && data[5] == 'r'  && data[6] == '=') {
+			    in=1;
+			    data+=7;
+			    server=data;
+			} else if(data[0] == 's' && data[1] == 'e' && data[2] == 's' && data[3] == 's' && data[4] == 'i'  && data[5] == 'o' && data[6] == 'n'  && data[7] == '=' ) {
+			    in=1;
+			    data+=8;
+			    session=data;
+			} else if(data[0] == 'i' && data[1] == 'p' && data[2] == '=') {
+			    in=1;
+			    data+=3;
+			    ip=data;
+			}
+		    } else if(*data == '&' ) {
+			in=0;
+			*data=0;
+		    }
+		}
+		if(server && session && hash && ip) {
+		    db.key=server;
+		    dbh=tfind(&db,&root,(void *)compare);
+		    if(!dbh) {
+			loger("[%d]\t%s->%s error server (%s)\n",now,get_addr(p->client),ip,server);
+			error_write(HEAD"ERROR:SERVER\n");
+		    }
+		    expire(&(*dbh)->root);
+
+		    if(checkLink(session,hash) < 1 || strcmp(getIP(),ip)) {
+			error_write(HEAD"ERROR:SESSION\n");
+		    }
+		    
+		    login=getLogin();
+		    ip=getIP();
+		    
+		    user.key=login;
+		    userh=tfind(&user,&(*dbh)->root,(void*)compare);
+
+		    if(userh) {
+			if(reset) {
+
+			    (*userh)->time=0;
+			    p->len=snprintf(p->data,BUFLEN,HEAD"AUTH:RESET\n");
+
+			} else {
+
+			    (*userh)->time=now;
+			    TAILQ_REMOVE(&expire_tailq_head, *userh, entries);
+			    TAILQ_INSERT_TAIL(&expire_tailq_head, *userh, entries);
+			    loger("[%d]\t%s->%s %s@%s sess ok\n",now,get_addr(p->client),ip,login,server);
+			    if((*userh)->sess+3000<now) {
+				(*userh)->sess=now;
+				p->len=snprintf(p->data,BUFLEN,HEAD"AUTH:OK:%s:%s:%s:%s:%s\n",(*userh)->email,(*userh)->group,getLogin(),genLink(ip,login),getHash());
+			    } else {
+				p->len=snprintf(p->data,BUFLEN,HEAD"AUTH:OK:%s:%s:%s\n",(*userh)->email,(*userh)->group,getLogin());
+			    }
+
+			}
+		    }  else {
+			loger("[%d]\t%s->%s %s@%s sess expired\n",now,get_addr(p->client),ip,login,server);
+			p->len=snprintf(p->data,BUFLEN,HEAD"ERROR:EXPIRED\n");
+		    }
+		
+		
+		} else 	if(login && server && clear && ip) {
+
+
+		    db.key=server;
+		    dbh=tfind(&db,&root,(void *)compare);
+		    if(!dbh) {
+			loger("[%d]\t%s->%s error server (%s)\n",now,get_addr(p->client),ip,server);
+			error_write(HEAD"ERROR:SERVER\n");
+		    }
+
+		    expire(&(*dbh)->root);
+
+		    strtolower(login);
+		    user.key=login;
+		    userh=tfind(&user,&(*dbh)->root,(void*)compare);
+
+		    if(userh && (*userh)->time+60>now) {
+
+			if(!strcmp(clear,(*userh)->clear)) {
+			    (*userh)->time=now;
+			    TAILQ_REMOVE(&expire_tailq_head, *userh, entries);
+			    TAILQ_INSERT_TAIL(&expire_tailq_head, *userh, entries);
+			    loger("[%d]\t%s->%s %s@%s:%s ok ts\n",now,get_addr(p->client),ip,login,server,clear);
+			    p->len=snprintf(p->data,BUFLEN,HEAD"AUTH:OK:%s:%s:%s:%s:%s\n",(*userh)->email,(*userh)->group,genLink(ip,login),getHash(),(*userh)->crypt);
+			} else {
+			    loger("[%d]\t%s->%s %s@%s:%s fail ts\n",now,get_addr(p->client),ip,login,server,clear);
+			    p->len=snprintf(p->data,BUFLEN,HEAD"ERROR:PASSWORD:TS\n");
+	    		}
+
+		    } else {
+			//в tsearch юзера нету, или данные по нему устарели, запрашиваем напрямую в mysql
+			len=snprintf(query,BUFLEN*2,"select U_Password,U_Email,U_Groups from %s_Users where U_Username = '%s'",(*dbh)->prefix,mysqlsafe(login));
+			mysql_real_query(&(*dbh)->h,query,len);
+
+			result = mysql_use_result(&(*dbh)->h);
+			if(!result) { 
+			    loger("[%d]\t%s->%s %s@%s:%s mismatch login (via sql:%s)\n",now,get_addr(p->client),ip,login,server,clear,query);
+			    error_write(HEAD"ERROR:LOGIN MISMATCH\n");
+			}
+		    
+			row = mysql_fetch_row(result);
+			if(!row) { 
+			    mysql_free_result(result);
+			    loger("[%d]\t%s->%s %s@%s:%s not found login\n",now,get_addr(p->client),ip,login,server,clear);
+			    error_write(HEAD"ERROR:LOGIN NOT FOUND\n");
+			}
+			
+			if(check_pass(clear,row[0])) {
+
+    			    if(userh) {
+				free((*userh)->clear);
+				free((*userh)->email);
+				free((*userh)->group);
+				(*userh)->clear=strdup(clear);
+				(*userh)->email=strdup(row[1]?row[1]:"");
+				(*userh)->group=strdup(row[2]);
+				(*userh)->time=now;
+
+				TAILQ_REMOVE(&expire_tailq_head, *userh, entries);
+				TAILQ_INSERT_TAIL(&expire_tailq_head, *userh, entries);
+
+			    } else {
+			        usernew=malloc(sizeof(*usernew));
+				usernew->time=now;
+				usernew->clear=strdup(clear);
+				usernew->key=strdup(login);
+				usernew->email=strdup(row[1]?row[1]:"");
+				usernew->group=strdup(row[2]);
+				userh=tsearch(usernew,&(*dbh)->root,(void *)compare);
+				TAILQ_INSERT_TAIL(&expire_tailq_head, *userh, entries);
+
+			    }
+			    loger("[%d]\t%s->%s %s@%s:%s ok\n",now,get_addr(p->client),ip,login,server,clear);
+			    (*userh)->sess=now;
+			    memcpy((*userh)->crypt,get_crypt(clear,row[0]),13);
+			    p->len=snprintf(p->data,BUFLEN,HEAD"AUTH:OK:%s:%s:%s:%s:%s\n",row[1],row[2],genLink(ip,login),getHash(),(*userh)->crypt);
+			} else {
+			    loger("[%d]\t%s->%s %s@%s:%s fail\n",now,get_addr(p->client),ip,login,server,clear);
+			    p->len=snprintf(p->data,BUFLEN,HEAD"ERROR:PASSWORD:DB\n");
+			}
+			mysql_free_result(result);
+			
+		    }
+
+		} else {
+		    error_write(HEAD"ERROR:LOGIN EMPTY\n");
+		}
+	}
+	event_set(&p->ev,p->fd,EV_WRITE|EV_TIMEOUT,client_handle,p);
+	event_add(&p->ev,&ttl);
+
+    } else if((event & EV_WRITE) == EV_WRITE) {
+
+	
+	len=write(fd,p->data,p->len);
+	if(len < 0 && errno == EAGAIN) {
+	    event_set(&p->ev,p->fd,EV_WRITE|EV_TIMEOUT,client_handle,p);
+	    event_add(&p->ev,&ttl);
+	} else {
+	    client_handle(fd,EV_TIMEOUT,arg);
+	}
+
+    } else if((event & EV_TIMEOUT) == EV_TIMEOUT) {
+	shutdown(fd,1);
+	close(fd);
+	event_del(&p->ev);
+        free(p);
+    }
+
+}
+
+
+
+
+
+
+
+
+void client_init(int fd, short event, void *arg) {
+
+    struct pool *p;
+    socklen_t len=sizeof(struct sockaddr_in);
+    p=(void *)malloc(sizeof(*p));    
+    p->len=0;
+    p->fd=accept(fd,(void *)&p->client,&len);
+    setnb(p->fd);
+    event_set(&p->ev,p->fd,EV_READ|EV_TIMEOUT,client_handle,p);
+    event_add(&p->ev,&ttl);
+
+}
+
+
+
+void net_init() {
+
+	int listen_fd;
+	struct sockaddr_in listen_addr;
+	int reuseaddr_on = 1;
+	struct event ev_accept;
+
+	event_init();
+
+	listen_fd = socket(AF_INET, SOCK_STREAM, 0);
+	if (listen_fd < 0) err(1, "listen failed");
+	if (setsockopt(listen_fd, SOL_SOCKET, SO_REUSEADDR, &reuseaddr_on,sizeof(reuseaddr_on)) == -1)	err(1, "setsockopt failed");
+
+	memset(&listen_addr, 0, sizeof(listen_addr));
+	listen_addr.sin_family = AF_INET;
+	listen_addr.sin_addr.s_addr = INADDR_ANY;
+	listen_addr.sin_port = htons(SERVER_PORT);
+
+	if (bind(listen_fd, (struct sockaddr *)&listen_addr,sizeof(listen_addr)) < 0)err(1, "bind failed");
+	listen(listen_fd, 5);
+	setnb(listen_fd);
+
+	event_set(&ev_accept, listen_fd, EV_READ|EV_PERSIST, client_init, NULL);
+	event_add(&ev_accept, NULL);
+
+	event_dispatch();
+
+
+
+}
+
+int main(int argc, char **argv) {
+
+	struct sigaction new_action, old_action;
+	new_action.sa_handler = restart_handler;
+	sigemptyset (&new_action.sa_mask);
+	new_action.sa_flags = 0;
+	sigaction (SIGHUP, NULL, &old_action);
+	if (old_action.sa_handler != SIG_IGN)  sigaction (SIGHUP, &new_action, NULL);
+	    
+
+
+	aes_set_key( &ctx, key, KEYLEN);
+	
+	TAILQ_INIT(&expire_tailq_head);
+	
+	struct st_db *db;
+	
+	my_bool reconnect = 1;
+	
+	for(len=0;*db_config[len].key;len++) {
+	    db=malloc(sizeof(*db));
+	    if(mysql_init(&db->h)==NULL) {
+		err(1,"\nFailed to initate MySQL connection\n");
+	    }
+	    
+	    mysql_options(&db->h, MYSQL_OPT_RECONNECT, &reconnect);
+	    
+	    if (!mysql_real_connect(&db->h,db_config[len].host,db_config[len].login,db_config[len].pass,db_config[len].db,0,NULL,0))   { 
+		printf( "Failed to connect to MySQL: Error: %s\n", mysql_error(&mysql)); 
+		exit(1);
+	    }
+
+	    mysql_real_query(&db->h,"set names cp1251",sizeof("set names cp1251"));
+
+	    db->key=strdup(db_config[len].key);
+	    db->root=NULL;
+	    db->prefix=strdup(db_config[len].prefix);
+	    tsearch(db,&root,(void *)compare);
+	}
+
+        if(fork() == 0) {
+            close(stdin);
+            close(stdout);
+            close(stderr);
+	    net_init();
+        }
+							
+	return 0;
+}
+
+
+
+
+    
+
+
+
+
+
+
+
