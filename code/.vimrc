@@ -2,6 +2,9 @@ set nocompatible
 if filereadable(glob("~/.vimrc_local"))
     source ~/.vimrc_local
 endif
+if exists("use_go")
+    set rtp+=$GOROOT/misc/vim
+endif
 set nobackup
 set history=50
 set showcmd
@@ -204,6 +207,10 @@ let g:neocomplcache_force_overwrite_completefunc=1
 Bundle "xolox/vim-easytags"
 Bundle "https://github.com/motemen/git-vim"
 
+" Go
+if exists("use_go")
+    Bundle "jnwhiteh/vim-golang.git"
+endif
 
 " Lua
 if exists("use_lua")
