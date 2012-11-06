@@ -158,6 +158,7 @@ Bundle 'FuzzyFinder'
 
 " IDE
 Bundle "mileszs/ack.vim"
+let g:ackprg="ack -H --nocolor --nogroup --column"
 Bundle "git://github.com/godlygeek/tabular.git"
 
 
