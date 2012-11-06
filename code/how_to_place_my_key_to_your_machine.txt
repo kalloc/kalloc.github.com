@@ -89,17 +89,15 @@ EOF
     cat > ~/.pdbrc << EOF
 # Command line history:
 import readline
-histfile = "~/.pdb-pyhist"
-try:
-    readline.read_history_file(histfile)
-except IOError:
-    pass
+import pdb
+import rlcompleter
 import atexit
-atexit.register(readline.write_history_file, histfile)
+import os
+histfile = os.path.expanduser("~/.pdb-pyhist")
+if os.path.exists(histfile): readline.read_history_file(histfile)
+code=atexit.register(readline.write_history_file, histfile)
 del histfile
 readline.set_history_length(200)
-
-import rlcompleter
 pdb.Pdb.complete = rlcompleter.Completer(locals()).complete
 EOF
     if [[ "$(python -c "import ipdb" 2>&1)" != "" ]];then
