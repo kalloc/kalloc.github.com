@@ -60,6 +60,9 @@ if [[ -f /etc/debian_version ]] || [[ -f /etc/SuSE-release ]];then
     if [[ $(which ack-grep) == "" ]];then
 	install_pkg  ack-grep
     fi
+    if [[ $(which ack) == "" ]];then
+        ln -s /usr/local/bin/ack-grep /usr/local/bin/ack
+    fi
     if [[ $(which vim) == "" ]];then
         if [[ -f /etc/debian_version ]];then
             install_pkg vim-nox ctags
