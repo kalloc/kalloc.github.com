@@ -205,7 +205,6 @@ let g:neocomplcache_lock_buffer_name_pattern = '\*ku\*'
 let g:neocomplcache_force_overwrite_completefunc=1
 
 
-Bundle "xolox/vim-easytags"
 Bundle "https://github.com/motemen/git-vim"
 
 " Go
@@ -217,8 +216,6 @@ endif
 if exists("use_lua")
     Bundle 'vim-scripts/lua.vim'
     Bundle 'rkowal/Lua-Omni-Vim-Completion'
-    Bundle 'xolox/vim-lua-ftplugin'
-    Bundle 'xolox/vim-lua-inspect'
 endif
 " PHP
 if exists("use_php")
