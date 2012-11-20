@@ -205,7 +205,7 @@ let g:neocomplcache_lock_buffer_name_pattern = '\*ku\*'
 let g:neocomplcache_force_overwrite_completefunc=1
 
 
-Bundle "https://github.com/motemen/git-vim"
+"Bundle "https://github.com/motemen/git-vim"
 
 " Go
 if exists("use_go")
