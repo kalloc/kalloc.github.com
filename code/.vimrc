@@ -20,7 +20,7 @@ set acd
 set completeopt=menuone,menu,longest
 set listchars=tab:>-,trail:-
 set list
-set nu
+"set nu
 set sw=4 ts=4 sta et
 au FileType crontab,fstab,make set noet ts=8 sw=8
 au BufEnter *.sh set ai sw=4 ts=4 sta et tw=80
@@ -254,7 +254,15 @@ endif
     autocmd FileType python setlocal omnifunc=pythoncomplete#Complete 
     autocmd FileType python map <buffer> <F10> :call Flake8()<CR>
     "Bundle 'git://github.com/fs111/pydoc.vim.git'
-    Bundle "git://github.com/kevinw/pyflakes-vim.git"
+    Bundle "git://github.com/scrooloose/syntastic"
+    set statusline+=%#warningmsg#
+    set statusline+=%{SyntasticStatuslineFlag()}
+    set statusline+=%*
+    let g:syntastic_check_on_open=1
+    let g:syntastic_enable_signs=1
+    let g:syntastic_enable_highlighting=1
+    let g:syntastic_error_symbol='✗'
+    let g:syntastic_warning_symbol='⚠'
     Bundle "vim-django-support"
     Bundle "vim-python-virtualenv"
     "Bundle "klen/python-mode"

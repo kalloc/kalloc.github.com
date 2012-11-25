@@ -136,7 +136,7 @@ EOF
         echo -e "$VIM_"
     fi
     
-    if [[ ! -f ${userroot}/.vim/ftplugin/python/pyflakes.vim ]]; then
+    if [[ $(which pyflakes) != ""  ]]; then
         if [[ ! -f /usr/bin/python ]] ;then
             echo '[e] install python'
         else
@@ -147,8 +147,6 @@ EOF
             cd pyflakes;
             python setup.py install > /dev/null;cd ..;
             mkdir -p  ${userroot}/.vim;
-            cp -r pyflakes-vim/ftplugin ${userroot}/.vim/;
-            cd ~;
             rm -rf /tmp/pyfl
         fi
     fi
