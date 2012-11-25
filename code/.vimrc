@@ -160,6 +160,15 @@ Bundle 'FuzzyFinder'
 Bundle "mileszs/ack.vim"
 let g:ackprg="ack -H --nocolor --nogroup --column"
 Bundle "git://github.com/godlygeek/tabular.git"
+Bundle "git://github.com/scrooloose/syntastic"
+set statusline+=%#warningmsg#
+set statusline+=%{SyntasticStatuslineFlag()}
+set statusline+=%*
+let g:syntastic_check_on_open=1
+let g:syntastic_enable_signs=1
+let g:syntastic_enable_highlighting=1
+let g:syntastic_error_symbol='✗'
+let g:syntastic_warning_symbol='⚠'
 
 
 " Source Explorer  http://www.vim.org/scripts/script.php?script_id=2179
@@ -254,15 +263,7 @@ endif
     autocmd FileType python setlocal omnifunc=pythoncomplete#Complete 
     autocmd FileType python map <buffer> <F10> :call Flake8()<CR>
     "Bundle 'git://github.com/fs111/pydoc.vim.git'
-    Bundle "git://github.com/scrooloose/syntastic"
-    set statusline+=%#warningmsg#
-    set statusline+=%{SyntasticStatuslineFlag()}
-    set statusline+=%*
-    let g:syntastic_check_on_open=1
-    let g:syntastic_enable_signs=1
-    let g:syntastic_enable_highlighting=1
-    let g:syntastic_error_symbol='✗'
-    let g:syntastic_warning_symbol='⚠'
+    let g:syntastic_python_checker="flake8"
     Bundle "vim-django-support"
     Bundle "vim-python-virtualenv"
     "Bundle "klen/python-mode"
