@@ -53,6 +53,8 @@ if [[ -f /etc/debian_version ]] || [[ -f /etc/SuSE-release ]];then
 
     echo '[x] install vim enviroment'
     ${WGET}/.vimrc > ${userroot}/.vimrc;
+    ${WGET}/.tmux.conf > ${userroot}/.tmux.conf;
+    ${WGET}/.screenrc > ${userroot}/.screenrc;
     if [[ ! -d ${userroot}/.vim ]];then
         mkdir -p ${userroot}/.vim
     fi
