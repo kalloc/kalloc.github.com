@@ -116,6 +116,9 @@ nmap <F11> :set<Space>nu!<CR>
 
 
 
+if filereadable(glob("tmux"))
+    autocmd VimEnter,VimLeave * silent !tmux set status
+endif
 
 
 
