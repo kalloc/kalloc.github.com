@@ -1,3 +1,1 @@
-http://assblasters.org/?p=311
-http://assblasters.org/?p=312
-http://assblasters.org/?p=313
+../all/spammer_wordpress_urls.txt

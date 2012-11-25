@@ -1,6 +1,1 @@
-#!/bin/bash
-/usr/bin/rsync --include-from /root/include --exclude-from /root/exclude --backup-dir=/backup/modified/ -t -b --archive -vv -z /vs/user79/var/www/virtual/ /backup/current/user79 >  /backup/log/transfer.log
-/usr/bin/rsync --include-from /root/include --exclude-from /root/exclude --backup-dir=/backup/modified/ -t -b --archive -vv -z /vs/user24/home/sites/ /backup/current/user24 >>  /backup/log/transfer.log
-/root/mod.sh  >  /backup/log/`date +%Y-%m-%d`.log
-find /backup/ -maxdepth 1 -mtime +120  -type f -print0 | xargs -n 20 -0 rm -f
-
+../all/rsync_backup
