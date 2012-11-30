@@ -273,6 +273,12 @@ endif
     Bundle "https://github.com/nvie/vim-flake8.git"
     "Bundle 'vim-scripts/pep8'
     let g:pep8_map='<leader>8'
+    if !exists("syntastic_python_checker_args")
+        let g:syntastic_python_checker_args='--ignore=E711'
+    endif
+    if !exists("pep8_ignore")
+        let g:pep8_ignore="E711"
+    endif
     if filereadable($VIRTUAL_ENV . '/.vimrc')
             source $VIRTUAL_ENV/.vimrc
     endif
