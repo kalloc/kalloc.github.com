@@ -52,11 +52,11 @@ set laststatus=2
 set statusline=%<%f\ [%Y%R%W]%1*%{(&modified)?'\ [+]\ ':''}%*%=%c%V,%l\ %P\ [%n]
 
 "Charset choice
-menu Encoding.koi8-r   :e ++enc=koi8-r<CR>
+menu Encoding.utf-8        :e ++enc=utf-8 <CR>
 menu Encoding.windows-1251 :e ++enc=cp1251<CR>
 menu Encoding.ibm-866      :e ++enc=ibm866<CR>
-menu Encoding.utf-8        :e ++enc=utf-8 <CR>
-set fileencodings=utf-8,koi8-r,cp866,cp1251
+menu Encoding.koi8-r   :e ++enc=koi8-r<CR>
+set fileencodings=utf-8,cp1251,koi8-r,cp866
 map <F9> :emenu Encoding.<TAB>
 
 
