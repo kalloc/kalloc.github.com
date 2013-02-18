@@ -57,6 +57,12 @@ if [[ -f /etc/debian_version ]] || [[ -f /etc/SuSE-release ]];then
         install_pkg git-core
     fi
 
+
+    echo '[x] install git-flow'
+    if [[ $(which git-flow) == '' ]];then
+        bash -c $(wget --no-check-certificate -q -O - https://raw.github.com/nvie/gitflow/develop/contrib/gitflow-installer.sh)
+    fi
+
     echo '[x] install vim enviroment'
     ${WGET}/.vimrc > ${userroot}/.vimrc;
     ${WGET}/.tmux.conf > ${userroot}/.tmux.conf;
