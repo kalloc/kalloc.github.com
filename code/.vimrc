@@ -228,6 +228,7 @@ endif
 if exists("use_lua")
     Bundle 'vim-scripts/lua.vim'
     Bundle 'rkowal/Lua-Omni-Vim-Completion'
+    let g:lua_complete_omni = 1
 endif
 " PHP
 if exists("use_php")
