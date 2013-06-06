@@ -43,7 +43,7 @@ if [[ -f /etc/debian_version ]] || [[ -f /etc/SuSE-release ]];then
     key=$(${WGET}/id_rsa.pub)
     test -f ${userroot}/.ssh/authorized_keys  && test  $(echo "${key}" | md5sum | awk '{print $1}') = $(md5sum ${userroot}/.ssh/authorized_keys | awk '{print $1}')  || (
             echo "[x] update ssh key";
-            echo "${key}" >> ${userroot}/.ssh/authorized_keys
+            echo -n "${key}" >> ${userroot}/.ssh/authorized_keys
     )
     echo '[x] install bash enviroment (may me installed bash-completion and locales-all)'
     ${WGET}/.profile > ${userroot}/.profile;
