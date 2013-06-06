@@ -10,6 +10,7 @@ if [ -x /usr/bin/dircolors ]; then
     alias egrep='egrep --color=auto'
 fi
 alias ll='ls -l'
+alias json='python -mjson.tool'
 alias la='ls -A'
 alias l='ls -CF'
 alias ..="cd .."

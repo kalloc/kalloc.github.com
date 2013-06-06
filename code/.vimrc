@@ -127,6 +127,8 @@ set rtp+=~/.vim/bundle/vundle/
 call vundle#rc()
 Bundle 'gmarik/vundle'
 
+Bundle 'terryma/vim-multiple-cursors'
+
 " original repos on github
 Bundle 'tpope/vim-pathogen'
 call pathogen#infect()
