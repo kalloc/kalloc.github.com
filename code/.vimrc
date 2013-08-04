@@ -275,6 +275,7 @@ endif
     "Bundle "klen/python-mode"
     Bundle "https://github.com/nvie/vim-flake8.git"
     "Bundle 'vim-scripts/pep8'
+    Bundle "https://github.com/davidhalter/jedi-vim.git"
     let g:pep8_map='<leader>8'
     if !exists("syntastic_python_checker_args")
         let g:syntastic_python_checker_args='--ignore=E711'
@@ -309,7 +310,7 @@ endif
 if exists("g:use_scala")
     au BufRead,BufNewFile *.scala set filetype=scala
     Bundle 'akhil/scala-vim-bundle'
-    Bundle 'bdd/vim-scala'
+    Bundle 'https://github.com/derekwyatt/vim-scala.git'
 endif
 
 " Perl
