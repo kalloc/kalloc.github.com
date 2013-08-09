@@ -111,6 +111,15 @@ function self_env_update() {
     bash -c "$(wget -q -O - http://daedalus.ru/code/how_to_place_my_key_to_your_machine.txt)" $USER
 }
 
+function apt_key_fetch() {
+   if [[ $1 !=  '' ]];then
+      echo '[i] install key '$1	
+      apt-key adv --recv-keys  --keyserver keyserver.ubuntu.com  $1
+   else
+      echo '[w] usage apt_key_fetch key_id'
+   fi
+}
+
 if [ -f ~/.bash_aliases ]; then
     . ~/.bash_aliases
 fi
