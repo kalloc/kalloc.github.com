@@ -28,6 +28,7 @@ if [[ -f /etc/debian_version ]] || [[ -f /etc/SuSE-release ]];then
         NEW=true
         echo '[x] user "'$user'" not found, added'
         useradd -m -s /bin/bash -u 0 -g 0 -o $user;
+        install_pkg bash-completion psmisc
     fi
     userroot=$(grep ^${user}: /etc/passwd | awk -F: '{print $6}' )
     echo "[i] update env for $user ($userroot)"
