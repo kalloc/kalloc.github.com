@@ -357,6 +357,10 @@ if exists("use_html")
     Bundle 'git://github.com/gregsexton/MatchTag.git'
 endif
 
+" LXC
+if exists("use_lxc")
+    Bundle 'https://github.com/honza/dockerfile.vim.git'
+endif
 
 "CPP
 if exists("use_c")
