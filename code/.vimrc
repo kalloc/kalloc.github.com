@@ -90,12 +90,12 @@ function! TabMove(direction)
 endfunction
  
 " мапинг для screen / tmux 
-nnoremap <ESC>[1;3D <silent><A-LEFT>
-nnoremap <ESC>[1;3C <silent><A-RIGHT>
-nnoremap <ESC>[1;4D <silent><A-S-LEFT>
-nnoremap <ESC>[1;4C <silent><A-S-RIGHT>
-nnoremap <ESC>[1;3A <silent><A-UP>
-nnoremap <ESC>[1;3B <silent><A-DOWN>
+map <ESC>[1;3D <silent><A-LEFT>
+map <ESC>[1;3C <silent><A-RIGHT>
+map <ESC>[1;4D <silent><A-S-LEFT>
+map <ESC>[1;4C <silent><A-S-RIGHT>
+map <ESC>[1;3A <silent><A-UP>
+map <ESC>[1;3B <silent><A-DOWN>
 
 " новая вкладка
 nnoremap <C-T> :tabnew<CR>
