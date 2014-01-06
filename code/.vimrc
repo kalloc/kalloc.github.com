@@ -89,8 +89,18 @@ function! TabMove(direction)
     endif
 endfunction
  
+" мапинг для screen / tmux 
+nnoremap <ESC>[1;3D <silent><A-LEFT>
+nnoremap <ESC>[1;3C <silent><A-RIGHT>
+nnoremap <ESC>[1;4D <silent><A-S-LEFT>
+nnoremap <ESC>[1;4C <silent><A-S-RIGHT>
+nnoremap <ESC>[1;3A <silent><A-UP>
+nnoremap <ESC>[1;3B <silent><A-DOWN>
+
 " новая вкладка
 nnoremap <C-T> :tabnew<CR>
+" закрыть вкладка
+nnoremap <C-W> :tabclose<CR>
 " предыдущая вкладка
 nnoremap <silent><A-LEFT> :call TabJump('left')<CR>
 " следующая вкладка
@@ -106,6 +116,8 @@ nnoremap <silent><A-S-RIGHT> :call TabMove('right')<CR>
 
 
 
+
+" inoremap <C-t> <Esc>:tabnew<CR>
 
 
 set pastetoggle=<F3>
