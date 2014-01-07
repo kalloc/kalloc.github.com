@@ -96,6 +96,13 @@ map <silent><ESC>[1;4D <A-S-LEFT>
 map <silent><ESC>[1;4C <A-S-RIGHT>
 map <silent><ESC>[1;3A <A-UP>
 map <silent><ESC>[1;3B <A-DOWN>
+map <silent><ESC>t <A-t>
+map <silent><ESC>w <A-w>
+
+" новая вкладка
+nnoremap <A-t> :tabnew<CR>
+" закрыть вкладка
+nnoremap <A-w> :tabclose<CR>
 
 " новая вкладка
 nnoremap <C-T> :tabnew<CR>
