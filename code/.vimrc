@@ -104,10 +104,6 @@ nnoremap <A-t> :tabnew<CR>
 " закрыть вкладка
 nnoremap <A-w> :tabclose<CR>
 
-" новая вкладка
-nnoremap <C-T> :tabnew<CR>
-" закрыть вкладка
-nnoremap <C-W> :tabclose<CR>
 " предыдущая вкладка
 nnoremap <silent><A-LEFT> :call TabJump('left')<CR>
 " следующая вкладка
