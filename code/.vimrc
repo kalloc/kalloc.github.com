@@ -365,7 +365,9 @@ if exists("use_html")
     autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags 
     au BufEnter *.html set ai sw=2 ts=2 sta et fo=croql tw=100
     au BufEnter *.mint set filetype=mint ai sw=2 ts=2 sta et fo=croql tw=80
+    au BufEnter *.jinja2 set filetype=htmljinja ai sw=2 ts=2 sta et fo=croql tw=80    
     Bundle 'git://github.com/othree/html5.vim.git'
+    Bundle 'https://github.com/estin/htmljinja'                                       
     Bundle 'git://github.com/hokaccha/vim-html5validator.git'
     ""Bundle 'git://github.com/tyru/operator-html-escape.vim.git'
     Bundle 'git://github.com/tpope/vim-haml.git'
