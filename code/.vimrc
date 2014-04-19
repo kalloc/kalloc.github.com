@@ -292,9 +292,12 @@ endif
     Bundle "vim-django-support"
     Bundle "vim-python-virtualenv"
     "Bundle "klen/python-mode"
-    Bundle "https://github.com/nvie/vim-flake8.git"
-    "Bundle 'vim-scripts/pep8'
     Bundle "https://github.com/davidhalter/jedi-vim.git"
+    Bundle "https://github.com/nvie/vim-flake8.git"
+    let g:jedi#popup_on_dot = 1
+    let g:jedi#show_call_signatures = 1
+    let g:jedi#popup_select_first = 0
+    "Bundle 'vim-scripts/pep8'
     let g:pep8_map='<leader>8'
     if !exists("syntastic_python_checker_args")
         let g:syntastic_python_checker_args='--ignore=E711'
