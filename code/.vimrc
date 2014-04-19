@@ -395,9 +395,10 @@ endif
 
 "Erlang
 if exists("use_erlang")
+    Bundle "elixir-lang/vim-elixir"
+    Bundle "mattonrails/vim-mix"
     Bundle "jimenezrick/vimerl"
     Bundle "aerosol/vim-erlang-skeletons"
-    Bundle "elixir-lang/vim-elixir"
     let g:erl_author="Nikita Kuznetsov"
     let g:erl_company="ACME inc."
 endif
