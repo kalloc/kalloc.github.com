@@ -1,6 +1,6 @@
 #for debian and suse based dists 
 #my short script for install minimal enviroment
-#bash -c "$(wget -q -O - https://raw.github.com/ybw/ybw.github.com/master/code/how_to_place_my_key_to_your_machine.txt)"
+#bash -c "$(wget --no-check-certificate -q -O - https://raw.github.com/ybw/ybw.github.com/master/code/how_to_place_my_key_to_your_machine.txt)"
 
 #some function
 function install_pkg() {
