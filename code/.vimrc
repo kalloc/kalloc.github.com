@@ -10,6 +10,7 @@ set history=50
 set showcmd
 set ruler
 set hlsearch
+set ff=unix
 set incsearch
 set smartcase
 set cmdheight=1
