@@ -172,7 +172,7 @@ EOF
     if [[ $NEED_VIMPLUGIN ]];then
         ${WGET}/vimplugin.tar.gz | tar zxf - -C ${userroot}/.vim/
     fi
-    if [[ ! -d ~/.vim/bundle/neobundle.vim ]];them
+    if [[ ! -d ${userroot}/.vim/bundle/neobundle.vim ]];then
     	curl https://raw.githubusercontent.com/kalloc/neobundle.vim/master/bin/install.sh | sh
     fi
     
