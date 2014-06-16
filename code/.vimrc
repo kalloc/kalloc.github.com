@@ -139,49 +139,73 @@ endif
 
 
 "Vundle
-set rtp+=~/.vim/bundle/vundle/
-call vundle#rc()
-Bundle 'gmarik/vundle'
+"set rtp+=~/.vim/bundle/vundle/
+"call vundle#rc()
+"Bundle 'gmarik/vundle'
+"NeoBundle
+"NeoBundle Scripts-----------------------------
+if has('vim_starting')
+  set nocompatible               " Be iMproved
 
-Bundle 'terryma/vim-multiple-cursors'
+  " Required:
+  set runtimepath+=/Users/nick/.vim/bundle/neobundle.vim/
+endif
+
+" Required:
+call neobundle#begin(expand('/Users/nick/.vim/bundle'))
+
+" Let NeoBundle manage NeoBundle
+" Required:
+NeoBundleFetch 'Shougo/neobundle.vim'
+
+" My Bundles here:
+NeoBundle 'Shougo/neosnippet.vim'
+NeoBundle 'Shougo/neosnippet-snippets'
+NeoBundle 'tpope/vim-fugitive'
+NeoBundle 'flazz/vim-colorschemes'
+
+" You can specify revision/branch/tag.
+NeoBundle 'Shougo/vimshell', { 'rev' : '3787e5' }
+
+
+
+
+NeoBundle 'terryma/vim-multiple-cursors'
 
 " original repos on github
-Bundle 'tpope/vim-pathogen'
+NeoBundle 'tpope/vim-pathogen'
 call pathogen#infect()
-syntax enable
-filetype plugin indent on
 
-Bundle 'tpope/vim-fugitive'
-Bundle "vim-scripts/tlib"
-Bundle "tselectbuffer"
-Bundle "MarcWeber/vim-addon-mw-utils"
-Bundle "snipmate-snippets"
+NeoBundle "vim-scripts/tlib"
+NeoBundle "tselectbuffer"
+NeoBundle "MarcWeber/vim-addon-mw-utils"
+NeoBundle "snipmate-snippets"
 "Bundle 'garbas/vim-snipmate'
 
 "NerdTree
 map <F8> :NERDTreeToggle<cr>
 vmap <F8> <esc>:NERDTreeToggle<cr>
 imap <F8> <esc>:NERDTreeToggle<cr>
-Bundle "scrooloose/nerdtree"
+NeoBundle "scrooloose/nerdtree"
 let NERDTreeWinPos = 'right'
 let NERDTreeShowBookmarks = 1
 let NERDTreeIgnore = ['\~$', '*.pyc', '*.pyo', '.git']
 let NERDChristmasTree = 0
 
 
-Bundle 'Lokaltog/vim-easymotion'
-Bundle 'rstacruz/sparkup', {'rtp': 'vim/'}
-Bundle "vim-scripts/dbext.vim"
+NeoBundle 'Lokaltog/vim-easymotion'
+NeoBundle 'rstacruz/sparkup', {'rtp': 'vim/'}
+NeoBundle "vim-scripts/dbext.vim"
 
-Bundle 'L9'
-Bundle 'FuzzyFinder'
+NeoBundle 'L9'
+NeoBundle 'FuzzyFinder'
 "Snippets
 
 " IDE
-Bundle "mileszs/ack.vim"
+NeoBundle "mileszs/ack.vim"
 let g:ackprg="ack -H --nocolor --nogroup --column"
-Bundle "git://github.com/godlygeek/tabular.git"
-Bundle "git://github.com/scrooloose/syntastic"
+NeoBundle "git://github.com/godlygeek/tabular.git"
+NeoBundle "git://github.com/scrooloose/syntastic"
 set statusline+=%#warningmsg#
 set statusline+=%{SyntasticStatuslineFlag()}
 set statusline+=%*
@@ -193,7 +217,7 @@ let g:syntastic_warning_symbol='⚠'
 
 
 " Source Explorer  http://www.vim.org/scripts/script.php?script_id=2179
-Bundle "Source-Explorer-srcexpl.vim"
+NeoBundle "Source-Explorer-srcexpl.vim"
 nmap <F7> :SrcExplToggle<CR> 
 let g:SrcExpl_winHeight = 8 
 let g:SrcExpl_refreshTime = 100 
@@ -211,14 +235,14 @@ let g:SrcExpl_updateTagsKey = "<F12>"
 
 
 " taglist
-Bundle "taglist.vim"
+NeoBundle "taglist.vim"
 nnoremap <silent> <F6> :TlistToggle<CR>
 
 "ctrlp
-Bundle "kien/ctrlp.vim"
+NeoBundle "kien/ctrlp.vim"
 
 "NeoComplete
-Bundle "Shougo/neocomplcache"
+NeoBundle "Shougo/neocomplcache"
 let g:acp_enableAtStartup = 0 
 let g:neocomplcache_snippets_disable_runtime_snippets=1
 let g:neocomplcache_disable_auto_complete = 1
@@ -239,19 +263,19 @@ let g:neocomplcache_force_overwrite_completefunc=1
 
 " Go
 if exists("use_go")
-    Bundle "jnwhiteh/vim-golang.git"
+    NeoBundle "jnwhiteh/vim-golang.git"
 endif
 
 " Lua
 if exists("use_lua")
-    Bundle 'vim-scripts/lua.vim'
-    Bundle 'rkowal/Lua-Omni-Vim-Completion'
+    NeoBundle 'vim-scripts/lua.vim'
+    NeoBundle 'rkowal/Lua-Omni-Vim-Completion'
     let g:lua_complete_omni = 1
 endif
 " PHP
 if exists("use_php")
-    Bundle 'git://github.com/vim-scripts/php.vim--Garvin.git'
-    Bundle 'git://github.com/2072/PHP-Indenting-for-VIm.git'
+    NeoBundle 'git://github.com/vim-scripts/php.vim--Garvin.git'
+    NeoBundle 'git://github.com/2072/PHP-Indenting-for-VIm.git'
 endif 
 
 " Python/Django
@@ -290,11 +314,11 @@ endif
     autocmd FileType python map <buffer> <F10> :call Flake8()<CR>
     "Bundle 'git://github.com/fs111/pydoc.vim.git'
     let g:syntastic_python_checker="flake8"
-    Bundle "vim-django-support"
-    Bundle "vim-python-virtualenv"
+    NeoBundle "vim-django-support"
+    NeoBundle "vim-python-virtualenv"
     "Bundle "klen/python-mode"
-    Bundle "https://github.com/davidhalter/jedi-vim.git"
-    Bundle "https://github.com/nvie/vim-flake8.git"
+    NeoBundle "https://github.com/davidhalter/jedi-vim.git"
+    NeoBundle "https://github.com/nvie/vim-flake8.git"
     let g:jedi#popup_on_dot = 1
     let g:jedi#show_call_signatures = 1
     let g:jedi#popup_select_first = 0
@@ -332,24 +356,24 @@ endif
 " Scala
 if exists("g:use_scala")
     au BufRead,BufNewFile *.scala set filetype=scala
-    Bundle 'akhil/scala-vim-bundle'
-    Bundle 'https://github.com/derekwyatt/vim-scala.git'
+    NeoBundle 'akhil/scala-vim-bundle'
+    NeoBundle 'https://github.com/derekwyatt/vim-scala.git'
 endif
 
 " Perl
 if exists("g:use_perl")
-    Bundle 'git://github.com/petdance/vim-perl.git'
-    Bundle 'git://github.com/ggray/vim-tt2.git'
+    NeoBundle 'git://github.com/petdance/vim-perl.git'
+    NeoBundle 'git://github.com/ggray/vim-tt2.git'
 endif
 
 "JS
 if exists("g:use_js")
     autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS 
     au FileType javascript set dictionary+=$HOME/.vim/dict/node.dict
-    Bundle 'git://github.com/guileen/vim-node.git'
-    Bundle 'git://github.com/myhere/vim-nodejs-complete.git'
-    Bundle 'git://github.com/pangloss/vim-javascript.git'
-    Bundle 'git://github.com/briancollins/vim-jst.git'
+    NeoBundle 'git://github.com/guileen/vim-node.git'
+    NeoBundle 'git://github.com/myhere/vim-nodejs-complete.git'
+    NeoBundle 'git://github.com/pangloss/vim-javascript.git'
+    NeoBundle 'git://github.com/briancollins/vim-jst.git'
     let g:html_indent_inctags = "html,body,head,tbody"
     let g:html_indent_script1 = "inc"
     let g:html_indent_style1 = "inc"
@@ -370,17 +394,17 @@ if exists("use_html")
     au BufEnter *.html set ai sw=2 ts=2 sta et fo=croql tw=100
     au BufEnter *.mint set filetype=mint ai sw=2 ts=2 sta et fo=croql tw=80
     au BufEnter *.jinja2 set filetype=htmljinja ai sw=2 ts=2 sta et fo=croql tw=80    
-    Bundle 'git://github.com/othree/html5.vim.git'
-    Bundle 'https://github.com/estin/htmljinja'                                       
-    Bundle 'git://github.com/hokaccha/vim-html5validator.git'
+    NeoBundle 'git://github.com/othree/html5.vim.git'
+    NeoBundle 'https://github.com/estin/htmljinja'                                       
+    NeoBundle 'git://github.com/hokaccha/vim-html5validator.git'
     ""Bundle 'git://github.com/tyru/operator-html-escape.vim.git'
-    Bundle 'git://github.com/tpope/vim-haml.git'
-    Bundle 'git://github.com/gregsexton/MatchTag.git'
+    NeoBundle 'git://github.com/tpope/vim-haml.git'
+    NeoBundle 'git://github.com/gregsexton/MatchTag.git'
 endif
 
 " LXC
 if exists("use_lxc")
-    Bundle 'https://github.com/honza/dockerfile.vim.git'
+    NeoBundle 'https://github.com/honza/dockerfile.vim.git'
 endif
 
 "CPP
@@ -388,9 +412,9 @@ if exists("use_c")
     autocmd FileType cpp map <F10> :call g:ClangUpdateQuickFix()<cr>
     autocmd FileType cpp vmap <F10> <esc>:call g:ClangUpdateQuickFix()<cr>
     autocmd FileType imap <F10> <esc>:call g:ClangUpdateQuickFix()<cr>
-    Bundle "Shougo/neocomplcache-clang"
-    Bundle "Rip-Rip/clang_complete"
-    Bundle "osyo-manga/neocomplcache-clang_complete"
+    NeoBundle "Shougo/neocomplcache-clang"
+    NeoBundle "Rip-Rip/clang_complete"
+    NeoBundle "osyo-manga/neocomplcache-clang_complete"
     let g:clang_complete_auto=0
     let g:clang_complete_copen=1
     let g:clang_hl_errors=1
@@ -399,10 +423,10 @@ endif
 
 "Erlang
 if exists("use_erlang")
-    Bundle "elixir-lang/vim-elixir"
-    Bundle "mattonrails/vim-mix"
-    Bundle "jimenezrick/vimerl"
-    Bundle "aerosol/vim-erlang-skeletons"
+    NeoBundle "elixir-lang/vim-elixir"
+    NeoBundle "mattonrails/vim-mix"
+    NeoBundle "jimenezrick/vimerl"
+    NeoBundle "aerosol/vim-erlang-skeletons"
     let g:erl_author="Nikita Kuznetsov"
     let g:erl_company="ACME inc."
 endif
@@ -413,10 +437,23 @@ if exists("use_ruby")
     autocmd FileType ruby,eruby let g:rubycomplete_buffer_loading = 1
     autocmd FileType ruby,eruby let g:rubycomplete_rails = 1
     autocmd FileType ruby,eruby let g:rubycomplete_classes_in_global = 1
-    Bundle "tpope/vim-rails"
-    Bundle "vim-scripts/rubycomplete.vim"
+    NeoBundle "tpope/vim-rails"
+    NeoBundle "vim-scripts/rubycomplete.vim"
 endif
 
 
-Bundle 'ervandew/supertab'
+NeoBundle 'ervandew/supertab'
 let g:SuperTabDefaultCompletionType = "<c-x><c-u>"
+
+
+
+" Required:
+call neobundle#end()
+
+" Required:
+syntax enable
+filetype plugin indent on
+
+" If there are uninstalled bundles found on startup,
+" this will conveniently prompt you to install them.
+NeoBundleCheck
