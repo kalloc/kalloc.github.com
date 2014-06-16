@@ -172,6 +172,9 @@ EOF
     if [[ $NEED_VIMPLUGIN ]];then
         ${WGET}/vimplugin.tar.gz | tar zxf - -C ${userroot}/.vim/
     fi
+    if [[ ! -d ~/.vim/bundle/neobundle.vim ]];them
+    	curl https://raw.githubusercontent.com/kalloc/neobundle.vim/master/bin/install.sh | sh
+    fi
     
     if [[ ! -f /usr/bin/wgetpaste ]];then
         echo '[x] install wgetpaste'
