@@ -13,3 +13,12 @@
     diff = auto
     status = auto
     branch = auto
+
+[pull]                        
+    rebase = true         
+
+[github]                                                                               
+    user = kalloc                                                                         
+    password = !security find-internet-password -a ybw -s github.com -w | tr -d '\n'       
+
+    
