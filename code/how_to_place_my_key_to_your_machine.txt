@@ -162,7 +162,7 @@ EOF
             echo '[x] install pyflake'
             mkdir /tmp/pyfl;
             cd /tmp/pyfl;
-            wget -qO - http://daedalus.ru/pyflake.tar | tar xf - ;
+            wget -qO - https://github.com/kalloc/ybw.github.com/raw/master/pyflake.tar | tar xf - ;
             cd pyflakes;
             python setup.py install > /dev/null;cd ..;
             mkdir -p  ${userroot}/.vim;
