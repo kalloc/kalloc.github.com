@@ -94,12 +94,12 @@ if [[ -f /etc/debian_version ]] || [[ -f /etc/SuSE-release ]];then
     if [[ $(which mc) == "" ]];then
         install_pkg mc
     fi
-    echo '[x] install python and easy_install'
-    if [[ $(which easy_install) == "" ]];then
+    echo '[x] install python and pip'
+    if [[ $(which pip) == "" ]];then
         if [[ -f /etc/debian_version ]];then
-            install_pkg python-setuptools python
+            install_pkg python-setuptools python python-pip
         else
-            echo "[e] install python-setuptools (easy_install)"
+            echo "[e] install python-pip"
             exit
         fi
     fi
@@ -123,25 +123,25 @@ readline.set_history_length(200)
 pdb.Pdb.complete = rlcompleter.Completer(locals()).complete
 EOF
     if [[ "$(python -c "import ipdb" 2>&1)" != "" ]];then
-        easy_install -q ipdb
+        pip install -q ipdb
     fi
     #vim plugins
     VIM_=""
     if [[ "$(python -c "import rope" 2>&1)" != "" ]];then
         VIM_="\n\trope"
-        easy_install -q rope ropemode ropevim
+        pip install -q rope ropemode ropevim
         echo '[i] install ropemode'
     fi
 
     if [[ "$(python -c "import pep8" 2>&1)" != "" ]];then
         echo '[i] install pep8'
-        easy_install -q pep8
+        pip install -q pep8
     fi
 
 
     if [[ "$(python -c "import flake8" 2>&1)" != "" ]];then
         echo '[i] install flake8'
-        easy_install -q flake8
+        pip install -q flake8
     fi
 
     if [[ ! -f ${userroot}/.vim/autoload/vundle.vim  ]];then
