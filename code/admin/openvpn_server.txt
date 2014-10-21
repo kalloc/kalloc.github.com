@@ -1,1 +1,0 @@
-../all/openvpn_server.txt

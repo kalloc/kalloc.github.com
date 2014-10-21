@@ -1,1 +1,0 @@
-../all/reader_wordpress.py

@@ -1,1 +1,0 @@
-../all/ngx_log_xml.c

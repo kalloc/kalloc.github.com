@@ -1,1 +1,0 @@
-../all/svn_loader.py

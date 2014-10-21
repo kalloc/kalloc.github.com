@@ -1,1 +1,0 @@
-../all/reader_lj_atom_asoc.py

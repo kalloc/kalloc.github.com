@@ -1,1 +1,0 @@
-../all/ispcp_debian.sh

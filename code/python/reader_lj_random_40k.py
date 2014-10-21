@@ -1,1 +1,0 @@
-../all/reader_lj_random_40k.py
