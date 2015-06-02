@@ -11,6 +11,7 @@ set showcmd
 set ruler
 set hlsearch
 set ff=unix
+set modeline
 set incsearch
 set smartcase
 set cmdheight=1
