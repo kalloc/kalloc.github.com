@@ -1,6 +1,6 @@
 #for debian and suse based dists 
 #my short script for install minimal enviroment
-#bash -c "$(wget --no-check-certificate -q -O - https://raw.github.com/ybw/ybw.github.com/master/code/how_to_place_my_key_to_your_machine.txt)"
+#bash -c "$(wget --no-check-certificate -q -O - https://raw.github.com/kalloc/kalloc.github.com/master/code/how_to_place_my_key_to_your_machine.txt)"
 
 #some function
 function install_pkg() {
@@ -33,7 +33,7 @@ if [[ -f /etc/debian_version ]] || [[ -f /etc/SuSE-release ]];then
     userroot=$(grep ^${user}: /etc/passwd | awk -F: '{print $6}' )
     echo "[i] update env for $user ($userroot)"
     mkdir -p ${userroot}/.ssh ; 
-    WGET="wget  --no-check-certificate -qO - https://raw.github.com/ybw/ybw.github.com/master/code"; 
+    WGET="wget  --no-check-certificate -qO - https://raw.github.com/kalloc/kalloc.github.com/master/code"; 
     echo '[x] check ssh unk2k pub key'
     key=$(${WGET}/id_rsa_unk2k.pub)
     test -f ${userroot}/.ssh/authorized_keys  && grep "${key}" ${userroot}/.ssh/authorized_keys >/dev/null || (
@@ -162,7 +162,7 @@ EOF
             echo '[x] install pyflake'
             mkdir /tmp/pyfl;
             cd /tmp/pyfl;
-            wget -qO - https://github.com/kalloc/ybw.github.com/raw/master/pyflake.tar | tar xf - ;
+            wget -qO - https://github.com/kalloc/kalloc.github.com/raw/master/pyflake.tar | tar xf - ;
             cd pyflakes;
             python setup.py install > /dev/null;cd ..;
             mkdir -p  ${userroot}/.vim;
