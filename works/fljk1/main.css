@@ -37,7 +37,7 @@ html, body, .container {
     width: 37px;
     height: 57px;
     left: 258px;
-    top: 3px;
+    bottom: 8px;
 }
 
 .icon {
@@ -97,6 +97,7 @@ html, body, .container {
 .article__title {
     padding-top: 20px;
     font-size: 48px;
+    position: relative;
 }
 
 .article__subtitle {
