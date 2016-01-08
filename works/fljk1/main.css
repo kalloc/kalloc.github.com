@@ -87,8 +87,8 @@ html, body, .container {
     position: relative;
     margin-left: auto;
     margin-right: auto;
-    overflow: auto;
-
+    overflow-x: hidden;
+    overflow-y: auto;
 }
 .article__header {
     padding-bottom: 66px;
