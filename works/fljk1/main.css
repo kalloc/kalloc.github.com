@@ -169,6 +169,10 @@ html, body, .container {
 
 .footer {
    height: 180px;
+   display: flex;
+   flex-direction: column;
+   flex-wrap: wrap;
+   align-items: center;
 }
 
 .footer__about {
@@ -188,5 +192,4 @@ html, body, .container {
 }
 
 @media(min-width: 0px) and (max-width: 500px) {
-
 }
