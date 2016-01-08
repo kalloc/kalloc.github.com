@@ -125,8 +125,14 @@ html, body, .container {
     padding-bottom: 82px;
 }
 
+.content__motivation {
+  width: 500px;
+  font-size: 19px;
+  font-style: italic;    
+}
 .content__motivation > ul {
-  list-style-type: none;
+    padding-left: 1em;
+    list-style-type: none;
 }
 
 .content__motivation > ul > li:before {
