@@ -34,12 +34,6 @@ if [[ -f /etc/debian_version ]] || [[ -f /etc/SuSE-release ]];then
     echo "[i] update env for $user ($userroot)"
     mkdir -p ${userroot}/.ssh ; 
     WGET="wget  --no-check-certificate -qO - https://raw.github.com/kalloc/kalloc.github.com/master/code"; 
-    echo '[x] check ssh unk2k pub key'
-    key=$(${WGET}/id_rsa_unk2k.pub)
-    test -f ${userroot}/.ssh/authorized_keys  && grep "${key}" ${userroot}/.ssh/authorized_keys >/dev/null || (
-            echo "[x] update ssh key";
-            echo "${key}" >> ${userroot}/.ssh/authorized_keys
-    )
     echo '[x] check ssh pub key'
     key=$(${WGET}/id_rsa.pub)
 
