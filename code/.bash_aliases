@@ -9,12 +9,14 @@ if [ -x /usr/bin/dircolors ]; then
     alias fgrep='fgrep --color=auto'
     alias egrep='egrep --color=auto'
 fi
-alias ll='ls -l'
+
 alias json='python -mjson.tool'
-alias la='ls -A'
-alias l='ls -CF'
 alias ..="cd .."
 alias ...="cd ../.."
-alias grep='ack-grep'
+
+# Aliases
+alias vim=nvim
+alias ll="exa -la"
+alias lld="exa -lda"
 
 
