@@ -1,24 +1,38 @@
-[user]
-    name = Nikita Kuznetsov
-    email = nikita.kuznetsov@daedalus.ru
 
 [alias]
     up = !(git add . && git stash && git pull --rebase >&2) | grep -v \"No local changes to save\" && git stash pop
     ci = commit
     st = status
     co = checkout
-    sync = git up && git push
 
 [color]
-    diff = auto
-    status = auto
-    branch = auto
+	diff = auto
+	status = auto
+	branch = auto
 
-[pull]                        
-    rebase = true         
+[core]
+	quotepath = false
+	editor = vim
 
-[github]                                                                               
-    user = kalloc                                                                         
-    password = !security find-internet-password -a ybw -s github.com -w | tr -d '\n'       
+[push]
+	default = matching
 
-    
+
+[filter "media"]
+	clean = git-media-clean %f
+	smudge = git-media-smudge %f
+
+[branch]
+	autosetuprebase = always
+
+[pull]
+	rebase = true
+
+[merge]
+	ff = false
+
+[filter "lfs"]
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true
