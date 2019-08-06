@@ -44,14 +44,14 @@ use_color=false
 safe_term=${TERM//[^[:alnum:]]/.}       # sanitize TERM
 
 function parse_git_dirty {
-  [[ $(git status 2> /dev/null | tail -n1) != "nothing to commit (working directory clean)" ]] && echo "*"
+  [[ $(git status 2> /dev/null | tail -n1) != "nothing to commit (working tree clean)" ]] && echo "*"
 }
 
 if [[ $(which git) != "" ]];then
     function parse_git_branch {
         git_status="$(git status 2> /dev/null)"
-        pattern="^# On branch ([^${IFS}]*)"
-        if [[ ! ${git_status}} =~ "working directory clean" ]]; then
+        pattern="^[#\s+]*On branch ([^${IFS}]*)"
+        if [[ ! ${git_status}} =~ "working tree clean" ]]; then
             state="*"
         fi
         # add an else if or two here if you want to get more specific
@@ -63,7 +63,7 @@ if [[ $(which git) != "" ]];then
     }
 else
     function parse_git_branch {
-	return 
+    return 
     }
 fi
 
